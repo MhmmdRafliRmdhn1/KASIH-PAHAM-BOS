@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Pendaftaran Akun Usaha Baru — TransformaUMKM | GTNIC 2026 Web Development." />
+  <title>Buat Akun UMKM Baru — TransformaUMKM | GTNIC 2026</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body.auth-page {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-primary);
+      padding: 5.5rem 1.5rem 2rem 1.5rem;
+      position: relative;
+      overflow-x: hidden;
+    }
+    .auth-page-wrapper {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 1100px;
+      display: grid;
+      grid-template-columns: 1fr 1.15fr;
+      gap: 3.5rem;
+      align-items: center;
+    }
+    .auth-page-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      box-shadow: 0 25px 70px -10px rgba(0, 0, 0, 0.7), 0 0 25px rgba(255, 107, 53, 0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+    .auth-page-header {
+      margin-bottom: 0.5rem;
+    }
+    .auth-page-header h2 {
+      font-size: 1.45rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 0.35rem;
+    }
+    .auth-page-header p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    .auth-page-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(255, 107, 53, 0.15);
+      border: 1px solid rgba(255, 107, 53, 0.3);
+      padding: 3px 10px;
+      border-radius: var(--radius-full);
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--coral-primary);
+      margin-bottom: 0.75rem;
+    }
+    .auth-switch-box {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border-color);
+    }
+    .auth-switch-box a {
+      color: var(--cyan-primary);
+      font-weight: 700;
+      text-decoration: none;
+    }
+    .auth-switch-box a:hover {
+      text-decoration: underline;
+    }
+    .reg-benefit-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      margin-top: 1.25rem;
+    }
+    .reg-benefit-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-color);
+      padding: 0.75rem 1rem;
+      border-radius: var(--radius-md);
+    }
+    .reg-benefit-item span.icon {
+      font-size: 1.2rem;
+      line-height: 1;
+    }
+    .reg-benefit-item strong {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--text-main);
+    }
+    .reg-benefit-item p {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    @media (max-width: 900px) {
+      .auth-page-wrapper {
+        grid-template-columns: 1fr;
+        max-width: 520px;
+      }
+      .auth-hero-pane {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body data-theme="dark" class="auth-page">
+
+  <!-- TOP AUTH NAVIGATION: Explicit separation of Login vs Register -->
+  <nav class="auth-top-nav">
+    <div class="auth-top-left">
+      <a href="index.html" class="auth-brand-link">
+        <div class="logo-badge sm" style="background:linear-gradient(135deg,var(--coral-primary),#f97316)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <span class="brand-title">Transforma<span class="hl-cyan">UMKM</span></span>
+      </a>
+      <span class="auth-page-tag" style="border-color:rgba(255,107,53,0.3); background:rgba(255,107,53,0.1); color:var(--coral-primary);">📝 Khusus Halaman Buat Akun (Register)</span>
+    </div>
+    <div class="auth-top-right">
+      <div class="auth-nav-pill-group">
+        <a href="login.html" class="auth-nav-pill">🔑 Masuk (Login)</a>
+        <a href="register.html" class="auth-nav-pill active-register">📝 Buat Akun (Register)</a>
+      </div>
+      <a href="index.html" class="btn btn-sm btn-ghost">📊 Buka Dashboard &rarr;</a>
+    </div>
+  </nav>
+
+  <div class="auth-bg-glow glow-top" style="background:var(--coral-primary)"></div>
+  <div class="auth-bg-glow glow-bottom" style="background:var(--cyan-primary)"></div>
+  <div class="auth-grid-overlay"></div>
+
+  <div class="auth-page-wrapper">
+    <!-- LEFT: BENEFIT SHOWCASE -->
+    <div class="auth-hero-pane">
+      <div class="auth-page-badge">
+        <span>REGISTRASI UMKM GRATIS</span>
+      </div>
+      <div class="auth-hero-logo">
+        <div class="logo-badge lg" style="background:linear-gradient(135deg,var(--coral-primary),#f97316)">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <span class="auth-hero-title">Transforma<span class="hl-cyan">UMKM</span></span>
+      </div>
+      <h1 class="auth-hero-heading">
+        Mulai Transformasi Digital<br/>
+        <span class="hl-gradient">Toko Anda Sekarang</span>
+      </h1>
+      <p class="auth-hero-sub">
+        Daftarkan usaha Anda dalam hitungan detik. Nikmati sistem kasir POS, katalog digital mandiri, dan analitik bisnis 100% tanpa potongan komisi.
+      </p>
+
+      <div class="reg-benefit-list">
+        <div class="reg-benefit-item">
+          <span class="icon">&#128176;</span>
+          <div>
+            <strong>0% Biaya Komisi Transaksi</strong>
+            <p>Berbeda dari e-commerce konvensional, seluruh omzet penjualan adalah milik Anda sepenuhnya.</p>
+          </div>
+        </div>
+        <div class="reg-benefit-item">
+          <span class="icon">&#128241;</span>
+          <div>
+            <strong>Katalog Online Siap Pakai</strong>
+            <p>Otomatis mendapatkan website mini storefront yang bisa dibagikan langsung ke pelanggan.</p>
+          </div>
+        </div>
+        <div class="reg-benefit-item">
+          <span class="icon">&#128274;</span>
+          <div>
+            <strong>Data Tersimpan Aman &amp; Privat</strong>
+            <p>Seluruh basis data inventori dan keuangan tersimpan aman di perangkat Anda.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: DEDICATED REGISTRATION FORM CARD -->
+    <div class="auth-page-card">
+      <div class="auth-page-header">
+        <div class="auth-page-badge">
+          <span>BUAT AKUN BARU</span>
+        </div>
+        <h2>Pendaftaran Akun UMKM</h2>
+        <p>Lengkapi formulir di bawah ini untuk membuka akses dashboard usaha Anda.</p>
+      </div>
+
+      <!-- DEDICATED REGISTER FORM -->
+      <form id="standaloneRegisterForm" onsubmit="handleRegisterSubmit(event)">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="regOwnerName" class="form-label">Nama Pemilik Usaha <span class="req">*</span></label>
+            <input type="text" id="regOwnerName" class="form-input" required placeholder="Contoh: Hendra Wijaya" />
+          </div>
+
+          <div class="form-group">
+            <label for="regBusinessName" class="form-label">Nama Toko / UMKM <span class="req">*</span></label>
+            <input type="text" id="regBusinessName" class="form-input" required placeholder="Contoh: Kopi Nusantara" />
+          </div>
+
+          <div class="form-group">
+            <label for="regCategory" class="form-label">Kategori Usaha <span class="req">*</span></label>
+            <select id="regCategory" class="form-input" required>
+              <option value="Kuliner & F&B">Kuliner &amp; Minuman (F&B)</option>
+              <option value="Retail & Toko Kelontong">Retail &amp; Toko Kelontong</option>
+              <option value="Fashion & Kerajinan">Fashion &amp; Kerajinan Lokal</option>
+              <option value="Bahan Pokok & Sembako">Bahan Pokok &amp; Sembako</option>
+              <option value="Jasa & Agribisnis">Jasa &amp; Agribisnis</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="regPhone" class="form-label">Nomor WhatsApp Aktif <span class="req">*</span></label>
+            <input type="tel" id="regPhone" class="form-input" required placeholder="081234567890" />
+          </div>
+
+          <div class="form-group full">
+            <label for="regEmail" class="form-label">Email Usaha <span class="req">*</span></label>
+            <input type="email" id="regEmail" class="form-input" required placeholder="toko@nusantara.id" />
+          </div>
+
+          <div class="form-group">
+            <label for="regPassword" class="form-label">Kata Sandi <span class="req">*</span></label>
+            <input type="password" id="regPassword" class="form-input" required placeholder="Min. 6 karakter" minlength="6" />
+          </div>
+
+          <div class="form-group">
+            <label for="regConfirmPassword" class="form-label">Ulangi Kata Sandi <span class="req">*</span></label>
+            <input type="password" id="regConfirmPassword" class="form-input" required placeholder="Ulangi kata sandi" minlength="6" />
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-smart btn-block btn-lg mt-3" id="btnRegisterSubmit">
+          <span>Daftarkan Akun &amp; Buka Dashboard</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </form>
+
+      <!-- SEPARATED LINK TO LOGIN PAGE -->
+      <div class="auth-switch-box" style="flex-direction: column; text-align: center; gap: 0.65rem; background: rgba(255,255,255,0.02); padding: 1rem; border-radius: var(--radius-md); border: 1px dashed var(--border-color);">
+        <span style="font-size: 0.85rem; color: var(--text-muted);">Sudah memiliki akun usaha? Halaman login terpisah:</span>
+        <a href="login.html" class="btn btn-primary btn-block" style="text-decoration: none;">
+          <span>🔑 Buka Halaman Masuk (Login) &rarr;</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script>
+    const STORAGE_KEY_AUTH = 'transforma_umkm_session';
+
+    function showToast(msg, type = 'info') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.innerHTML = `<span>⚡</span><span>${msg}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(10px)';
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    function handleRegisterSubmit(e) {
+      e.preventDefault();
+      const ownerName = document.getElementById('regOwnerName').value.trim();
+      const businessName = document.getElementById('regBusinessName').value.trim();
+      const category = document.getElementById('regCategory').value;
+      const phone = document.getElementById('regPhone').value.trim();
+      const email = document.getElementById('regEmail').value.trim();
+      const password = document.getElementById('regPassword').value;
+      const confirmPassword = document.getElementById('regConfirmPassword').value;
+
+      if (password !== confirmPassword) {
+        showToast('Konfirmasi kata sandi tidak cocok!');
+        return;
+      }
+
+      const user = {
+        name: ownerName,
+        role: 'owner',
+        roleLabel: 'Owner (Pemilik)',
+        email: email,
+        storeName: businessName,
+        phone: phone,
+        category: category
+      };
+
+      localStorage.setItem(STORAGE_KEY_AUTH, JSON.stringify(user));
+      showToast(`Pendaftaran berhasil! Mengalihkan ke Dashboard...`);
+      setTimeout(() => {
+        window.location.href = 'index.html';
+      }, 500);
+    }
+  </script>
+</body>
+</html>

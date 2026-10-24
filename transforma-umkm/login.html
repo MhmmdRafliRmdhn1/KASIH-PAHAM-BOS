@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Masuk ke TransformaUMKM — Platform Operasi Digital Bisnis & UMKM Indonesia." />
+  <title>Masuk (Login) — TransformaUMKM | GTNIC 2026</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body.auth-page {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-primary);
+      padding: 5.5rem 1.5rem 2rem 1.5rem;
+      position: relative;
+      overflow-x: hidden;
+    }
+    .auth-page-wrapper {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 1050px;
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+    }
+    .auth-page-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      box-shadow: 0 25px 70px -10px rgba(0, 0, 0, 0.7), 0 0 25px rgba(0, 212, 255, 0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+    .auth-page-header {
+      margin-bottom: 0.5rem;
+    }
+    .auth-page-header h2 {
+      font-size: 1.45rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 0.35rem;
+    }
+    .auth-page-header p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    .auth-page-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(0, 212, 255, 0.12);
+      border: 1px solid rgba(0, 212, 255, 0.3);
+      padding: 3px 10px;
+      border-radius: var(--radius-full);
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--cyan-primary);
+      margin-bottom: 0.75rem;
+    }
+    .auth-switch-box {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border-color);
+    }
+    .auth-switch-box a {
+      color: var(--cyan-primary);
+      font-weight: 700;
+      text-decoration: none;
+    }
+    .auth-switch-box a:hover {
+      text-decoration: underline;
+    }
+    @media (max-width: 900px) {
+      .auth-page-wrapper {
+        grid-template-columns: 1fr;
+        max-width: 480px;
+      }
+      .auth-hero-pane {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body data-theme="dark" class="auth-page">
+
+  <!-- TOP AUTH NAVIGATION: Explicit separation of Login vs Register -->
+  <nav class="auth-top-nav">
+    <div class="auth-top-left">
+      <a href="index.html" class="auth-brand-link">
+        <div class="logo-badge sm">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <span class="brand-title">Transforma<span class="hl-cyan">UMKM</span></span>
+      </a>
+      <span class="auth-page-tag">🔑 Khusus Halaman Masuk (Login)</span>
+    </div>
+    <div class="auth-top-right">
+      <div class="auth-nav-pill-group">
+        <a href="login.html" class="auth-nav-pill active">🔑 Masuk (Login)</a>
+        <a href="register.html" class="auth-nav-pill">📝 Buat Akun (Register)</a>
+      </div>
+      <a href="index.html" class="btn btn-sm btn-ghost">📊 Buka Dashboard &rarr;</a>
+    </div>
+  </nav>
+
+  <div class="auth-bg-glow glow-top"></div>
+  <div class="auth-bg-glow glow-bottom"></div>
+  <div class="auth-grid-overlay"></div>
+
+  <div class="auth-page-wrapper">
+    <!-- LEFT HERO SHOWCASE -->
+    <div class="auth-hero-pane">
+      <div class="auth-hero-badge">
+        <span class="badge-dot-cyan"></span>
+        <span>GTNIC 2026 &bull; Web Development Track</span>
+      </div>
+      <div class="auth-hero-logo">
+        <div class="logo-badge lg">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <span class="auth-hero-title">Transforma<span class="hl-cyan">UMKM</span></span>
+      </div>
+      <h1 class="auth-hero-heading">
+        Masuk ke Portal Operasional<br/>
+        <span class="hl-gradient">Bisnis &amp; UMKM Digital</span>
+      </h1>
+      <p class="auth-hero-sub">
+        Solusi terpadu kasir kilat POS, otomatisasi inventori, analitik laba bersih real-time, dan CRM WhatsApp tanpa biaya langganan bulanan.
+      </p>
+
+      <div class="auth-feature-list">
+        <div class="af-item">
+          <div class="af-icon">&#9889;</div>
+          <div>
+            <strong>Smart Kasir &amp; POS Kilat</strong>
+            <p>Transaksi cepat, kalkulator diskon, dan struk digital WhatsApp.</p>
+          </div>
+        </div>
+        <div class="af-item">
+          <div class="af-icon">&#128230;</div>
+          <div>
+            <strong>Inventori &amp; Safety Stock Alert</strong>
+            <p>Peringatan dini stok habis &amp; draf pesanan supplier via WA.</p>
+          </div>
+        </div>
+        <div class="af-item">
+          <div class="af-icon">&#128202;</div>
+          <div>
+            <strong>Executive Business Dashboard</strong>
+            <p>Monitoring omzet, laba bersih (HPP vs Jual), dan tren penjualan 7 hari.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="auth-hero-quote">
+        <em>&ldquo;Build something that solves a real problem.&rdquo;</em>
+        <small>&mdash; Panduan Resmi GTNIC 2026</small>
+      </div>
+    </div>
+
+    <!-- RIGHT: DEDICATED LOGIN FORM CARD -->
+    <div class="auth-page-card">
+      <div class="auth-page-header">
+        <div class="auth-page-badge">
+          <span>PORTAL LOGIN UMKM</span>
+        </div>
+        <h2>Masuk ke Akun Usaha</h2>
+        <p>Silakan masukkan kredensial akun toko Anda untuk melanjutkan ke dashboard.</p>
+      </div>
+
+      <!-- QUICK DEMO PRESETS FOR JURY / EXAMINER -->
+      <div class="demo-preset-card">
+        <div class="dpc-header">
+          <span>⚡ Akses Cepat Akun Demo (Untuk Penguji / Juri):</span>
+        </div>
+        <div class="dpc-buttons">
+          <button type="button" class="btn-demo-preset owner" onclick="quickFillLogin('owner')">
+            <span>👑 Masuk sebagai Pemilik UMKM (Owner)</span>
+          </button>
+          <button type="button" class="btn-demo-preset cashier" onclick="quickFillLogin('cashier')">
+            <span>🛒 Masuk sebagai Staf Kasir (Cashier)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- DEDICATED LOGIN FORM -->
+      <form id="standaloneLoginForm" onsubmit="handleLoginSubmit(event)">
+        <div class="form-group">
+          <label for="loginEmail" class="form-label">Email atau Nama Pengguna <span class="req">*</span></label>
+          <div class="input-with-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="currentColor" stroke-width="2"/><polyline points="22,6 12,13 2,6" stroke="currentColor" stroke-width="2"/></svg>
+            <input type="text" id="loginEmail" class="form-input" required placeholder="owner@nusantara.id" value="owner@nusantara.id" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="label-row-between">
+            <label for="loginPassword" class="form-label">Kata Sandi (Password) <span class="req">*</span></label>
+            <a href="javascript:void(0)" onclick="alert('Petunjuk: Gunakan kata sandi demo: demo1234')" class="form-link-small">Lupa kata sandi?</a>
+          </div>
+          <div class="input-with-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="11" width="18" height="11" rx="2" stroke="currentColor" stroke-width="2"/><path d="M7 11V7a5 5 0 0110 0v4" stroke="currentColor" stroke-width="2"/></svg>
+            <input type="password" id="loginPassword" class="form-input" required placeholder="••••••••" value="demo1234" />
+          </div>
+        </div>
+
+        <div class="form-group-checkbox">
+          <label class="custom-checkbox-label">
+            <input type="checkbox" id="loginRemember" checked />
+            <span>Ingat sesi masuk saya di perangkat ini</span>
+          </label>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block btn-lg" id="btnLoginSubmit">
+          <span>Masuk ke Dashboard</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </form>
+
+      <!-- SEPARATED LINK TO REGISTER PAGE -->
+      <div class="auth-switch-box" style="flex-direction: column; text-align: center; gap: 0.65rem; background: rgba(255,255,255,0.02); padding: 1rem; border-radius: var(--radius-md); border: 1px dashed var(--border-color);">
+        <span style="font-size: 0.85rem; color: var(--text-muted);">Belum memiliki akun usaha? Halaman pendaftaran terpisah:</span>
+        <a href="register.html" class="btn btn-smart btn-block" style="text-decoration: none;">
+          <span>📝 Buka Halaman Buat Akun UMKM &rarr;</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script>
+    const STORAGE_KEY_AUTH = 'transforma_umkm_session';
+
+    function showToast(msg) {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.innerHTML = `<span>⚡</span><span>${msg}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(10px)';
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    function quickFillLogin(role) {
+      const emailInput = document.getElementById('loginEmail');
+      const passInput = document.getElementById('loginPassword');
+      if (role === 'owner') {
+        emailInput.value = 'owner@nusantara.id';
+        passInput.value = 'demo1234';
+        showToast('Kredensial Pemilik UMKM (Owner) terisi otomatis!');
+      } else {
+        emailInput.value = 'kasir@nusantara.id';
+        passInput.value = 'demo1234';
+        showToast('Kredensial Staf Kasir (Cashier) terisi otomatis!');
+      }
+    }
+
+    function handleLoginSubmit(e) {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value.trim();
+      const remember = document.getElementById('loginRemember').checked;
+
+      let user;
+      if (email.toLowerCase().includes('kasir')) {
+        user = {
+          name: 'Siti Rahma',
+          role: 'cashier',
+          roleLabel: 'Kasir Toko',
+          email: email,
+          storeName: 'Kopi & Ritel Nusantara',
+          category: 'Retail'
+        };
+      } else {
+        user = {
+          name: 'Hendra Wijaya',
+          role: 'owner',
+          roleLabel: 'Owner (Pemilik)',
+          email: email || 'owner@nusantara.id',
+          storeName: 'Kopi & Ritel Nusantara',
+          category: 'Kuliner & F&B'
+        };
+      }
+
+      if (remember) {
+        localStorage.setItem(STORAGE_KEY_AUTH, JSON.stringify(user));
+      } else {
+        sessionStorage.setItem(STORAGE_KEY_AUTH, JSON.stringify(user));
+      }
+
+      showToast(`Login berhasil! Mengalihkan ke Dashboard...`);
+      setTimeout(() => {
+        window.location.href = 'index.html';
+      }, 500);
+    }
+  </script>
+</body>
+</html>
