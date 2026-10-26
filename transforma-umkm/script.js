@@ -148,7 +148,6 @@ let lastCompletedTrx = null;
 let currentPosCategory = 'all';
 let currentInvFilter = 'all';
 let currentUser = null;
-let isMobileSimulatorActive = false;
 
 // ========================================================
 // INITIALIZATION
@@ -156,7 +155,7 @@ let isMobileSimulatorActive = false;
 document.addEventListener('DOMContentLoaded', () => {
   initStorage();
   initAuth();
-  initMobileSimulator();
+  initMobileNav();
   initTheme();
   initClock();
   initNav();
@@ -1650,53 +1649,16 @@ function handleMobileAccountClick() {
 }
 
 // ========================================================
-// 10. MOBILE DEVICE SIMULATOR (SMARTPHONE VIEW TOGGLE)
+// 10. RESPONSIVE MOBILE NAVIGATION
 // ========================================================
-function initMobileSimulator() {
-  // Mobile Bottom Navigation Tabs Event Listeners
+function initMobileNav() {
+  // Mobile Bottom Navigation Tabs Event Listeners (for actual mobile screens)
   document.querySelectorAll('#mobileBottomNav .mob-nav-btn[data-tab]').forEach(btn => {
     btn.addEventListener('click', () => {
       const tab = btn.getAttribute('data-tab');
       switchTab(tab);
     });
   });
-
-  // Sync Phone Status Bar Clock
-  function updatePhoneClock() {
-    const timeEl = document.getElementById('phoneStatusTime');
-    if (timeEl) {
-      const now = new Date();
-      timeEl.textContent = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
-    }
-  }
-  updatePhoneClock();
-  setInterval(updatePhoneClock, 1000);
-}
-
-function toggleMobileSimulator() {
-  isMobileSimulatorActive = !isMobileSimulatorActive;
-  document.body.classList.toggle('mobile-mode-active', isMobileSimulatorActive);
-
-  const toggleBtn = document.getElementById('btnToggleMobileMode');
-  const icon = document.getElementById('deviceToggleIcon');
-  const text = document.getElementById('mobileToggleText');
-
-  if (toggleBtn) toggleBtn.classList.toggle('active', isMobileSimulatorActive);
-  if (icon) icon.textContent = isMobileSimulatorActive ? '💻' : '📱';
-  if (text) text.textContent = isMobileSimulatorActive ? 'Mode Desktop' : 'Mode Mobile';
-
-  // Redraw Canvas Charts smoothly after transition
-  setTimeout(() => {
-    renderSalesTrendChart();
-    renderCategoryDonutChart();
-  }, 350);
-
-  showToast(
-    isMobileSimulatorActive
-      ? '📱 Tampilan Smartphone Simulator diaktifkan! Pengalaman mobile app live.'
-      : '💻 Kembali ke Tampilan Desktop Penuh.',
-    'info'
-  );
 }
 
 // Modal generic helpers
