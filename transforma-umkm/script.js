@@ -17,6 +17,7 @@ const DEFAULT_USER = {
   roleLabel: 'Owner (Pemilik)',
   email: 'owner@nusantara.id',
   storeName: 'Kopi & Ritel Nusantara',
+  phone: '081234567890',
   category: 'Kuliner & F&B'
 };
 
@@ -154,8 +155,14 @@ let currentUser = null;
 // ========================================================
 document.addEventListener('DOMContentLoaded', () => {
   initStorage();
+<<<<<<< HEAD
   initAuth();
   initMobileNav();
+=======
+  const isAuthenticated = initAuth();
+  if (!isAuthenticated) return;
+  initMobileSimulator();
+>>>>>>> 3e55df8b838c39b664178cdf4101f2d6ec3eedd8
   initTheme();
   initClock();
   initNav();
@@ -338,6 +345,60 @@ function showToast(msg, type = 'info') {
 function formatRupiah(num) {
   return 'Rp ' + Number(num || 0).toLocaleString('id-ID');
 }
+// ========================================================
+// SECURITY & DATA NORMALIZATION HELPERS
+// ========================================================
+function escapeHtml(val) {
+  if (val === null || val === undefined) return '';
+  return String(val).replace(/[&<>"']/g, m => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  })[m]);
+}
+
+function normalizeIndonesianPhone(rawPhone) {
+  if (!rawPhone || typeof rawPhone !== 'string') return null;
+  let digits = rawPhone.replace(/\D/g, '');
+  if (!digits) return null;
+  if (digits.startsWith('62')) {
+    if (digits.length < 10 || digits.length > 15) return null;
+    return digits;
+  }
+  if (digits.startsWith('0')) {
+    digits = '62' + digits.slice(1);
+    if (digits.length < 10 || digits.length > 15) return null;
+    return digits;
+  }
+  if (digits.startsWith('8')) {
+    digits = '62' + digits;
+    if (digits.length < 10 || digits.length > 15) return null;
+    return digits;
+  }
+  return null;
+}
+
+function extractIndonesianPhone(text) {
+  if (!text || typeof text !== 'string') return null;
+  const match = text.match(/(\+?62|08|8)[0-9\s-]{7,16}/);
+  if (match) {
+    return normalizeIndonesianPhone(match[0]);
+  }
+  return null;
+}
+
+function getWhatsAppUrl(rawPhone, message = '') {
+  const textParam = message ? `?text=${encodeURIComponent(message)}` : '';
+  if (!rawPhone) {
+    return `https://wa.me/${textParam}`;
+  }
+  const normalized = normalizeIndonesianPhone(rawPhone);
+  if (!normalized) return null;
+  return `https://wa.me/${normalized}${textParam}`;
+}
+
 
 // ========================================================
 // RENDER ALL VIEWS
@@ -410,7 +471,7 @@ function renderSmartInsight(lowStockProds) {
 
   if (lowStockProds.length > 0) {
     const worst = lowStockProds[0];
-    insightText.innerHTML = `⚠️ <strong>TransformaAI Smart Restock:</strong> Stok produk <strong>${worst.name}</strong> tersisa <strong>${worst.stock} unit</strong> (di bawah ambang ${worst.minStock}). AI menyarankan restock segera ke supplier.`;
+    insightText.innerHTML = `⚠️ <strong>TransformaAI Smart Restock:</strong> Stok produk <strong>${escapeHtml(worst.name)}</strong> tersisa <strong>${worst.stock} unit</strong> (di bawah ambang ${worst.minStock}). AI menyarankan restock segera ke supplier.`;
     insightAction.textContent = 'Buka Saran Stok AI →';
     insightAction.onclick = () => {
       switchTab('ai-assistant');
@@ -440,17 +501,21 @@ function renderRecentTransactionsTable() {
     const totalItems = t.items.reduce((sum, i) => sum + i.qty, 0);
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td><strong>${t.id}</strong></td>
-      <td>${t.date} ${t.time || ''}</td>
-      <td>${t.customerName || 'Umum'}</td>
-      <td><span class="status-badge cyan">${t.method}</span></td>
+      <td><strong>${escapeHtml(t.id)}</strong></td>
+      <td>${escapeHtml(t.date)} ${escapeHtml(t.time || '')}</td>
+      <td>${escapeHtml(t.customerName || 'Umum')}</td>
+      <td><span class="status-badge cyan">${escapeHtml(t.method)}</span></td>
       <td>${totalItems} item</td>
       <td><strong style="color:var(--cyan-primary);">${formatRupiah(t.grandTotal)}</strong></td>
-      <td><span class="status-badge success">${t.status}</span></td>
+      <td><span class="status-badge success">${escapeHtml(t.status)}</span></td>
       <td>
-        <button class="btn btn-xs btn-outline-cyan" onclick="showReceiptModalById('${t.id}')">Struk</button>
+        <button type="button" class="btn btn-xs btn-outline-cyan btn-struk-action">Struk</button>
       </td>
     `;
+    const btnStruk = tr.querySelector('.btn-struk-action');
+    if (btnStruk) {
+      btnStruk.onclick = () => showReceiptModalById(t.id);
+    }
     tbody.appendChild(tr);
   });
 }
@@ -668,10 +733,10 @@ function renderPosCatalog() {
 
     card.innerHTML = `
       <span class="prod-badge-stock ${badgeClass}">${badgeText}</span>
-      <span class="prod-icon-large">${p.icon || '📦'}</span>
+      <span class="prod-icon-large">${escapeHtml(p.icon || '📦')}</span>
       <div>
-        <div class="prod-name">${p.name}</div>
-        <div class="prod-sku">${p.sku}</div>
+        <div class="prod-name">${escapeHtml(p.name)}</div>
+        <div class="prod-sku">${escapeHtml(p.sku)}</div>
       </div>
       <div class="prod-price">${formatRupiah(p.sellPrice)}</div>
     `;
@@ -788,16 +853,20 @@ function renderPosCart() {
     row.className = 'cart-item-row';
     row.innerHTML = `
       <div class="cir-left">
-        <div class="cir-name">${item.name}</div>
+        <div class="cir-name">${escapeHtml(item.name)}</div>
         <div class="cir-price">${formatRupiah(item.price)}</div>
       </div>
       <div class="cir-qty-ctrl">
-        <button class="qty-btn" onclick="updateCartQty('${item.id}', -1)">-</button>
+        <button type="button" class="qty-btn btn-qty-minus">-</button>
         <span class="cir-qty-num">${item.qty}</span>
-        <button class="qty-btn" onclick="updateCartQty('${item.id}', 1)">+</button>
+        <button type="button" class="qty-btn btn-qty-plus">+</button>
       </div>
       <div class="cir-total">${formatRupiah(itemTotal)}</div>
     `;
+    const btnMinus = row.querySelector('.btn-qty-minus');
+    const btnPlus = row.querySelector('.btn-qty-plus');
+    if (btnMinus) btnMinus.onclick = () => updateCartQty(item.id, -1);
+    if (btnPlus) btnPlus.onclick = () => updateCartQty(item.id, 1);
     list.appendChild(row);
   });
 
@@ -1039,7 +1108,7 @@ function showReceiptModal(trx) {
     const div = document.createElement('div');
     div.className = 'rc-row';
     div.innerHTML = `
-      <span>${it.name} x${it.qty}</span>
+      <span>${escapeHtml(it.name)} x${it.qty}</span>
       <span>${formatRupiah(it.price * it.qty)}</span>
     `;
     itemsContainer.appendChild(div);
@@ -1093,9 +1162,18 @@ function sendReceiptViaWhatsApp() {
   msg += `*TOTAL BAYAR: ${formatRupiah(trx.grandTotal)}* (${trx.method})\n\n`;
   msg += `Terima kasih telah berbelanja di UMKM kami! 🙏`;
 
-  const phone = trx.customerPhone ? trx.customerPhone.replace(/\D/g, '') : '';
-  const waUrl = phone ? `https://wa.me/${phone}?text=${encodeURIComponent(msg)}` : `https://wa.me/?text=${encodeURIComponent(msg)}`;
-  window.open(waUrl, '_blank');
+  const phone = trx.customerPhone || '';
+  if (phone) {
+    const waUrl = getWhatsAppUrl(phone, msg);
+    if (waUrl) {
+      window.open(waUrl, '_blank');
+    } else {
+      showToast('Nomor WhatsApp pelanggan tidak valid (format: 08xx / 628xx)!', 'warning');
+    }
+  } else {
+    // Pelanggan umum/guest tanpa nomor telepon: buka share unaddressed
+    window.open(getWhatsAppUrl('', msg), '_blank');
+  }
 }
 
 // ========================================================
@@ -1147,14 +1225,14 @@ function renderInventoryTable() {
     tr.innerHTML = `
       <td>
         <div style="display:flex;align-items:center;gap:0.5rem;">
-          <span style="font-size:1.3rem;">${p.icon || '📦'}</span>
+          <span style="font-size:1.3rem;">${escapeHtml(p.icon || '📦')}</span>
           <div>
-            <strong>${p.name}</strong><br/>
-            <small style="font-family:var(--font-mono);color:var(--text-subtle);">${p.sku}</small>
+            <strong>${escapeHtml(p.name)}</strong><br/>
+            <small style="font-family:var(--font-mono);color:var(--text-subtle);">${escapeHtml(p.sku)}</small>
           </div>
         </div>
       </td>
-      <td>${p.category}</td>
+      <td>${escapeHtml(p.category)}</td>
       <td style="font-family:var(--font-mono);">${formatRupiah(p.costPrice)}</td>
       <td style="font-family:var(--font-mono);color:var(--cyan-primary);"><strong>${formatRupiah(p.sellPrice)}</strong></td>
       <td><small style="color:var(--emerald-primary);font-weight:700;">+${marginPct}%</small></td>
@@ -1162,14 +1240,18 @@ function renderInventoryTable() {
         <strong style="font-family:var(--font-mono);">${p.stock}</strong> / <small style="color:var(--text-subtle);">${p.minStock}</small>
       </td>
       <td>${statusBadge}</td>
-      <td><small style="color:var(--text-muted);">${p.supplier || '-'}</small></td>
+      <td><small style="color:var(--text-muted);">${escapeHtml(p.supplier || '-')}</small></td>
       <td>
         <div style="display:flex;gap:0.35rem;">
-          <button class="btn btn-xs btn-outline-cyan" onclick="openEditProductModal('${p.id}')">Edit</button>
-          <button class="btn btn-xs btn-ghost-danger" onclick="deleteProduct('${p.id}')">Hapus</button>
+          <button type="button" class="btn btn-xs btn-outline-cyan btn-edit-prod">Edit</button>
+          <button type="button" class="btn btn-xs btn-ghost-danger btn-del-prod">Hapus</button>
         </div>
       </td>
     `;
+    const btnEdit = tr.querySelector('.btn-edit-prod');
+    const btnDel = tr.querySelector('.btn-del-prod');
+    if (btnEdit) btnEdit.onclick = () => openEditProductModal(p.id);
+    if (btnDel) btnDel.onclick = () => deleteProduct(p.id);
     tbody.appendChild(tr);
   });
 }
@@ -1299,7 +1381,7 @@ function generateAutoRestockOrders() {
   }
 
   let poMsg = `*SURAT PESANAN RESTOCK (PURCHASE ORDER)*\n`;
-  poMsg += `Toko: Transforma UMKM (Kopi & Ritel)\n`;
+  poMsg += `Toko: ${(currentUser && currentUser.storeName) || 'Transforma UMKM'}\n`;
   poMsg += `Tanggal: ${new Date().toLocaleDateString('id-ID')}\n`;
   poMsg += `------------------------------------\n`;
   poMsg += `Mohon dipersiapkan barang restock berikut:\n`;
@@ -1315,7 +1397,7 @@ function generateAutoRestockOrders() {
   poMsg += `------------------------------------\n`;
   poMsg += `Harap konfirmasi ketersediaan dan total tagihan. Terima kasih!`;
 
-  const waUrl = `https://wa.me/?text=${encodeURIComponent(poMsg)}`;
+  const waUrl = getWhatsAppUrl('', poMsg);
   window.open(waUrl, '_blank');
   showToast('Draft Purchase Order WhatsApp siap dikirimkan!', 'success');
 }
@@ -1352,24 +1434,32 @@ function renderCrmTable() {
       ? '<span class="status-badge" style="background:rgba(168,85,247,0.2);color:#c084fc;">⭐ VIP Member</span>'
       : '<span class="status-badge" style="background:rgba(255,255,255,0.05);color:var(--text-muted);">Regular</span>';
 
-    const cleanPhone = c.phone.replace(/\D/g, '');
-    const waText = encodeURIComponent(`Halo ${c.name}, terima kasih telah menjadi pelanggan setia Transforma UMKM! Anda memiliki ${c.points} poin loyalitas yang dapat ditukar dengan voucher diskon belanja.`);
-    const waLink = `https://wa.me/${cleanPhone.startsWith('0') ? '62' + cleanPhone.slice(1) : cleanPhone}?text=${waText}`;
-
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td><strong>${c.name}</strong><br/><small style="color:var(--text-subtle);">${c.notes || '-'}</small></td>
-      <td style="font-family:var(--font-mono);">${c.phone}</td>
+      <td><strong>${escapeHtml(c.name)}</strong><br/><small style="color:var(--text-subtle);">${escapeHtml(c.notes || '-')}</small></td>
+      <td style="font-family:var(--font-mono);">${escapeHtml(c.phone)}</td>
       <td>${segmentBadge}</td>
       <td style="font-family:var(--font-mono);color:var(--cyan-primary);">${formatRupiah(c.totalSpent)}</td>
       <td style="font-family:var(--font-mono);font-weight:700;">${c.points} pts</td>
-      <td><small style="color:var(--text-subtle);">${c.lastVisit || '-'}</small></td>
+      <td><small style="color:var(--text-subtle);">${escapeHtml(c.lastVisit || '-')}</small></td>
       <td>
-        <a href="${waLink}" target="_blank" class="btn btn-xs btn-smart" style="text-decoration:none;">
+        <button type="button" class="btn btn-xs btn-smart btn-crm-chat" style="text-decoration:none;">
           <span>💬 Chat WA</span>
-        </a>
+        </button>
       </td>
     `;
+    const chatBtn = tr.querySelector('.btn-crm-chat');
+    if (chatBtn) {
+      chatBtn.onclick = () => {
+        const waText = `Halo ${c.name}, terima kasih telah menjadi pelanggan setia Transforma UMKM! Anda memiliki ${c.points} poin loyalitas yang dapat ditukar dengan voucher diskon belanja.`;
+        const waUrl = getWhatsAppUrl(c.phone, waText);
+        if (waUrl) {
+          window.open(waUrl, '_blank');
+        } else {
+          showToast('Nomor WhatsApp pelanggan tidak valid (format: 08xx / 628xx)!', 'warning');
+        }
+      };
+    }
     tbody.appendChild(tr);
   });
 }
@@ -1389,6 +1479,11 @@ function handleCustomerFormSubmit(e) {
   const name = document.getElementById('custName').value.trim();
   const phone = document.getElementById('custPhone').value.trim();
   const notes = document.getElementById('custNotes').value.trim();
+
+  if (!normalizeIndonesianPhone(phone)) {
+    showToast('Format nomor telepon pelanggan tidak valid (contoh: 08123456789 atau +628123456789)!', 'warning');
+    return;
+  }
 
   const newCust = {
     id: 'cust-' + Date.now().toString().slice(-6),
@@ -1461,16 +1556,20 @@ function renderPublicStorefront() {
     card.className = 'public-product-card';
     card.innerHTML = `
       <div>
-        <div class="pub-prod-icon">${p.icon || '📦'}</div>
-        <div class="pub-prod-name">${p.name}</div>
-        <div class="pub-prod-cat">${p.category} &bull; Stok: ${p.stock}</div>
-        ${p.description ? `<p style="font-size:0.75rem;color:var(--text-subtle);margin-top:0.4rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.35;">${p.description}</p>` : ''}
+        <div class="pub-prod-icon">${escapeHtml(p.icon || '📦')}</div>
+        <div class="pub-prod-name">${escapeHtml(p.name)}</div>
+        <div class="pub-prod-cat">${escapeHtml(p.category)} &bull; Stok: ${p.stock}</div>
+        ${p.description ? `<p style="font-size:0.75rem;color:var(--text-subtle);margin-top:0.4rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.35;">${escapeHtml(p.description)}</p>` : ''}
       </div>
       <div class="pub-prod-bottom">
         <div class="pub-prod-price">${formatRupiah(p.sellPrice)}</div>
-        <button class="btn btn-xs btn-outline-cyan" onclick="orderViaWhatsApp('${p.id}')">Pesan via WA</button>
+        <button type="button" class="btn btn-xs btn-outline-cyan btn-order-wa">Pesan via WA</button>
       </div>
     `;
+    const btnOrder = card.querySelector('.btn-order-wa');
+    if (btnOrder) {
+      btnOrder.onclick = () => orderViaWhatsApp(p.id);
+    }
     grid.appendChild(card);
   });
 }
@@ -1486,8 +1585,16 @@ document.querySelectorAll('#pubCategoryFilters .store-tab').forEach(tab => {
 function orderViaWhatsApp(productId) {
   const p = products.find(x => x.id === productId);
   if (!p) return;
-  const msg = `Halo Transforma UMKM! Saya ingin memesan *${p.name}* seharga ${formatRupiah(p.sellPrice)}. Apakah stok masih tersedia?`;
-  window.open(`https://wa.me/6281234567890?text=${encodeURIComponent(msg)}`, '_blank');
+  const storeName = (currentUser && currentUser.storeName) || 'Transforma UMKM';
+  const storePhone = (currentUser && currentUser.phone) || (DEFAULT_USER && DEFAULT_USER.phone) || '081234567890';
+  const msg = `Halo ${storeName}! Saya ingin memesan *${p.name}* seharga ${formatRupiah(p.sellPrice)}. Apakah stok masih tersedia?`;
+  
+  const waUrl = getWhatsAppUrl(storePhone, msg);
+  if (waUrl) {
+    window.open(waUrl, '_blank');
+  } else {
+    showToast('Nomor WhatsApp toko tidak valid. Silakan periksa profil akun toko.', 'warning');
+  }
 }
 
 function copyStorefrontLink() {
@@ -1545,6 +1652,9 @@ function updateAlertBadges() {
 // ========================================================
 // 9. AUTHENTICATION & USER SESSION (LOGIN & REGISTRASI)
 // ========================================================
+// Catatan: Sesi autentikasi disimpan pada client-side Storage (localStorage/sessionStorage)
+// untuk keperluan purwarupa (prototype) standalone offline-first.
+// Pada fase produksi penuh, verifikasi token JWT/session harus dikelola oleh backend server.
 function initAuth() {
   const savedSession = localStorage.getItem(STORAGE_KEY_AUTH) || sessionStorage.getItem(STORAGE_KEY_AUTH);
   if (savedSession) {
@@ -1555,19 +1665,13 @@ function initAuth() {
     }
   }
 
-  // If no session exists, initialize default demo account
+  // Jika tidak ada sesi aktif, alihkan langsung ke portal login mandiri
   if (!currentUser) {
-    currentUser = {
-      name: 'Hendra Wijaya',
-      role: 'owner',
-      roleLabel: 'Owner (Pemilik)',
-      email: 'owner@nusantara.id',
-      storeName: 'Kopi & Ritel Nusantara',
-      category: 'Kuliner & F&B'
-    };
-    localStorage.setItem(STORAGE_KEY_AUTH, JSON.stringify(currentUser));
+    window.location.replace('login.html');
+    return false;
   }
   updateAuthUI();
+  return true;
 }
 
 function updateAuthUI() {
@@ -1638,9 +1742,9 @@ function proceedLogout(target = 'login') {
   currentUser = null;
 
   if (target === 'register') {
-    window.location.href = 'register.html';
+    window.location.replace('register.html');
   } else {
-    window.location.href = 'login.html';
+    window.location.replace('login.html');
   }
 }
 
@@ -1820,10 +1924,10 @@ function renderAiStockAdvisor() {
     tr.innerHTML = `
       <td>
         <div style="display:flex;align-items:center;gap:0.5rem;">
-          <span style="font-size:1.3rem;">${p.icon || '📦'}</span>
+          <span style="font-size:1.3rem;">${escapeHtml(p.icon || '📦')}</span>
           <div>
-            <strong>${p.name}</strong><br/>
-            <small style="color:var(--text-muted);">${p.category} &bull; SKU: ${p.sku}</small>
+            <strong>${escapeHtml(p.name)}</strong><br/>
+            <small style="color:var(--text-muted);">${escapeHtml(p.category)} &bull; SKU: ${escapeHtml(p.sku)}</small>
           </div>
         </div>
       </td>
@@ -1842,16 +1946,20 @@ function renderAiStockAdvisor() {
       </td>
       <td>${statusHtml}</td>
       <td>
-        <strong>${recAction}</strong><br/>
+        <strong>${escapeHtml(recAction)}</strong><br/>
         ${estCost > 0 ? `<small style="color:var(--cyan-primary); font-family:var(--font-mono);">Est. Modal: ${formatRupiah(estCost)}</small>` : '<small style="color:var(--text-muted);">&mdash;</small>'}
       </td>
       <td>
-        <button type="button" class="btn btn-xs ${recRestock > 0 ? 'btn-smart' : 'btn-outline-cyan'}" onclick="triggerAiSupplierOrder('${p.id}', ${recRestock || 15})">
+        <button type="button" class="btn btn-xs ${recRestock > 0 ? 'btn-smart' : 'btn-outline-cyan'} btn-ai-order">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
           <span>Pesan via WA</span>
         </button>
       </td>
     `;
+    const btnAiOrder = tr.querySelector('.btn-ai-order');
+    if (btnAiOrder) {
+      btnAiOrder.onclick = () => triggerAiSupplierOrder(p.id, recRestock || 15);
+    }
     tbody.appendChild(tr);
   });
 
@@ -1896,13 +2004,8 @@ function triggerAiSupplierOrder(prodId, qty) {
   msg += `Mohon konfirmasi ketersediaan dan nomor rekening faktur pengiriman. Terima kasih!\n`;
   msg += `— Dibuat otomatis via TransformaAI Smart Inventory System.`;
 
-  let phone = '';
-  if (p.supplier && p.supplier.includes('08')) {
-    const match = p.supplier.match(/08\d+/);
-    if (match) phone = match[0];
-  }
-
-  const waUrl = phone ? `https://wa.me/${phone}?text=${encodeURIComponent(msg)}` : `https://wa.me/?text=${encodeURIComponent(msg)}`;
+  const extractedPhone = extractIndonesianPhone(p.supplier);
+  const waUrl = extractedPhone ? getWhatsAppUrl(extractedPhone, msg) : getWhatsAppUrl('', msg);
   window.open(waUrl, '_blank');
 }
 
@@ -2386,12 +2489,4 @@ function resetAiChatHistory() {
   showToast('Riwayat chat konsultasi AI telah dibersihkan.');
 }
 
-function escapeHtml(str) {
-  return (str || '').replace(/[&<>"']/g, m => ({
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#39;'
-  })[m]);
-}
+// (escapeHtml defined at top security helpers)
