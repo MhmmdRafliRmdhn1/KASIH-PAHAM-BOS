@@ -155,14 +155,8 @@ let currentUser = null;
 // ========================================================
 document.addEventListener('DOMContentLoaded', () => {
   initStorage();
-<<<<<<< HEAD
   initAuth();
-  initMobileNav();
-=======
-  const isAuthenticated = initAuth();
-  if (!isAuthenticated) return;
   initMobileSimulator();
->>>>>>> 3e55df8b838c39b664178cdf4101f2d6ec3eedd8
   initTheme();
   initClock();
   initNav();
@@ -205,7 +199,7 @@ function generateInitialTransactions() {
     const d = new Date(now.getTime() - i * 86400000);
     const dateStr = d.toISOString().split('T')[0];
     const timeStr = `${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}`;
-    
+
     trxs.push({
       id: `TRX-${1000 + i}`,
       date: dateStr,
@@ -1588,7 +1582,7 @@ function orderViaWhatsApp(productId) {
   const storeName = (currentUser && currentUser.storeName) || 'Transforma UMKM';
   const storePhone = (currentUser && currentUser.phone) || (DEFAULT_USER && DEFAULT_USER.phone) || '081234567890';
   const msg = `Halo ${storeName}! Saya ingin memesan *${p.name}* seharga ${formatRupiah(p.sellPrice)}. Apakah stok masih tersedia?`;
-  
+
   const waUrl = getWhatsAppUrl(storePhone, msg);
   if (waUrl) {
     window.open(waUrl, '_blank');
