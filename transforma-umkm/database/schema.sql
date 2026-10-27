@@ -1,7 +1,6 @@
 -- ========================================================
 -- TransformaUMKM — Relational Database Schema & Architecture
--- Dialect: PostgreSQL / MySQL Compatible
--- GTNIC 2026 Web Development Track
+-- Platform Operasi Bisnis Digital UMKM Indonesia
 -- ========================================================
 
 -- 1. Table: Categories

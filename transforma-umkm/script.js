@@ -1,7 +1,7 @@
 // ========================================================
 // TransformaUMKM — Main Application Logic
 // Akselerasi Transformasi Digital UMKM & Bisnis
-// GTNIC 2026 Web Development Track
+// TransformaUMKM Digital Business Platform
 // ========================================================
 
 const STORAGE_KEY_PRODUCTS = 'transforma_umkm_products';
@@ -279,7 +279,7 @@ function initNav() {
 
   // Reset/Seed Button
   document.getElementById('btnResetSeed').addEventListener('click', () => {
-    if (confirm('Muat ulang dataset realistis UMKM? Data yang diubah akan kembali ke nilai default kompetisi.')) {
+    if (confirm('Muat ulang dataset realistis UMKM? Data yang diubah akan kembali ke nilai default demo.')) {
       products = JSON.parse(JSON.stringify(INITIAL_PRODUCTS));
       customers = JSON.parse(JSON.stringify(INITIAL_CUSTOMERS));
       transactions = generateInitialTransactions();
@@ -1005,13 +1005,13 @@ function renderQrisDummyCanvas() {
     }
   }
 
-  // Center GTNIC tag
+  // Center QRIS tag
   ctx.fillStyle = '#e11d48';
   ctx.fillRect(size / 2 - 16, size / 2 - 10, 32, 20);
   ctx.fillStyle = '#ffffff';
-  ctx.font = 'bold 10px monospace';
+  ctx.font = 'bold 9px monospace';
   ctx.textAlign = 'center';
-  ctx.fillText('GTNIC', size / 2, size / 2 + 4);
+  ctx.fillText('QRIS', size / 2, size / 2 + 3);
 }
 
 function processPayment() {
@@ -1607,7 +1607,7 @@ function exportDatabase() {
   const backup = {
     appName: 'TransformaUMKM',
     version: '1.0.0',
-    competition: 'GTNIC 2026 Web Development',
+    platform: 'TransformaUMKM Business Operating System',
     exportedAt: new Date().toISOString(),
     products,
     transactions,

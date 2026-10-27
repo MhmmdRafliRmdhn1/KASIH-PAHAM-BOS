@@ -3,14 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="TransformaUMKM — Platform Operasi Digital Terpadu untuk Akselerasi Bisnis & UMKM Indonesia (GTNIC 2026 Web Development)." />
-  <title>TransformaUMKM — All-in-One Digital SME Operating System | GTNIC 2026</title>
+  <meta name="description" content="TransformaUMKM — Platform Operasi Digital Terpadu untuk Akselerasi Bisnis &amp; UMKM Indonesia." />
+  <title>TransformaUMKM — All-in-One Digital SME Operating System</title>
   
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   
+  <!-- Theme Pre-Initializer for clean Dark Mode -->
+  <script>
+    if (!localStorage.getItem('transforma_umkm_theme') || localStorage.getItem('transforma_umkm_theme') === 'light') {
+      localStorage.setItem('transforma_umkm_theme', 'dark');
+    }
+  </script>
+
   <!-- Main Stylesheet -->
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -19,111 +26,179 @@
   <!-- TOP APP BAR -->
   <header class="app-header">
     <div class="header-left">
-      <div class="brand-logo">
+      <div class="brand-logo" onclick="switchTab('dashboard')">
         <div class="logo-badge">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
             <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </div>
         <div class="brand-text">
           <span class="brand-title">Transforma<span class="hl-cyan">UMKM</span></span>
-          <span class="brand-badge">GTNIC 2026 &bull; Web Dev Track</span>
         </div>
-      </div>
-      <div class="store-selector">
-        <span class="store-dot"></span>
-        <span class="store-name" id="currentStoreName">Kopi &amp; Ritel Nusantara</span>
-        <span class="store-status">Online (Toko Aktif)</span>
       </div>
     </div>
 
     <div class="header-center">
       <nav class="app-nav">
         <button class="nav-tab active" data-tab="dashboard">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="9" rx="1.5" stroke="currentColor" stroke-width="2"/><rect x="14" y="3" width="7" height="5" rx="1.5" stroke="currentColor" stroke-width="2"/><rect x="14" y="12" width="7" height="9" rx="1.5" stroke="currentColor" stroke-width="2"/><rect x="3" y="16" width="7" height="5" rx="1.5" stroke="currentColor" stroke-width="2"/></svg>
-          <span>Dashboard Bisnis</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="9" rx="1.5" stroke="currentColor" stroke-width="2"/><rect x="14" y="3" width="7" height="5" rx="1.5" stroke="currentColor" stroke-width="2"/><rect x="14" y="12" width="7" height="9" rx="1.5" stroke="currentColor" stroke-width="2"/><rect x="3" y="16" width="7" height="5" rx="1.5" stroke="currentColor" stroke-width="2"/></svg>
+          <span>Dashboard</span>
         </button>
         <button class="nav-tab" data-tab="pos">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" stroke="currentColor" stroke-width="2"/><path d="M3 6h18M16 10a4 4 0 01-8 0" stroke="currentColor" stroke-width="2"/></svg>
-          <span>Smart POS &amp; Kasir</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" stroke="currentColor" stroke-width="2"/><path d="M3 6h18M16 10a4 4 0 01-8 0" stroke="currentColor" stroke-width="2"/></svg>
+          <span>Smart POS</span>
           <span class="cart-pill-count" id="navCartCount">0</span>
         </button>
         <button class="nav-tab" data-tab="inventory">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z" stroke="currentColor" stroke-width="2"/><polyline points="3.27 6.96 12 12.01 20.73 6.96" stroke="currentColor" stroke-width="2"/><line x1="12" y1="22.08" x2="12" y2="12" stroke="currentColor" stroke-width="2"/></svg>
-          <span>Inventori &amp; Restock</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z" stroke="currentColor" stroke-width="2"/><polyline points="3.27 6.96 12 12.01 20.73 6.96" stroke="currentColor" stroke-width="2"/><line x1="12" y1="22.08" x2="12" y2="12" stroke="currentColor" stroke-width="2"/></svg>
+          <span>Inventori</span>
           <span class="alert-pill-count" id="navStockAlertCount" style="display:none;">0</span>
         </button>
         <button class="nav-tab nav-tab-ai" data-tab="ai-assistant">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <span>Asisten AI Bisnis</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Asisten AI</span>
           <span class="ai-nav-badge">AI</span>
         </button>
         <button class="nav-tab" data-tab="crm">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke="currentColor" stroke-width="2"/><circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="2"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke="currentColor" stroke-width="2"/></svg>
-          <span>CRM &amp; Pelanggan</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke="currentColor" stroke-width="2"/><circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="2"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke="currentColor" stroke-width="2"/></svg>
+          <span>CRM</span>
         </button>
         <button class="nav-tab" data-tab="storefront">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z" stroke="currentColor" stroke-width="2"/></svg>
-          <span>Katalog Digital Publik</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z" stroke="currentColor" stroke-width="2"/></svg>
+          <span>Katalog</span>
+        </button>
+        <button class="nav-tab" data-tab="settings">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 15a3 3 0 100-6 3 3 0 000 6z" stroke="currentColor" stroke-width="2"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z" stroke="currentColor" stroke-width="2"/></svg>
+          <span>Pengaturan</span>
         </button>
       </nav>
     </div>
 
     <div class="header-right">
-      <!-- MOBILE MODE TOGGLE BUTTON -->
-      <button class="btn btn-sm btn-device-toggle" id="btnToggleMobileMode" onclick="toggleMobileSimulator()" title="Ubah tampilan menjadi Mode Smartphone Mobile">
-        <span class="device-icon" id="deviceToggleIcon">📱</span>
-        <span id="mobileToggleText">Mode Mobile</span>
+      <button class="icon-btn" id="themeToggle" title="Ganti Tema (Dark / Light)">
+        <span class="theme-icon">&#9790;</span>
       </button>
 
-      <!-- USER PROFILE & AUTH DROPDOWN -->
+      <!-- USER PROFILE & DROPDOWN -->
       <div class="user-auth-widget" id="userAuthWidget">
         <button class="btn btn-sm btn-user-profile" id="btnUserProfile" onclick="toggleUserDropdown()" title="Menu Akun & Profil">
           <span class="user-avatar" id="userAvatarChar">H</span>
           <span class="user-info-text">
             <strong id="headerUserName">Hendra Wijaya</strong>
-            <small id="headerUserRole">Owner (Pemilik)</small>
+            <small id="headerUserRole">Owner</small>
           </span>
           <span class="caret-down">&#9662;</span>
         </button>
         <div class="user-dropdown-menu" id="userDropdownMenu">
           <div class="ud-header">
-            <strong id="udName">Hendra Wijaya</strong>
+            <div class="ud-user-row">
+              <strong id="udName">Hendra Wijaya</strong>
+              <span class="badge-role" id="udRoleBadge">Pemilik UMKM</span>
+            </div>
             <span id="udEmail">owner@nusantara.id</span>
-            <span class="badge-role" id="udRoleBadge">Pemilik UMKM</span>
+            <div class="ud-store-tag">
+              <span class="store-dot"></span>
+              <span class="store-name" id="currentStoreName">Kopi &amp; Ritel Nusantara</span>
+            </div>
           </div>
           <div class="ud-links">
             <button onclick="switchTab('dashboard'); closeUserDropdown();" class="ud-item">📊 Dashboard Bisnis</button>
             <button onclick="switchTab('pos'); closeUserDropdown();" class="ud-item">🛒 Kasir Cepat (POS)</button>
-            <div style="border-top: 1px solid var(--border-color); margin: 6px 0;"></div>
+            <div class="ud-divider"></div>
+            <!-- Tools relocated to keep top navbar clean -->
+            <button class="ud-item" id="btnToggleMobileMode" onclick="toggleMobileSimulator(); closeUserDropdown();" title="Mode Smartphone Mobile">
+              <span id="deviceToggleIcon">📱</span>
+              <span id="mobileToggleText">Mode Mobile Simulator</span>
+            </button>
+            <button class="ud-item" id="btnResetSeed" title="Reset & Muat Contoh Data Realistis">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M1 4v6h6M23 20v-6h-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              <span>Muat Data Demo</span>
+            </button>
+            <button class="ud-item" id="btnExportData" title="Export Seluruh Database (JSON/CSV)">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              <span>Export Database</span>
+            </button>
+            <div class="ud-divider"></div>
             <button type="button" onclick="handleLogout()" class="ud-item danger" id="btnDropdownLogout" style="font-weight: 700;">🚪 Keluar (Logout)</button>
+          </div>
+          <div class="ud-footer-clock">
+            <span class="ud-clock-dot"></span>
+            <span id="liveClock">00:00:00 WIB</span>
           </div>
         </div>
       </div>
-
-      <button class="icon-btn" id="themeToggle" title="Ganti Tema (Dark / Light)">
-        <span class="theme-icon">&#9790;</span>
-      </button>
-      <button class="btn btn-sm btn-seed" id="btnResetSeed" title="Reset & Muat Contoh Data Realistis">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M1 4v6h6M23 20v-6h-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-        <span>Data Demo</span>
-      </button>
-      <button class="btn btn-sm btn-outline-cyan" id="btnExportData" title="Export Seluruh Database (JSON/CSV)">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-        <span>Export</span>
-      </button>
-      <div class="live-clock" id="liveClock">00:00:00 WIB</div>
     </div>
   </header>
 
-  <!-- SUBHEADER INFO BANNER -->
-<div class="theme-banner">
-    <div class="banner-inner">
-      <div class="banner-tag">GTNIC 2026 SUBTEMA</div>
-      <p class="banner-text"><strong>Accelerating Digital Transformation for Business and SMEs</strong> &mdash; Fokus: <em>Business, UMKM &amp; Digital Economy</em></p>
-      <div class="banner-status">
-        <span class="pulse-indicator"></span>
-        <span>Local Database Persistent &bull; Siap Live Demo</span>
+  <!-- ======================================================== -->
+  <!-- WELCOMING PAGE — Full viewport hero (shown on load/refresh) -->
+  <!-- Dismissed on scroll or CTA click, hidden after via sessionStorage -->
+  <!-- ======================================================== -->
+  <div id="welcomingPage" role="dialog" aria-label="Selamat datang di TransformaUMKM">
+
+    <!-- Parallax background (moves slower than content on mouse/scroll) -->
+    <div class="wp-bg" id="wpBg"></div>
+
+    <!-- Floating ambient orbs -->
+    <div class="wp-orb wp-orb-1" aria-hidden="true"></div>
+    <div class="wp-orb wp-orb-2" aria-hidden="true"></div>
+    <div class="wp-orb wp-orb-3" aria-hidden="true"></div>
+
+    <!-- Particles / starfield canvas -->
+    <canvas id="wpParticlesCanvas" aria-hidden="true"></canvas>
+
+    <!-- Main centred content block -->
+    <div class="wp-content" id="wpContent">
+      <!-- Logo icon -->
+      <div class="wp-logo" aria-hidden="true">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+
+      <!-- Kicker badge -->
+      <div class="wp-kicker">
+        <span class="wp-kicker-dot"></span>
+        Solusi Digital &nbsp;·&nbsp; Untuk UMKM Indonesia
+      </div>
+
+      <!-- Headline -->
+      <h1 class="wp-headline">
+        Kelola UMKM dengan
+        <span class="hl-gradient">Transformasi Digital</span>
+      </h1>
+
+      <!-- Subheading -->
+      <p class="wp-sub">
+        Platform operasi digital terpadu untuk POS, inventori, CRM, dan analitik bisnis &mdash; semua dalam satu dasbor yang intuitif.
+      </p>
+
+      <!-- Feature pills -->
+      <div class="wp-features">
+        <span class="wp-feature-chip">📊 Dashboard Real-time</span>
+        <span class="wp-feature-chip">🛒 Smart POS Kasir</span>
+        <span class="wp-feature-chip">📦 Manajemen Stok</span>
+        <span class="wp-feature-chip">👥 CRM Pelanggan</span>
+        <span class="wp-feature-chip">✨ Asisten AI</span>
+        <span class="wp-feature-chip">🌐 Katalog Digital</span>
+      </div>
+
+      <!-- CTA Button -->
+      <button class="wp-cta-btn" id="wpCtaBtn" onclick="dismissWelcomingPage()" aria-label="Masuk ke Dashboard">
+        <span>Masuk ke Dashboard</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Scroll cue -->
+    <div class="wp-scroll-cue" aria-hidden="true">
+      <span>Scroll untuk melanjutkan</span>
+      <div class="wp-scroll-cue-chevron">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+          <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
       </div>
     </div>
   </div>
@@ -195,10 +270,10 @@
 
       <!-- KPI METRIC CARDS -->
       <div class="kpi-grid">
-        <div class="kpi-card" style="--accent:#00D4FF">
+        <div class="kpi-card" style="--accent:#38bdf8; --accent-bg:rgba(56, 189, 248, 0.1); --accent-border:rgba(56, 189, 248, 0.2);">
           <div class="kpi-top">
             <span class="kpi-label">TOTAL OMZET HARI INI</span>
-            <div class="kpi-icon-wrap" style="color:#00D4FF">
+            <div class="kpi-icon-wrap" style="color:#38bdf8">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
             </div>
           </div>
@@ -209,10 +284,10 @@
           </div>
         </div>
 
-        <div class="kpi-card" style="--accent:#10B981">
+        <div class="kpi-card" style="--accent:#10b981; --accent-bg:rgba(16, 185, 129, 0.1); --accent-border:rgba(16, 185, 129, 0.2);">
           <div class="kpi-top">
             <span class="kpi-label">ESTIMASI LABA BERSIH</span>
-            <div class="kpi-icon-wrap" style="color:#10B981">
+            <div class="kpi-icon-wrap" style="color:#10b981">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><polyline points="17 6 23 6 23 12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </div>
           </div>
@@ -222,10 +297,10 @@
           </div>
         </div>
 
-        <div class="kpi-card" style="--accent:#A855F7">
+        <div class="kpi-card" style="--accent:#a855f7; --accent-bg:rgba(168, 85, 247, 0.1); --accent-border:rgba(168, 85, 247, 0.2);">
           <div class="kpi-top">
             <span class="kpi-label">TOTAL TRANSAKSI</span>
-            <div class="kpi-icon-wrap" style="color:#A855F7">
+            <div class="kpi-icon-wrap" style="color:#a855f7">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="2" y="5" width="20" height="14" rx="2" stroke="currentColor" stroke-width="2.2"/><line x1="2" y1="10" x2="22" y2="10" stroke="currentColor" stroke-width="2.2"/></svg>
             </div>
           </div>
@@ -235,10 +310,10 @@
           </div>
         </div>
 
-        <div class="kpi-card" style="--accent:#FF6B35">
+        <div class="kpi-card" style="--accent:#f97316; --accent-bg:rgba(249, 115, 22, 0.1); --accent-border:rgba(249, 115, 22, 0.2);">
           <div class="kpi-top">
             <span class="kpi-label">PERINGATAN STOK</span>
-            <div class="kpi-icon-wrap" style="color:#FF6B35">
+            <div class="kpi-icon-wrap" style="color:#f97316">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0zM12 9v4M12 17h.01" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </div>
           </div>
@@ -1122,7 +1197,7 @@
           </div>
           <div class="rc-footer">
             <p>Terima Kasih Atas Kunjungan Anda!</p>
-            <small>Didukung oleh TransformaUMKM &bull; GTNIC 2026</small>
+            <small>Didukung oleh TransformaUMKM</small>
           </div>
         </div>
       </div>
@@ -1310,21 +1385,347 @@
     </div>
   </div>
 
+  <!-- ======================================================== -->
+  <!-- SETTINGS TAB (will be inserted as a tab-pane by JS or static) -->
+  <!-- ======================================================== -->
+
   <!-- FOOTER -->
   <footer class="app-footer">
     <div class="footer-inner">
       <div class="foot-col">
-        <strong>TransformaUMKM &bull; GTNIC 2026</strong>
+        <strong>TransformaUMKM</strong>
         <p>Akselerasi Transformasi Digital untuk Bisnis &amp; UMKM Indonesia</p>
       </div>
       <div class="foot-col text-right">
         <span>Teknologi: Vanilla HTML5, Modern CSS Design System, Client-Side Persistent Database</span>
-        <p>&copy; 2026 Garda Tech National Innovation Competition. All rights reserved.</p>
+        <p>&copy; 2026 TransformaUMKM. All rights reserved.</p>
       </div>
     </div>
   </footer>
 
   <!-- Main JavaScript File -->
   <script src="script.js"></script>
+
+  <!-- ======================================================== -->
+  <!-- WELCOMING PAGE ENGINE (Inline — does NOT touch script.js) -->
+  <!-- Mechanism: Layered Parallax Scroll-Down                  -->
+  <!-- WP slides up off-screen as user scrolls (no fade).      -->
+  <!-- sessionStorage prevents re-show in same browser session. -->
+  <!-- localStorage toggle in Settings allows full disable.     -->
+  <!-- ======================================================== -->
+  <script>
+  (function () {
+    'use strict';
+
+    /* ── Config ── */
+    const LS_KEY_WP_ENABLED = 'transforma_wp_enabled';
+    const SS_KEY_WP_SEEN    = 'transforma_wp_seen';
+
+    function isWpEnabled() {
+      const v = localStorage.getItem(LS_KEY_WP_ENABLED);
+      return v === null ? true : v === 'true';
+    }
+
+    const wp        = document.getElementById('welcomingPage');
+    const wpBg      = document.getElementById('wpBg');
+    const wpContent = document.getElementById('wpContent');
+
+    /* ── Early exit: feature OFF or already seen this session ── */
+    if (!isWpEnabled() || sessionStorage.getItem(SS_KEY_WP_SEEN)) {
+      if (wp) wp.style.display = 'none';
+      buildSettingsPane();
+      return;
+    }
+
+    /* Lock body scroll while WP is active */
+    document.body.style.overflow = 'hidden';
+
+    /* ================================================================
+       PARALLAX SCROLL-DOWN ENGINE
+       scrollProgress   [0 → 1]: how far through the dismiss animation
+       targetProgress   [0 → 1]: where we want to be (from input events)
+
+       Each rAF tick eases scrollProgress toward targetProgress with
+       smooth damping (inertia). When progress reaches 1, WP is fully
+       above the viewport and gets hidden.
+
+       Layered depths:
+         WP container  : translateY(-progress × 100vh)   → full speed
+         .wp-bg        : translateY(-progress × 55vh)    → 55% speed (parallax)
+         .wp-content   : translateY(-progress × 85vh)    → 85% speed (midground)
+    ================================================================ */
+    let scrollProgress = 0;
+    let targetProgress = 0;
+    let rafId          = null;
+    let isAnimating    = false;
+
+    /* Mouse-move parallax state (independent of scroll) */
+    let mouseOffsetX = 0;
+    let mouseOffsetY = 0;
+
+    function applyTransforms() {
+      const vh = window.innerHeight;
+
+      /* Main WP panel — full scroll speed */
+      wp.style.transform = `translateY(${-scrollProgress * vh}px)`;
+
+      /* Background — moves slower (55%) + mouse parallax */
+      if (wpBg) {
+        wpBg.style.transform =
+          `translateY(${-scrollProgress * vh * 0.55}px) ` +
+          `translate(${mouseOffsetX * -18}px, ${mouseOffsetY * -18}px)`;
+      }
+
+      /* Content — moves at 85% + slight mouse counter-move */
+      if (wpContent) {
+        wpContent.style.transform =
+          `translateY(${-scrollProgress * vh * 0.85}px) ` +
+          `translate(${mouseOffsetX * 8}px, ${mouseOffsetY * 6}px)`;
+      }
+    }
+
+    function tick() {
+      /* Smooth damp: ease scrollProgress toward targetProgress */
+      const delta = targetProgress - scrollProgress;
+      scrollProgress += delta * 0.10;   /* 0.10 = inertia/damping factor */
+
+      applyTransforms();
+
+      if (scrollProgress >= 0.995 && targetProgress >= 1) {
+        /* Fully scrolled off — finalize */
+        scrollProgress = 1;
+        applyTransforms();
+        finalDismiss();
+        rafId = null;
+        return;
+      }
+
+      if (Math.abs(delta) < 0.0002 && targetProgress === scrollProgress) {
+        /* At rest, no need to keep looping */
+        rafId = null;
+        return;
+      }
+
+      rafId = requestAnimationFrame(tick);
+    }
+
+    function startTick() {
+      if (!rafId) rafId = requestAnimationFrame(tick);
+    }
+
+    function addScrollDelta(rawDelta) {
+      /* Normalise: wheel delta varies wildly across devices/browsers */
+      const normalized = Math.min(Math.abs(rawDelta), 200) / 200; /* 0–1 per tick */
+      targetProgress = Math.max(0, Math.min(1, targetProgress + normalized * 0.28));
+      startTick();
+    }
+
+    /* ── Called when WP is fully off-screen ── */
+    function finalDismiss() {
+      sessionStorage.setItem(SS_KEY_WP_SEEN, '1');
+      wp.classList.add('wp-hidden');
+      wp.style.display = 'none';
+      document.body.style.overflow = '';
+      stopParticles();
+    }
+
+    /* ── Exposed for CTA button click: smoothly scroll to 100% ── */
+    window.dismissWelcomingPage = function () {
+      targetProgress = 1;
+      startTick();
+    };
+
+    /* ── Input: Wheel scroll ── */
+    window.addEventListener('wheel', function (e) {
+      if (!wp || wp.classList.contains('wp-hidden')) return;
+      if (e.deltaY > 0) {
+        addScrollDelta(e.deltaY);
+      } else if (e.deltaY < 0 && targetProgress > 0) {
+        /* Allow scrolling back up only if not yet fully committed */
+        const normalized = Math.min(Math.abs(e.deltaY), 200) / 200;
+        targetProgress = Math.max(0, targetProgress - normalized * 0.28);
+        startTick();
+      }
+    }, { passive: true });
+
+    /* ── Input: Touch swipe ── */
+    let touchStartY = 0;
+    window.addEventListener('touchstart', function (e) {
+      touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+
+    window.addEventListener('touchmove', function (e) {
+      if (!wp || wp.classList.contains('wp-hidden')) return;
+      const delta = touchStartY - e.touches[0].clientY;
+      if (delta > 0) {
+        addScrollDelta(delta * 2.2);
+        touchStartY = e.touches[0].clientY; /* Reset so it tracks movement */
+      } else if (delta < 0 && targetProgress > 0) {
+        const normalized = Math.min(Math.abs(delta) * 2.2, 200) / 200;
+        targetProgress = Math.max(0, targetProgress - normalized * 0.28);
+        startTick();
+        touchStartY = e.touches[0].clientY;
+      }
+    }, { passive: true });
+
+    /* ── Mouse-move parallax (depth effect while not scrolling) ── */
+    window.addEventListener('mousemove', function (e) {
+      if (!wp || wp.classList.contains('wp-hidden')) return;
+      mouseOffsetX = (e.clientX / window.innerWidth  - 0.5) * 2;
+      mouseOffsetY = (e.clientY / window.innerHeight - 0.5) * 2;
+      /* Apply mouse parallax independently (doesn't need rAF loop) */
+      applyTransforms();
+    });
+
+    /* ── Particles canvas (starfield) ── */
+    const canvas = document.getElementById('wpParticlesCanvas');
+    let animFrameId = null;
+
+    function stopParticles() {
+      if (animFrameId) cancelAnimationFrame(animFrameId);
+      animFrameId = null;
+    }
+
+    if (canvas) {
+      const ctx = canvas.getContext('2d');
+      const particles = [];
+      const COUNT = 70;
+
+      function resize() {
+        canvas.width  = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      for (let i = 0; i < COUNT; i++) {
+        particles.push({
+          x:      Math.random() * canvas.width,
+          y:      Math.random() * canvas.height,
+          r:      Math.random() * 1.4 + 0.3,
+          alpha:  Math.random() * 0.5 + 0.15,
+          dx:     (Math.random() - 0.5) * 0.22,
+          dy:     (Math.random() - 0.5) * 0.15,
+          dAlpha: (Math.random() - 0.5) * 0.004
+        });
+      }
+
+      function drawParticles() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(function (p) {
+          p.x += p.dx;  p.y += p.dy;  p.alpha += p.dAlpha;
+          if (p.x < 0 || p.x > canvas.width)           p.dx     *= -1;
+          if (p.y < 0 || p.y > canvas.height)           p.dy     *= -1;
+          if (p.alpha < 0.05 || p.alpha > 0.65)         p.dAlpha *= -1;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(148,163,184,' + p.alpha + ')';
+          ctx.fill();
+        });
+        animFrameId = requestAnimationFrame(drawParticles);
+      }
+      drawParticles();
+    }
+
+    /* ================================================================
+       BUILD SETTINGS PANE
+       Injects #pane-settings into .main-content.
+       switchTab('settings') in script.js automatically shows/hides it
+       because switchTab uses the generic pane-{tabId} pattern.
+    ================================================================ */
+    function buildSettingsPane() {
+      if (document.getElementById('pane-settings')) return;
+      const mainContent = document.querySelector('.main-content');
+      if (!mainContent) return;
+
+      const isWpOn  = isWpEnabled();
+      const isDark  = document.body.getAttribute('data-theme') === 'dark';
+
+      const pane = document.createElement('section');
+      pane.className = 'tab-pane';
+      pane.id = 'pane-settings';
+      pane.innerHTML = [
+        '<div class="pane-header">',
+        '  <div>',
+        '    <h2>Pengaturan Aplikasi</h2>',
+        '    <p class="pane-sub">Konfigurasi tampilan, performa, dan preferensi pengalaman pengguna TransformaUMKM.</p>',
+        '  </div>',
+        '</div>',
+
+        '<p class="settings-section-title">Performa &amp; Tampilan</p>',
+        '<div class="settings-section">',
+
+        '  <div class="settings-toggle-row">',
+        '    <div class="settings-toggle-label">',
+        '      <strong>\uD83C\uDFA5 Welcoming Page &amp; Efek Parallax</strong>',
+        '      <span>Tampilkan layar sambutan dengan efek parallax saat pertama kali masuk. Matikan untuk performa lebih ringan (hemat RAM / GPU).</span>',
+        '    </div>',
+        '    <label class="toggle-switch" for="toggleWelcomingPage">',
+        '      <input type="checkbox" id="toggleWelcomingPage" ' + (isWpOn ? 'checked' : '') + ' onchange="handleWpToggle(this.checked)">',
+        '      <span class="toggle-slider"></span>',
+        '    </label>',
+        '  </div>',
+
+        '  <div class="settings-toggle-row">',
+        '    <div class="settings-toggle-label">',
+        '      <strong>\uD83C\uDF19 Mode Gelap (Dark Mode)</strong>',
+        '      <span>Ganti tema antara Mode Gelap dan Mode Terang. Preferensi disimpan secara lokal.</span>',
+        '    </div>',
+        '    <label class="toggle-switch" for="toggleThemeSettings">',
+        '      <input type="checkbox" id="toggleThemeSettings" ' + (isDark ? 'checked' : '') + ' onchange="handleThemeToggleSettings(this.checked)">',
+        '      <span class="toggle-slider"></span>',
+        '    </label>',
+        '  </div>',
+
+        '</div>',
+
+        '<p class="settings-section-title">Tentang Aplikasi</p>',
+        '<div class="settings-section">',
+        '  <div class="settings-toggle-row">',
+        '    <div class="settings-toggle-label">',
+        '      <strong>TransformaUMKM v1.0</strong>',
+        '      <span>Platform Operasi Digital Terpadu untuk UMKM Indonesia.<br>Teknologi: Vanilla HTML5, Modern CSS Design System, Client-Side Persistent Database.</span>',
+        '    </div>',
+        '    <span style="font-size:0.78rem;color:var(--text-subtle);white-space:nowrap;">v1.0</span>',
+        '  </div>',
+        '</div>',
+      ].join('\n');
+
+      mainContent.appendChild(pane);
+    }
+
+    /* Build settings pane after DOM is ready */
+    document.addEventListener('DOMContentLoaded', buildSettingsPane);
+
+    /* ── Global handlers exposed to inline onchange attributes ── */
+    window.handleWpToggle = function (checked) {
+      localStorage.setItem(LS_KEY_WP_ENABLED, checked ? 'true' : 'false');
+      var msg = 'Welcoming Page ' + (checked ? 'diaktifkan' : 'dinonaktifkan') + '. Berlaku saat halaman di-refresh.';
+      if (typeof showToast === 'function') showToast(msg, checked ? 'info' : 'warning');
+    };
+
+    window.handleThemeToggleSettings = function (checked) {
+      var theme = checked ? 'dark' : 'light';
+      document.body.setAttribute('data-theme', theme);
+      localStorage.setItem('transforma_umkm_theme', theme);
+      if (typeof updateThemeIcon === 'function') updateThemeIcon(theme);
+    };
+
+    /* Keep settings theme checkbox in sync with top-bar toggle */
+    document.addEventListener('DOMContentLoaded', function () {
+      var themeBtn = document.getElementById('themeToggle');
+      if (themeBtn) {
+        themeBtn.addEventListener('click', function () {
+          requestAnimationFrame(function () {
+            var isDarkNow = document.body.getAttribute('data-theme') === 'dark';
+            var chk = document.getElementById('toggleThemeSettings');
+            if (chk) chk.checked = isDarkNow;
+          });
+        });
+      }
+    });
+
+  })();
+  </script>
 </body>
 </html>
