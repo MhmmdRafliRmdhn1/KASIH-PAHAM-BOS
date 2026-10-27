@@ -388,7 +388,6 @@ select.a-input { appearance: none; padding-right: 2rem; background-image: url("d
 .auth-foot { text-align: center; font-size: 0.74rem; color: var(--text-subtle); margin-top: 1.1rem; }
 
 /* 7. COMPONENT LAYER (legacy panes, re-themed) ----------------------------- */
-}
 
 @keyframes fadeIn {
   from {

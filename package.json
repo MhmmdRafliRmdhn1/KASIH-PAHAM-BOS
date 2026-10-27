@@ -1,0 +1,16 @@
+{
+  "name": "transforma-umkm",
+  "version": "1.0.0",
+  "description": "TransformaUMKM — Platform Operasi Digital Terpadu untuk Akselerasi Bisnis & UMKM Indonesia",
+  "scripts": {
+    "dev": "live-server --port=8080 --open",
+    "start": "live-server --port=8080 --open",
+    "serve": "live-server --port=8080"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  }
+}
