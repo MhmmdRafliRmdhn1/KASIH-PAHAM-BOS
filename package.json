@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "TransformaUMKM — Platform Operasi Digital Terpadu untuk Akselerasi Bisnis & UMKM Indonesia",
   "scripts": {
-    "dev": "live-server --port=8080 --open",
-    "start": "live-server --port=8080 --open",
-    "serve": "live-server --port=8080"
+    "dev": "live-server . --port=8080",
+    "start": "live-server . --port=8080",
+    "serve": "live-server . --port=8080"
   },
   "keywords": [],
   "author": "",
