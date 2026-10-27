@@ -1,8 +1,7 @@
 # 🤖 TransformaUMKM — Asisten Bisnis Berbasis AI & Smart SME Operating System
 
-> **Karya Kompetisi GTNIC 2026 — Web Development Track**  
-> **Grand Theme Motto:** *Innovation for a Better Future*  
-> **Subtema:** *Accelerating Digital Transformation for Business and SMEs*  
+> **TransformaUMKM — Platform Solusi Digital Terpadu untuk UMKM Indonesia**  
+> **Misi:** *Accelerating Digital Transformation for Business and SMEs*  
 > **Pilar Inovasi:** *Asisten Bisnis Berbasis AI (Smart Restock, Auto Copywriter & Data-Driven Promo)*  
 > **Fokus Industri:** *Business, UMKM & Digital Economy*  
 
@@ -36,7 +35,7 @@ Sektor Usaha Mikro, Kecil, dan Menengah (UMKM) menyumbang lebih dari 61% terhada
 ### Fitur Unggulan Sistem
 | Modul | Fitur Unggulan | Sentuhan Inovasi AI & Nilai Tambah |
 |---|---|---|
-| **🤖 Asisten AI Bisnis** | **Saran Stok Berbasis AI, Generator Deskripsi Otomatis, Caption Promosi Penjualan, Chat Copilot** | **Pilar Utama Inovasi GTNIC: Otomasi cerdas tanpa biaya API mahal, langsung dari data penjualan lokal.** |
+| **🤖 Asisten AI Bisnis** | **Saran Stok Berbasis AI, Generator Deskripsi Otomatis, Caption Promosi Penjualan, Chat Copilot** | **Pilar Utama Inovasi: Otomasi cerdas tanpa biaya API mahal, langsung dari data penjualan lokal.** |
 | **📦 Inventori & Restock AI** | Prediksi *Runout Days*, Klasifikasi Status (Darurat, Menipis, Aman, Overstock), One-Click WhatsApp PO ke Supplier | Mencegah *stockout* dan mengurangi *dead stock* hingga 40%. |
 | **✍️ AI Product Copywriter** | Generator deskripsi instan di katalog dan form produk, 4 pilihan tone, integrasi langsung ke etalase online | Meningkatkan konversi penjualan katalog digital UMKM. |
 | **📱 AI Promo Caption Generator** | Rekomendasi promosi otomatis berbasis produk terlaris, dead-stock sale, promo akhir pekan, format WA/IG/TikTok | Efisiensi waktu pembuatan konten pemasaran dari jam ke detik. |
@@ -68,7 +67,7 @@ Sistem dibangun dengan arsitektur **Zero-Heavy-Dependency Single Page Applicatio
 │  Semantic HTML5       │             │  Stock Safety Triggers│
 │  Vanilla CSS3 Tokens  │             │  Auto PO Generator WA │
 │  Responsive Flex/Grid │             │  Profit Margin Engine │
-│  Glassmorphism Dark   │             │  QRIS Canvas Painter  │
+│  Glassmorphism Light  │             │  QRIS Canvas Painter  │
 └───────────┬───────────┘             └───────────┬───────────┘
             │                                     │
             └──────────────────┬──────────────────┘
@@ -88,12 +87,12 @@ Sistem dibangun dengan arsitektur **Zero-Heavy-Dependency Single Page Applicatio
 
 ## 📁 4. Struktur Repository
 
-Sesuai dengan standar teknis **GTNIC 2026 (Slide 10)**:
+Sesuai dengan standar teknis industri modern:
 
 ```
 transforma-umkm/
 ├── index.html              # Aplikasi web utama (SPA 5 Modul Terintegrasi)
-├── style.css               # Desain sistem responsif, dark/light theme, komponen kasir
+├── style.css               # Desain sistem responsif (light theme), komponen kasir
 ├── script.js               # Business logic, state management, CRUD, kalkulasi laba, canvas chart
 ├── vercel.json             # Konfigurasi deployment platform Vercel
 ├── .gitignore              # Proteksi file kredensial, env, dan runtime logs
@@ -102,7 +101,7 @@ transforma-umkm/
 ├── database/
 │   └── schema.sql          # Skema database relasional (PostgreSQL/MySQL ready)
 └── docs/
-    └── PROPOSAL_UX_CASE_STUDY.md  # Draf proposal lengkap 15 halaman standar GTNIC
+    └── PROPOSAL_UX_CASE_STUDY.md  # Draf proposal lengkap dan panduan UX Case Study
 ```
 
 ---
@@ -131,7 +130,7 @@ Buka browser pada alamat: `http://localhost:3000`.
 
 ## 🔐 6. Environment Variables
 
-Sesuai aturan keamanan **GTNIC 2026 (Slide 8 & 10)**, aplikasi ini tidak mengekspos kredensial sensitif secara publik:
+Sesuai prinsip keamanan web modern (*best security practices*), aplikasi ini tidak mengekspos kredensial sensitif secara publik:
 ```env
 # Mode Aplikasi (Client-Side Standalone)
 APP_ENV=production
@@ -159,11 +158,11 @@ Aplikasi telah dilengkapi `vercel.json` dan siap dideploy langsung ke hosting pu
 
 ---
 
-## 🏆 Kepatuhan Terhadap Standar Penilaian GTNIC 2026
+## 🏆 Standar Mutu & Keunggulan TransformaUMKM
 
 - **Fungsionalitas & Implementasi (25%)**: Alur kasir, cetak struk, kalkulasi diskon/pajak, dan CRUD inventori bekerja 100% tanpa mock statis.
 - **Relevansi Masalah & Solusi (20%)**: Menjawab langsung subtema *Accelerating Digital Transformation for Business and SMEs*.
 - **Kualitas Teknis & Arsitektur (20%)**: Struktur kode modular, clean code, semantik standar W3C, performa load < 1 detik.
-- **UI/UX & Design (15%)**: Dark glassmorphism modern, visual hierarchy teruji, responsive di smartphone/tablet/desktop.
+- **UI/UX & Design (15%)**: Light glassmorphism modern, visual hierarchy teruji, responsive di smartphone/tablet/desktop.
 - **Dampak Bisnis (10%)**: Efisiensi waktu pembukuan hingga 80%, nol kertas kasir, dan integrasi WhatsApp marketing.
 - **Dokumentasi (10%)**: Dilengkapi proposal lengkap di `docs/PROPOSAL_UX_CASE_STUDY.md`, skema database, dan README berstandar tinggi.

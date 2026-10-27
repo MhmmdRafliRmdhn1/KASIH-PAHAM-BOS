@@ -1,15 +1,15 @@
-# PROPOSAL UX CASE STUDY & DOKUMEN TEKNIS GTNIC 2026
-**GARDA TECH NATIONAL INNOVATION COMPETITION 2026**  
-**TRACK: WEB DEVELOPMENT**  
+# PROPOSAL UX CASE STUDY & DOKUMEN TEKNIS TRANSFORMAUMKM
+**PLATFORM SISTEM OPERASI DIGITAL TERPADU UMKM INDONESIA**  
+**TRACK: WEB APPLICATION DEVELOPMENT**  
 
 ---
 
 ### **JUDUL KARYA:**
 **TransformaUMKM: Platform Sistem Operasi Digital Terpadu Berbasis Smart Cloud POS, Manajemen Inventori Otomatis, dan CRM Terintegrasi untuk Akselerasi Bisnis UMKM Indonesia**
 
-**Subtema Kompetisi:** *Accelerating Digital Transformation for Business and SMEs*  
+**Fokus Bidang:** *Accelerating Digital Transformation for Business and SMEs*  
 **Fokus Industri:** *Business, UMKM, Digital Economy*  
-**Format Dokumen Standar:** Sesuai Ketentuan Guidebook GTNIC 2026 (Maks. 15 Halaman, Margin Kiri 4 cm, Lainnya 3 cm, Spasi 1.5)  
+**Format Dokumen Standar:** Standar Proposal Teknis & UX Case Study (Maks. 15 Halaman, Margin Kiri 4 cm, Lainnya 3 cm, Spasi 1.5)  
 
 ---
 
@@ -54,7 +54,7 @@ Melalui riset lapangan dan observasi pola kerja pelaku UMKM di sektor retail, wa
 4. **Hambatan Masuk ke Ranah E-Commerce (Biaya Komisi Tinggi)**: Berjualan di platform e-commerce raksasa sering membebankan potongan komisi 10%–15% per transaksi, biaya operasional iklan yang tinggi, dan rumitnya sinkronisasi antara stok toko fisik dengan toko online.
 
 ### 1.3 Alur Inovasi (Problem-to-Impact Framework)
-Sesuai arahan panduan GTNIC 2026:
+Sesuai framework inovasi digital modern:
 - **01 MASALAH**: Pencatatan kasir manual, stok tidak terpantau, pelanggan tidak terdata, biaya e-commerce mahal.
 - **02 PENGGUNA**: Pemilik UMKM (Retail, F&B, Craft), kasir toko, dan pelanggan umum.
 - **03 SOLUSI**: Web App *TransformaUMKM* yang mengintegrasikan Smart POS, Auto-Restock Alert, CRM WhatsApp, dan Katalog Publik.
@@ -123,7 +123,7 @@ Sistem memodelkan 7 entitas utama:
 - Tombol pemesanan langsung (*Direct Order via WhatsApp*) yang mencantumkan nama produk dan harga.
 
 ### 4.6 Modul Inovasi: Asisten Bisnis Berbasis AI (TransformaAI Copilot)
-Menjawab pilar *Innovation for a Better Future* dari GTNIC 2026, modul ini mengolah data penjualan transaksi lokal secara realtime untuk memberikan:
+Menjawab pilar *Innovation for a Better Future*, modul ini mengolah data penjualan transaksi lokal secara realtime untuk memberikan:
 1. **Saran Stok Berbasis AI (Smart Restock & Demand Velocity)**: Menganalisis *sales velocity* produk harian, menghitung *runout days* (estimasi hari sebelum stok habis), mengklasifikasikan status (*Darurat, Menipis, Aman, Overstock*), dan merumuskan Purchase Order ke supplier via WhatsApp.
 2. **Generator Deskripsi Produk Otomatis (AI Copywriter)**: Menghasilkan teks deskripsi komersial bernilai jual tinggi (headline, sensory copywriting, bullet points, CTA, dan SEO tags) dengan pilihan tone (*Storytelling, Persuasif, Premium, FOMO*), langsung tersinkronisasi ke katalog publik.
 3. **Generator Caption Promosi Medsos & WhatsApp Berbasis Data**: Mengidentifikasi produk terlaris #1, produk lambat laku (flash sale cuci gudang), momentum weekend, serta poin loyalitas, lalu menyusun caption promosi siap salin/kirim ke WhatsApp, Instagram, dan TikTok.

@@ -1,13 +1,12 @@
 // ========================================================
 // TransformaUMKM — Main Application Logic
 // Akselerasi Transformasi Digital UMKM & Bisnis
-// GTNIC 2026 Web Development Track
+// TransformaUMKM Digital Business Platform
 // ========================================================
 
 const STORAGE_KEY_PRODUCTS = 'transforma_umkm_products';
 const STORAGE_KEY_TRX = 'transforma_umkm_transactions';
 const STORAGE_KEY_CUSTOMERS = 'transforma_umkm_customers';
-const STORAGE_KEY_THEME = 'transforma_umkm_theme';
 const STORAGE_KEY_AUTH = 'transforma_umkm_session';
 
 // Default User Profile
@@ -155,11 +154,17 @@ let currentUser = null;
 // ========================================================
 document.addEventListener('DOMContentLoaded', () => {
   initStorage();
+<<<<<<< HEAD:script.js
   initAuth();
   initMobileSimulator();
   initTheme();
+=======
+  const isAuthenticated = initAuth();
+  if (!isAuthenticated) return;
+>>>>>>> b800731308c4e40c9af0693c781267216e961c99:transforma-umkm/script.js
   initClock();
   initNav();
+  initShell();
   renderAllViews();
 });
 
@@ -233,31 +238,15 @@ function saveCustomers() {
 }
 
 // ========================================================
-// THEME & UTILITIES
+// UTILITIES
 // ========================================================
-function initTheme() {
-  const saved = localStorage.getItem(STORAGE_KEY_THEME) || 'dark';
-  document.body.setAttribute('data-theme', saved);
-  updateThemeIcon(saved);
-
-  document.getElementById('themeToggle').addEventListener('click', () => {
-    const current = document.body.getAttribute('data-theme');
-    const next = current === 'dark' ? 'light' : 'dark';
-    document.body.setAttribute('data-theme', next);
-    localStorage.setItem(STORAGE_KEY_THEME, next);
-    updateThemeIcon(next);
-    renderSalesTrendChart();
-    renderCategoryDonutChart();
-  });
-}
-
-function updateThemeIcon(theme) {
-  const icon = document.querySelector('#themeToggle .theme-icon');
-  icon.innerHTML = theme === 'dark' ? '&#9790;' : '&#9728;';
+function cssVar(name) {
+  return getComputedStyle(document.body).getPropertyValue(name).trim() || '#888';
 }
 
 function initClock() {
   const clockEl = document.getElementById('liveClock');
+  if (!clockEl) return;
   function update() {
     const now = new Date();
     clockEl.textContent = now.toLocaleTimeString('id-ID', { hour12: false }) + ' WIB';
@@ -267,17 +256,13 @@ function initClock() {
 }
 
 function initNav() {
-  const tabs = document.querySelectorAll('.nav-tab');
-  tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      const tabId = tab.getAttribute('data-tab');
-      switchTab(tabId);
-    });
+  document.querySelectorAll('.nav-link[data-tab]').forEach(link => {
+    link.addEventListener('click', () => switchTab(link.getAttribute('data-tab')));
   });
 
   // Reset/Seed Button
   document.getElementById('btnResetSeed').addEventListener('click', () => {
-    if (confirm('Muat ulang dataset realistis UMKM? Data yang diubah akan kembali ke nilai default kompetisi.')) {
+    if (confirm('Muat ulang dataset realistis UMKM? Data yang diubah akan kembali ke nilai default demo.')) {
       products = JSON.parse(JSON.stringify(INITIAL_PRODUCTS));
       customers = JSON.parse(JSON.stringify(INITIAL_CUSTOMERS));
       transactions = generateInitialTransactions();
@@ -294,19 +279,26 @@ function initNav() {
   document.getElementById('btnExportData').addEventListener('click', exportDatabase);
 }
 
+const TAB_TITLES = {
+  dashboard: 'Dashboard', pos: 'Kasir (POS)', inventory: 'Inventori', crm: 'Pelanggan (CRM)',
+  storefront: 'Katalog Digital', 'ai-assistant': 'Asisten AI', settings: 'Pengaturan'
+};
+
 function switchTab(tabId) {
-  // Sync Desktop Nav Tabs
-  document.querySelectorAll('.nav-tab').forEach(t => {
-    t.classList.toggle('active', t.getAttribute('data-tab') === tabId);
+  document.querySelectorAll('.nav-link[data-tab]').forEach(t => {
+    const on = t.getAttribute('data-tab') === tabId;
+    t.classList.toggle('active', on);
+    if (on) t.setAttribute('aria-current', 'page'); else t.removeAttribute('aria-current');
   });
-  // Sync Mobile Bottom Nav Buttons
-  document.querySelectorAll('.mob-nav-btn[data-tab]').forEach(b => {
-    b.classList.toggle('active', b.getAttribute('data-tab') === tabId);
-  });
-  // Sync Panes
   document.querySelectorAll('.tab-pane').forEach(p => {
     p.classList.toggle('active', p.id === `pane-${tabId}`);
   });
+  const title = document.getElementById('topbarTitle');
+  if (title) title.textContent = TAB_TITLES[tabId] || 'Dashboard';
+  document.title = `${TAB_TITLES[tabId] || 'Dashboard'} — TransformaUMKM`;
+  closeSidebarMobile();
+  closeAllDropdowns();
+  window.scrollTo(0, 0);
 
   if (tabId === 'dashboard') {
     renderDashboard();
@@ -558,7 +550,7 @@ function renderSalesTrendChart() {
   const chartH = h - padBottom - padTop;
 
   // Grid Lines
-  ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+  ctx.strokeStyle = cssVar('--border-color');
   ctx.lineWidth = 1;
   for (let i = 0; i <= 3; i++) {
     const y = padTop + (chartH / 3) * i;
@@ -568,7 +560,7 @@ function renderSalesTrendChart() {
     ctx.stroke();
 
     const val = Math.round(maxVal - (maxVal / 3) * i);
-    ctx.fillStyle = '#6b7280';
+    ctx.fillStyle = cssVar('--text-subtle');
     ctx.font = '10px "JetBrains Mono"';
     ctx.textAlign = 'right';
     ctx.fillText((val / 1000) + 'k', padLeft - 8, y + 3);
@@ -584,8 +576,8 @@ function renderSalesTrendChart() {
 
   // Area Fill
   const grad = ctx.createLinearGradient(0, padTop, 0, h - padBottom);
-  grad.addColorStop(0, 'rgba(0, 212, 255, 0.35)');
-  grad.addColorStop(1, 'rgba(0, 212, 255, 0.0)');
+  grad.addColorStop(0, 'rgba(99, 102, 241, 0.32)');
+  grad.addColorStop(1, 'rgba(99, 102, 241, 0)');
 
   ctx.beginPath();
   ctx.moveTo(points[0].x, h - padBottom);
@@ -599,7 +591,7 @@ function renderSalesTrendChart() {
   ctx.beginPath();
   ctx.moveTo(points[0].x, points[0].y);
   points.forEach(p => ctx.lineTo(p.x, p.y));
-  ctx.strokeStyle = '#00d4ff';
+  ctx.strokeStyle = '#6366f1';
   ctx.lineWidth = 2.5;
   ctx.stroke();
 
@@ -607,14 +599,14 @@ function renderSalesTrendChart() {
   points.forEach((p, idx) => {
     ctx.beginPath();
     ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
-    ctx.fillStyle = '#0a0d14';
+    ctx.fillStyle = cssVar('--bg-card');
     ctx.fill();
-    ctx.strokeStyle = '#00d4ff';
+    ctx.strokeStyle = '#6366f1';
     ctx.lineWidth = 2;
     ctx.stroke();
 
-    ctx.fillStyle = '#9ca3af';
-    ctx.font = '11px "Plus Jakarta Sans"';
+    ctx.fillStyle = cssVar('--text-muted');
+    ctx.font = '11px "Inter"';
     ctx.textAlign = 'center';
     ctx.fillText(days[idx], p.x, h - 8);
   });
@@ -649,7 +641,7 @@ function renderCategoryDonutChart() {
   });
 
   const categories = Object.keys(catSums);
-  const colors = ['#00d4ff', '#ff6b35', '#10b981', '#a855f7'];
+  const colors = ['#6366f1', '#f97316', '#10b981', '#8b5cf6'];
   let totalVal = Object.values(catSums).reduce((a, b) => a + b, 0);
   if (totalVal === 0) totalVal = 1; // avoid division by zero
 
@@ -816,12 +808,10 @@ function updateCartQty(productId, delta) {
 function renderPosCart() {
   const list = document.getElementById('cartItemsList');
   const countPill = document.getElementById('navCartCount');
-  const mobCartBadge = document.getElementById('mobCartBadge');
   const totalItemCount = cart.reduce((sum, i) => sum + i.qty, 0);
-  if (countPill) countPill.textContent = totalItemCount;
-  if (mobCartBadge) {
-    mobCartBadge.textContent = totalItemCount;
-    mobCartBadge.style.display = totalItemCount > 0 ? 'inline-block' : 'none';
+  if (countPill) {
+    countPill.textContent = totalItemCount;
+    countPill.style.display = totalItemCount > 0 ? 'inline-block' : 'none';
   }
 
   if (cart.length === 0) {
@@ -1003,13 +993,13 @@ function renderQrisDummyCanvas() {
     }
   }
 
-  // Center GTNIC tag
+  // Center QRIS tag
   ctx.fillStyle = '#e11d48';
   ctx.fillRect(size / 2 - 16, size / 2 - 10, 32, 20);
   ctx.fillStyle = '#ffffff';
-  ctx.font = 'bold 10px monospace';
+  ctx.font = 'bold 9px monospace';
   ctx.textAlign = 'center';
-  ctx.fillText('GTNIC', size / 2, size / 2 + 4);
+  ctx.fillText('QRIS', size / 2, size / 2 + 3);
 }
 
 function processPayment() {
@@ -1426,7 +1416,7 @@ function renderCrmTable() {
     const isVip = c.totalSpent >= 200000;
     const segmentBadge = isVip
       ? '<span class="status-badge" style="background:rgba(168,85,247,0.2);color:#c084fc;">⭐ VIP Member</span>'
-      : '<span class="status-badge" style="background:rgba(255,255,255,0.05);color:var(--text-muted);">Regular</span>';
+      : '<span class="status-badge" style="background:var(--bg-hover);color:var(--text-muted);">Regular</span>';
 
     const tr = document.createElement('tr');
     tr.innerHTML = `
@@ -1605,7 +1595,7 @@ function exportDatabase() {
   const backup = {
     appName: 'TransformaUMKM',
     version: '1.0.0',
-    competition: 'GTNIC 2026 Web Development',
+    platform: 'TransformaUMKM Business Operating System',
     exportedAt: new Date().toISOString(),
     products,
     transactions,
@@ -1626,21 +1616,11 @@ function exportDatabase() {
 function updateAlertBadges() {
   const lowCount = products.filter(p => p.stock <= p.minStock).length;
   const alertPill = document.getElementById('navStockAlertCount');
-  const mobStockBadge = document.getElementById('mobStockBadge');
-
-  if (lowCount > 0) {
-    if (alertPill) {
-      alertPill.style.display = 'inline-block';
-      alertPill.textContent = lowCount;
-    }
-    if (mobStockBadge) {
-      mobStockBadge.style.display = 'inline-block';
-      mobStockBadge.textContent = lowCount;
-    }
-  } else {
-    if (alertPill) alertPill.style.display = 'none';
-    if (mobStockBadge) mobStockBadge.style.display = 'none';
+  if (alertPill) {
+    alertPill.textContent = lowCount;
+    alertPill.style.display = lowCount > 0 ? 'inline-block' : 'none';
   }
+  if (typeof renderNotifications === 'function') renderNotifications();
 }
 
 // ========================================================
@@ -1695,14 +1675,144 @@ function updateAuthUI() {
   if (pubStoreTitle && currentUser.storeName) pubStoreTitle.textContent = currentUser.storeName;
 }
 
-function toggleUserDropdown() {
-  const menu = document.getElementById('userDropdownMenu');
-  if (menu) menu.classList.toggle('show');
+// ========================================================
+// SHELL: dropdowns, sidebar, search, notifications
+// ========================================================
+const DROPDOWNS = ['userDropdownMenu', 'notifDropdown', 'searchResults'];
+
+function closeAllDropdowns(except) {
+  DROPDOWNS.forEach(id => {
+    if (id === except) return;
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('show');
+  });
+  const prof = document.getElementById('btnUserProfile');
+  if (prof) prof.setAttribute('aria-expanded', except === 'userDropdownMenu' ? 'true' : 'false');
 }
 
-function closeUserDropdown() {
-  const menu = document.getElementById('userDropdownMenu');
-  if (menu) menu.classList.remove('show');
+function toggleDropdown(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const willShow = !el.classList.contains('show');
+  closeAllDropdowns(willShow ? id : undefined);
+  el.classList.toggle('show', willShow);
+  if (id === 'userDropdownMenu') {
+    const prof = document.getElementById('btnUserProfile');
+    if (prof) prof.setAttribute('aria-expanded', String(willShow));
+  }
+}
+
+function toggleUserDropdown() { toggleDropdown('userDropdownMenu'); }
+function closeUserDropdown() { closeAllDropdowns(); }
+
+// ---- Sidebar (collapse on desktop, drawer on mobile) ----
+const SB_KEY = 'transforma_sb_collapsed';
+const isMobileViewport = () => window.innerWidth <= 1024;
+
+function toggleSidebar() {
+  if (isMobileViewport()) {
+    document.body.classList.toggle('sb-open');
+    return;
+  }
+  const collapsed = document.body.classList.toggle('sb-collapsed');
+  try { localStorage.setItem(SB_KEY, collapsed ? '1' : '0'); } catch (e) {}
+  const btn = document.getElementById('btnSidebarToggle');
+  if (btn) { btn.setAttribute('aria-expanded', String(!collapsed)); }
+  // Charts depend on container width — redraw after the width transition
+  setTimeout(() => { renderSalesTrendChart(); renderCategoryDonutChart(); }, 260);
+}
+
+function closeSidebarMobile() { document.body.classList.remove('sb-open'); }
+
+// ---- Global search (pages, products, customers) ----
+function runGlobalSearch(q) {
+  const box = document.getElementById('searchResults');
+  if (!box) return;
+  q = q.trim().toLowerCase();
+  if (!q) { box.classList.remove('show'); return; }
+
+  const esc = t => String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const groups = [];
+  const pages = Object.entries(TAB_TITLES).filter(([, t]) => t.toLowerCase().includes(q))
+    .map(([id, t]) => ({ label: t, meta: 'Halaman', tab: id }));
+  if (pages.length) groups.push(['Halaman', pages]);
+  const prods = products.filter(p => (p.name + ' ' + (p.sku || '') + ' ' + (p.category || '')).toLowerCase().includes(q)).slice(0, 5)
+    .map(p => ({ label: p.name, meta: 'Stok ' + p.stock, tab: 'inventory' }));
+  if (prods.length) groups.push(['Produk', prods]);
+  const custs = customers.filter(c => (c.name + ' ' + (c.phone || '')).toLowerCase().includes(q)).slice(0, 5)
+    .map(c => ({ label: c.name, meta: c.phone || 'Pelanggan', tab: 'crm' }));
+  if (custs.length) groups.push(['Pelanggan', custs]);
+
+  box.innerHTML = groups.length
+    ? groups.map(([g, items]) => `<div class="sr-label">${g}</div>` + items.map(i =>
+        `<button type="button" class="sr-item" data-tab="${i.tab}"><span>${esc(i.label)}</span><small>${esc(i.meta)}</small></button>`).join('')).join('')
+    : '<div class="sr-empty">Tidak ada hasil untuk “' + esc(q) + '”</div>';
+  closeAllDropdowns('searchResults');
+  box.classList.add('show');
+}
+
+// ---- Notifications (low stock + latest sales) ----
+let notifReadAt = 0;
+function buildNotifications() {
+  const items = [];
+  products.filter(p => p.stock <= p.minStock).slice(0, 5).forEach(p => items.push({
+    kind: 'warn', icon: '⚠️', title: 'Stok menipis', text: `${p.name} tersisa ${p.stock} unit`, tab: 'inventory', ts: 2
+  }));
+  transactions.slice().reverse().slice(0, 3).forEach(t => items.push({
+    kind: 'ok', icon: '🧾', title: `Transaksi ${t.id}`, text: `${t.customerName || 'Umum'} · ${formatRupiah(t.grandTotal)}`, tab: 'dashboard', ts: 1
+  }));
+  return items;
+}
+
+function renderNotifications() {
+  const list = document.getElementById('notifList');
+  const dot = document.getElementById('notifDot');
+  if (!list) return;
+  const items = buildNotifications();
+  list.innerHTML = items.length ? items.map(n =>
+    `<button type="button" class="notif-item" data-tab="${n.tab}"><span class="notif-ico ${n.kind}">${n.icon}</span>` +
+    `<span class="notif-txt"><strong>${n.title}</strong><span>${n.text}</span></span></button>`).join('')
+    : '<div class="notif-empty">Tidak ada notifikasi baru.</div>';
+  const unread = notifReadAt ? 0 : items.filter(n => n.kind === 'warn').length;
+  if (dot) { dot.textContent = unread; dot.style.display = unread ? 'flex' : 'none'; }
+}
+
+function initShell() {
+  const on = (id, ev, fn) => { const el = document.getElementById(id); if (el) el.addEventListener(ev, fn); };
+  on('btnSidebarToggle', 'click', toggleSidebar);
+  on('btnSidebarMobile', 'click', toggleSidebar);
+  on('sbBackdrop', 'click', closeSidebarMobile);
+
+  on('btnNotif', 'click', e => { e.stopPropagation(); toggleDropdown('notifDropdown'); });
+  on('btnNotifRead', 'click', e => { e.stopPropagation(); notifReadAt = Date.now(); renderNotifications(); });
+
+  const search = document.getElementById('globalSearch');
+  if (search) {
+    search.addEventListener('input', () => runGlobalSearch(search.value));
+    search.addEventListener('focus', () => runGlobalSearch(search.value));
+    search.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        const first = document.querySelector('#searchResults .sr-item');
+        if (first) first.click();
+      } else if (e.key === 'Escape') { search.blur(); closeAllDropdowns(); }
+    });
+  }
+  // Delegated clicks for search / notification rows
+  document.addEventListener('click', e => {
+    const row = e.target.closest('.sr-item[data-tab], .notif-item[data-tab]');
+    if (!row) return;
+    switchTab(row.getAttribute('data-tab'));
+    if (search) { search.value = ''; }
+  });
+
+  // Shortcuts: Ctrl/Cmd+K focus search · Esc closes menus
+  document.addEventListener('keydown', e => {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); if (search) search.focus(); }
+    else if (e.key === 'Escape') { closeAllDropdowns(); closeSidebarMobile(); }
+  });
+
+  window.addEventListener('resize', () => { if (!isMobileViewport()) closeSidebarMobile(); });
+  renderNotifications();
 }
 
 // Redirect to separate auth portals
@@ -1730,6 +1840,7 @@ function proceedLogout(target = 'login') {
   try {
     localStorage.removeItem(STORAGE_KEY_AUTH);
     sessionStorage.removeItem(STORAGE_KEY_AUTH);
+    sessionStorage.removeItem('transforma_wp_seen');
   } catch (err) {
     console.warn('Storage error on logout:', err);
   }
@@ -1742,6 +1853,7 @@ function proceedLogout(target = 'login') {
   }
 }
 
+<<<<<<< HEAD:script.js
 function handleMobileAccountClick() {
   handleLogout();
 }
@@ -1759,6 +1871,8 @@ function initMobileNav() {
   });
 }
 
+=======
+>>>>>>> b800731308c4e40c9af0693c781267216e961c99:transforma-umkm/script.js
 // Modal generic helpers
 function openModal(id) {
   const el = document.getElementById(id);
@@ -1776,10 +1890,9 @@ window.addEventListener('click', (e) => {
     e.target.classList.remove('open');
   }
 
-  // Close user dropdown if clicking outside
-  const userWidget = document.getElementById('userAuthWidget');
-  if (userWidget && !userWidget.contains(e.target)) {
-    closeUserDropdown();
+  // Close any open dropdown when clicking outside of its widget
+  if (!e.target.closest('.dd-wrap') && !e.target.closest('#searchBox')) {
+    closeAllDropdowns();
   }
 });
 
@@ -2070,7 +2183,7 @@ function handleGenerateAiDescription(e) {
         <p style="font-size:0.92rem; line-height:1.6; margin-bottom:1rem; color:var(--text-main);">
           ${aiResult.body}
         </p>
-        <div style="background:rgba(255,255,255,0.03); border:1px solid var(--border-color); border-radius:var(--radius-sm); padding:0.75rem; margin-bottom:1rem;">
+        <div style="background:var(--bg-hover); border:1px solid var(--border-color); border-radius:var(--radius-sm); padding:0.75rem; margin-bottom:1rem;">
           <strong style="color:var(--text-main); font-size:0.85rem; display:block; margin-bottom:0.4rem;">🌟 Keunggulan Produk:</strong>
           <ul style="padding-left:1.25rem; font-size:0.85rem; color:var(--text-muted); line-height:1.6;">
             ${aiResult.bullets.map(b => `<li>${b}</li>`).join('')}
@@ -2232,7 +2345,7 @@ function handleGenerateAiCaption(e) {
 
     const outputBox = document.getElementById('aiCaptionOutputBox');
     outputBox.innerHTML = `
-      <div style="background:rgba(255,255,255,0.02); border:1px solid var(--border-color); border-radius:var(--radius-sm); padding:1rem; font-family:${platform === 'whatsapp' ? 'var(--font-mono)' : 'var(--font-sans)'}; font-size:0.88rem; line-height:1.65; white-space:pre-wrap;">${caption}</div>
+      <div style="background:var(--bg-hover); border:1px solid var(--border-color); border-radius:var(--radius-sm); padding:1rem; font-family:${platform === 'whatsapp' ? 'var(--font-mono)' : 'var(--font-sans)'}; font-size:0.88rem; line-height:1.65; white-space:pre-wrap;">${caption}</div>
     `;
 
     document.getElementById('aiCaptionActionsRow').style.display = 'flex';
@@ -2452,7 +2565,7 @@ function processAiBusinessQuery(query) {
   } else if (q.includes('bundling') || q.includes('paket') || q.includes('snack')) {
     return `
       <p>🎁 <strong>Rekomendasi Paket Bundling Cerdas (AI Synergy):</strong></p>
-      <div style="background:rgba(255,255,255,0.03); border:1px solid var(--border-color); padding:0.75rem; border-radius:6px; margin:0.5rem 0;">
+      <div style="background:var(--bg-hover); border:1px solid var(--border-color); padding:0.75rem; border-radius:6px; margin:0.5rem 0;">
         <strong style="color:var(--cyan-primary);">Paket "Ngopi Santai Nusantara"</strong><br/>
         • 1x ${bestName} (Harga Normal: ${formatRupiah(65000)})<br/>
         • 1x Keripik Pisang Cokelat Lumer 200g (Harga Normal: ${formatRupiah(22000)})<br/>
@@ -2484,3 +2597,15 @@ function resetAiChatHistory() {
 }
 
 // (escapeHtml defined at top security helpers)
+
+// Redraw canvas charts when the viewport changes (browser zoom / window resize)
+(function () {
+  let t = null;
+  window.addEventListener('resize', () => {
+    clearTimeout(t);
+    t = setTimeout(() => {
+      if (typeof renderSalesTrendChart === 'function') renderSalesTrendChart();
+      if (typeof renderCategoryDonutChart === 'function') renderCategoryDonutChart();
+    }, 150);
+  });
+})();

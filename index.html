@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<<<<<<< HEAD:index.html
   <meta name="description" content="TransformaUMKM — Platform Operasi Digital Terpadu untuk Akselerasi Bisnis & UMKM Indonesia (GTNIC 2026 Web Development)." />
   <title>TransformaUMKM — All-in-One Digital SME Operating System | GTNIC 2026</title>
   
@@ -119,11 +120,210 @@
 
     <!-- ======================================================== -->
     <!-- 1. TAB: DASHBOARD BISNIS                                 -->
+=======
+  <meta name="description" content="TransformaUMKM — Platform Operasi Digital Terpadu untuk Akselerasi Bisnis &amp; UMKM Indonesia." />
+  <title>Dashboard — TransformaUMKM</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- Pre-paint: restore sidebar state (prevents flash) -->
+  <script>
+    (function () {
+      try {
+        if (localStorage.getItem('transforma_sb_collapsed') === '1') document.documentElement.classList.add('sb-collapsed-pre');
+      } catch (e) {}
+    })();
+  </script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <script>
+    (function () {
+      if (document.documentElement.classList.contains('sb-collapsed-pre') && window.innerWidth > 1024) document.body.classList.add('sb-collapsed');
+    })();
+  </script>
+
+  <div class="app-shell">
+
+    <!-- Nusantara watermark: Megamendung (kanan atas) · flora + batik kawung (kanan bawah) -->
+    <div class="nusa-deco" aria-hidden="true">
+      <svg class="nusa-tr" viewBox="0 0 560 400" preserveAspectRatio="xMaxYMin meet" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <path id="nusaCloud" d="M0 260 C0 205 48 180 84 204 C96 150 170 132 206 178 C240 146 316 166 308 232 C352 228 392 262 368 304 L0 304 Z"/>
+        </defs>
+        <g transform="translate(150 -118)">
+          <g transform="translate(0 0) scale(1.05)">
+            <use href="#nusaCloud" fill="#7c9cf0"/>
+            <use href="#nusaCloud" fill="#97b2f5" transform="translate(30 56) scale(.84)"/>
+            <use href="#nusaCloud" fill="#b2c7f8" transform="translate(54 104) scale(.68)"/>
+            <use href="#nusaCloud" fill="#cddbfb" transform="translate(74 144) scale(.53)"/>
+            <use href="#nusaCloud" fill="#e4ecfd" transform="translate(90 176) scale(.4)"/>
+          </g>
+        </g>
+        <g fill="none" stroke="#7c9cf0" stroke-width="2.2" stroke-linecap="round">
+          <path d="M30 150 C70 120 110 118 150 80"/>
+        </g>
+        <g fill="#93b0f3">
+          <path d="M150 80 C140 52 168 38 190 52 C176 62 164 70 150 80Z"/>
+          <path d="M118 108 C100 90 112 64 138 66 C132 84 126 96 118 108Z"/>
+          <path d="M84 126 C62 118 58 90 80 82 C86 98 86 112 84 126Z"/>
+          <path d="M60 140 C42 138 30 118 44 102 C54 114 58 126 60 140Z"/>
+        </g>
+      </svg>
+
+      <svg class="nusa-br" viewBox="0 0 440 320" preserveAspectRatio="xMaxYMax meet" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <pattern id="nusaKawung" width="36" height="36" patternUnits="userSpaceOnUse">
+            <g fill="none" stroke="#5b7fe0" stroke-width="1.4">
+              <ellipse cx="18" cy="9" rx="4.5" ry="9"/><ellipse cx="18" cy="27" rx="4.5" ry="9"/>
+              <ellipse cx="9" cy="18" rx="9" ry="4.5"/><ellipse cx="27" cy="18" rx="9" ry="4.5"/>
+            </g>
+            <circle cx="18" cy="18" r="1.8" fill="#5b7fe0"/>
+          </pattern>
+          <radialGradient id="nusaFade" cx="100%" cy="100%" r="95%">
+            <stop offset="0" stop-color="#fff"/><stop offset=".55" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/>
+          </radialGradient>
+          <mask id="nusaMask"><rect width="440" height="320" fill="url(#nusaFade)"/></mask>
+        </defs>
+        <rect width="440" height="320" fill="url(#nusaKawung)" mask="url(#nusaMask)"/>
+        <g fill="#8fb0f5" opacity=".9">
+          <path d="M440 190 C400 190 372 160 376 118 C410 126 436 150 440 190Z"/>
+          <path d="M440 250 C392 258 348 226 344 180 C392 186 436 210 440 250Z"/>
+        </g>
+      </svg>
+    </div>
+
+
+    <!-- ===================== LEFT SIDEBAR ===================== -->
+    <aside class="sidebar" id="sidebar" aria-label="Navigasi utama">
+      <div class="sb-brand" onclick="switchTab('dashboard')" title="TransformaUMKM">
+        <div class="brand-mark"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+        <span class="brand-name">Transforma<span>UMKM</span></span>
+      </div>
+
+      <div class="sb-scroll">
+        <div class="sb-group-label">Menu Utama</div>
+        <button type="button" class="nav-link active" data-tab="dashboard" data-label="Dashboard" title="Dashboard"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg><span class="nav-label">Dashboard</span></button>
+        <button type="button" class="nav-link" data-tab="pos" data-label="Kasir (POS)" title="Kasir (POS)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><path d="M3 6h18M16 10a4 4 0 01-8 0"/></svg><span class="nav-label">Kasir (POS)</span><span class="nav-badge" id="navCartCount" style="display:none">0</span></button>
+        <button type="button" class="nav-link" data-tab="inventory" data-label="Inventori" title="Inventori"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><path d="M3.3 7L12 12l8.7-5M12 22V12"/></svg><span class="nav-label">Inventori</span><span class="nav-badge warn" id="navStockAlertCount" style="display:none">0</span></button>
+        <button type="button" class="nav-link" data-tab="crm" data-label="Pelanggan (CRM)" title="Pelanggan (CRM)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg><span class="nav-label">Pelanggan (CRM)</span></button>
+
+        <div class="sb-group-label">Lainnya</div>
+        <button type="button" class="nav-link" data-tab="storefront" data-label="Katalog Digital" title="Katalog Digital"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l1.5-5h15L21 9"/><path d="M4 9v11h16V9"/><path d="M9 20v-6h6v6"/><path d="M3 9a3 3 0 006 0 3 3 0 006 0 3 3 0 006 0"/></svg><span class="nav-label">Katalog Digital</span></button>
+        <button type="button" class="nav-link" data-tab="ai-assistant" data-label="Asisten AI" title="Asisten AI"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9L12 3z"/><path d="M19 17l.7 1.8L21.5 19.5l-1.8.7L19 22l-.7-1.8-1.8-.7 1.8-.7L19 17z"/></svg><span class="nav-label">Asisten AI</span></button>
+        <button type="button" class="nav-link" data-tab="settings" data-label="Pengaturan" title="Pengaturan"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09a1.65 1.65 0 00-1-1.51 1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09a1.65 1.65 0 001.51-1 1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33h0a1.65 1.65 0 001-1.51V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51h0a1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82v0a1.65 1.65 0 001.51 1H21a2 2 0 110 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg><span class="nav-label">Pengaturan</span></button>
+      </div>
+
+      <div class="sb-footer">
+        <div class="sb-illustration" aria-hidden="true">
+          <svg viewBox="0 0 220 150" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="stBody" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b7a4fb"/><stop offset="1" stop-color="#8b73f0"/></linearGradient>
+              <linearGradient id="stHill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e5defd"/><stop offset="1" stop-color="#f3f0ff"/></linearGradient>
+            </defs>
+            <path d="M0 150 L0 98 C34 74 70 100 110 88 C150 76 186 92 220 70 L220 150Z" fill="url(#stHill)"/>
+            <ellipse cx="112" cy="140" rx="82" ry="7" fill="#7c6bd6" opacity=".18"/>
+            <rect x="52" y="64" width="118" height="74" rx="5" fill="url(#stBody)"/>
+            <rect x="52" y="64" width="118" height="74" rx="5" fill="none" stroke="#7a62e0" stroke-width="1" opacity=".5"/>
+            <path d="M44 50 H178 L186 68 H36Z" fill="#7a5ce8"/>
+            <g>
+              <path d="M36 68 H56 V60 H44 Z" fill="#fff" opacity=".0"/>
+              <path d="M44 50 H62 L58 68 H36Z" fill="#fff" opacity=".92"/>
+              <path d="M80 50 H98 L98 68 H76Z" fill="#fff" opacity=".92"/>
+              <path d="M116 50 H134 L138 68 H116Z" fill="#fff" opacity=".92"/>
+              <path d="M152 50 H170 L178 68 H156Z" fill="#fff" opacity=".92"/>
+            </g>
+            <path d="M36 68 q9 10 18 0 q9 10 18 0 q9 10 18 0 q9 10 18 0 q9 10 18 0 q9 10 18 0 q9 10 18 0 q4 4 8 0 L186 68Z" fill="#6d4fdc" opacity=".0"/>
+            <rect x="60" y="36" width="102" height="14" rx="4" fill="#fff"/>
+            <rect x="68" y="40" width="40" height="6" rx="3" fill="#8b73f0"/>
+            <rect x="114" y="40" width="40" height="6" rx="3" fill="#c9bffa"/>
+            <rect x="64" y="86" width="34" height="52" rx="3" fill="#6a52d8"/>
+            <rect x="70" y="92" width="22" height="28" rx="2" fill="#cfc6fb" opacity=".55"/>
+            <circle cx="92" cy="114" r="2" fill="#fff"/>
+            <rect x="108" y="84" width="52" height="38" rx="3" fill="#e9e4ff"/>
+            <path d="M134 84 V122 M108 103 H160" stroke="#8b73f0" stroke-width="2"/>
+            <g fill="#34b37e">
+              <path d="M14 142 C2 126 8 104 26 100 C28 118 24 132 14 142Z"/>
+              <path d="M26 144 C26 126 38 112 52 112 C52 128 42 140 26 144Z" fill="#5fcf9d"/>
+              <path d="M206 144 C196 128 200 108 216 104 C218 120 216 134 206 144Z"/>
+              <path d="M190 144 C188 130 176 122 168 124 C170 136 178 142 190 144Z" fill="#5fcf9d"/>
+            </g>
+          </svg>
+        </div>
+        <div class="sb-store" title="Toko aktif">
+          <span class="sb-store-dot"></span>
+          <div class="sb-store-text"><small>Toko aktif</small><strong id="currentStoreName">Kopi &amp; Ritel Nusantara</strong></div>
+        </div>
+      </div>
+    </aside>
+    <div class="sb-backdrop" id="sbBackdrop"></div>
+
+    <!-- ===================== MAIN COLUMN ===================== -->
+    <div class="app-main">
+
+      <!-- TOP HEADER -->
+      <header class="topbar">
+        <button type="button" class="tb-btn sb-toggle-mobile" id="btnSidebarMobile" aria-label="Buka menu"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+        <button type="button" class="tb-btn sb-toggle-desktop" id="btnSidebarToggle" aria-label="Ciutkan sidebar" aria-expanded="true" title="Ciutkan / perluas sidebar"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/></svg></button>
+        <h1 class="topbar-title" id="topbarTitle">Dashboard</h1>
+
+        <div class="search-box" id="searchBox">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+          <input type="search" class="search-input" id="globalSearch" placeholder="Cari produk, pelanggan, halaman…" autocomplete="off" aria-label="Pencarian global" />
+          <span class="search-kbd">Ctrl K</span>
+          <div class="dropdown search-results" id="searchResults" role="listbox"></div>
+        </div>
+
+        <div class="topbar-spacer"></div>
+
+        <div class="topbar-actions">
+          <div class="dd-wrap" id="notifWidget">
+            <button type="button" class="tb-btn" id="btnNotif" aria-label="Notifikasi" aria-haspopup="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg><span class="notif-dot" id="notifDot">0</span>
+            </button>
+            <div class="dropdown notif-dropdown" id="notifDropdown">
+              <div class="dd-head"><strong>Notifikasi</strong><button type="button" id="btnNotifRead">Tandai dibaca</button></div>
+              <div class="notif-list" id="notifList"></div>
+            </div>
+          </div>
+
+          <div class="dd-wrap" id="userAuthWidget">
+            <button type="button" class="btn-user-profile" id="btnUserProfile" onclick="toggleUserDropdown()" aria-haspopup="true" title="Menu akun">
+              <span class="user-avatar" id="userAvatarChar">H</span>
+              <span class="user-info-text"><strong id="headerUserName">Hendra Wijaya</strong><small id="headerUserRole">Owner</small></span>
+              <span class="caret-down">&#9662;</span>
+            </button>
+            <div class="dropdown user-dropdown-menu" id="userDropdownMenu">
+              <div class="ud-header">
+                <div class="ud-user-row"><strong id="udName">Hendra Wijaya</strong><span class="badge-role" id="udRoleBadge">Owner</span></div>
+                <span id="udEmail">owner@nusantara.id</span>
+              </div>
+              <button type="button" class="ud-item" onclick="switchTab('settings'); closeAllDropdowns();"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09a1.65 1.65 0 00-1-1.51 1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09a1.65 1.65 0 001.51-1 1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33h0a1.65 1.65 0 001-1.51V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51h0a1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82v0a1.65 1.65 0 001.51 1H21a2 2 0 110 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>Pengaturan</button>
+              <div class="ud-divider"></div>
+              <button type="button" class="ud-item" id="btnResetSeed"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M20.5 9A9 9 0 005.6 5.6L1 10m22 4l-4.6 4.4A9 9 0 013.5 15"/></svg>Muat Data Demo</button>
+              <button type="button" class="ud-item" id="btnExportData"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>Export Database</button>
+              <div class="ud-divider"></div>
+              <button type="button" class="ud-item danger" onclick="handleLogout()" id="btnDropdownLogout"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>Keluar</button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- MAIN CONTENT -->
+      <main class="main-content" id="mainContent">
+
+>>>>>>> b800731308c4e40c9af0693c781267216e961c99:transforma-umkm/index.html
     <!-- ======================================================== -->
     <section class="tab-pane active" id="pane-dashboard">
       <div class="pane-header">
         <div>
+<<<<<<< HEAD:index.html
           <h2>Dashboard Bisnis</h2>
+=======
+          <h2>Executive Business Dashboard</h2>
+>>>>>>> b800731308c4e40c9af0693c781267216e961c99:transforma-umkm/index.html
           <p class="pane-sub">Monitoring performa penjualan, laba bersih, dan kesehatan stok UMKM secara real-time.</p>
         </div>
         <div class="quick-actions">
@@ -138,6 +338,7 @@
         </div>
       </div>
 
+<<<<<<< HEAD:index.html
       <!-- OPERATIONAL INSIGHT & ALERT -->
       <div class="smart-alert-card" id="smartInsightBox">
         <div class="smart-alert-icon">
@@ -149,16 +350,43 @@
         </div>
         <button class="btn btn-sm btn-outline-cyan" id="smartInsightAction" onclick="handleSmartInsightAction()">
           Lihat Detail &rarr;
+=======
+      <!-- SMART AI / AUTOMATION INSIGHT BANNER -->
+      <div class="smart-alert-card" id="smartInsightBox">
+        <div class="smart-alert-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4M12 3a6 6 0 00-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0012 3z"/></svg>
+        </div>
+        <div class="smart-alert-content">
+          <h4>Smart Business Insight &amp; Auto-Recommendation:</h4>
+          <p id="smartInsightText">Memindai parameter inventori dan pola penjualan...</p>
+        </div>
+        <button class="btn btn-sm btn-smart" id="smartInsightAction" onclick="handleSmartInsightAction()">
+          Tindakan Cepat &rarr;
+>>>>>>> b800731308c4e40c9af0693c781267216e961c99:transforma-umkm/index.html
         </button>
       </div>
 
       <!-- KPI METRIC CARDS -->
       <div class="kpi-grid">
+<<<<<<< HEAD:index.html
         <div class="kpi-card" style="--accent:#00D4FF">
           <div class="kpi-top">
             <span class="kpi-label">TOTAL OMZET HARI INI</span>
             <div class="kpi-icon-wrap" style="color:#00D4FF">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+=======
+        <div class="kpi-card kpi-revenue" style="--accent:#3b82f6;">
+          <svg class="kpi-art" viewBox="0 0 200 110" preserveAspectRatio="xMaxYMax meet" aria-hidden="true">
+            <defs><linearGradient id="kaRev" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#60a5fa" stop-opacity=".38"/><stop offset="1" stop-color="#60a5fa" stop-opacity="0"/></linearGradient></defs>
+            <path d="M0 98 L30 82 L52 90 L84 58 L110 70 L146 34 L176 44 L200 14 V110 H0Z" fill="url(#kaRev)"/>
+            <path d="M0 98 L30 82 L52 90 L84 58 L110 70 L146 34 L176 44 L200 14" fill="none" stroke="#60a5fa" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" opacity=".7"/>
+            <circle cx="200" cy="14" r="3.4" fill="#3b82f6"/>
+          </svg>
+          <div class="kpi-top">
+            <span class="kpi-label">TOTAL OMZET HARI INI</span>
+            <div class="kpi-icon-wrap" style="color:var(--accent-text)">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><ellipse cx="12" cy="6" rx="7" ry="3" stroke="currentColor" stroke-width="2"/><path d="M5 6v4c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 10v4c0 1.7 3.1 3 7 3s7-1.3 7-3v-4M5 14v4c0 1.7 3.1 3 7 3s7-1.3 7-3v-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+>>>>>>> b800731308c4e40c9af0693c781267216e961c99:transforma-umkm/index.html
             </div>
           </div>
           <div class="kpi-value" id="kpiRevenue">Rp 0</div>
@@ -168,10 +396,25 @@
           </div>
         </div>
 
+<<<<<<< HEAD:index.html
         <div class="kpi-card" style="--accent:#10B981">
           <div class="kpi-top">
             <span class="kpi-label">ESTIMASI LABA BERSIH</span>
             <div class="kpi-icon-wrap" style="color:#10B981">
+=======
+        <div class="kpi-card kpi-profit" style="--accent:#10b981;">
+          <svg class="kpi-art" viewBox="0 0 200 110" preserveAspectRatio="xMaxYMax meet" aria-hidden="true">
+            <defs><linearGradient id="kaProf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#34d399"/><stop offset="1" stop-color="#34d399" stop-opacity=".25"/></linearGradient></defs>
+            <g fill="url(#kaProf)" opacity=".55">
+              <rect x="104" y="72" width="14" height="38" rx="3"/><rect x="124" y="58" width="14" height="52" rx="3"/>
+              <rect x="144" y="64" width="14" height="46" rx="3"/><rect x="164" y="40" width="14" height="70" rx="3"/><rect x="184" y="22" width="14" height="88" rx="3"/>
+            </g>
+            <path d="M0 108 H200" stroke="#34d399" stroke-width="2" opacity=".35"/>
+          </svg>
+          <div class="kpi-top">
+            <span class="kpi-label">ESTIMASI LABA BERSIH</span>
+            <div class="kpi-icon-wrap" style="color:#10b981">
+>>>>>>> b800731308c4e40c9af0693c781267216e961c99:transforma-umkm/index.html
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><polyline points="17 6 23 6 23 12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </div>
           </div>
@@ -181,10 +424,27 @@
           </div>
         </div>
 
+<<<<<<< HEAD:index.html
         <div class="kpi-card" style="--accent:#A855F7">
           <div class="kpi-top">
             <span class="kpi-label">TOTAL TRANSAKSI</span>
             <div class="kpi-icon-wrap" style="color:#A855F7">
+=======
+        <div class="kpi-card kpi-trx" style="--accent:#8b5cf6;">
+          <svg class="kpi-art" viewBox="0 0 200 110" preserveAspectRatio="xMaxYMax meet" aria-hidden="true">
+            <defs><linearGradient id="kaTrx" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c4b5fd"/><stop offset="1" stop-color="#a78bfa"/></linearGradient></defs>
+            <path d="M0 110 C40 84 80 100 120 76 C150 58 176 66 200 52 V110Z" fill="#c4b5fd" opacity=".35"/>
+            <g transform="translate(112 34) rotate(-8)">
+              <rect width="74" height="50" rx="9" fill="url(#kaTrx)" opacity=".75"/>
+              <rect y="12" width="74" height="9" fill="#fff" opacity=".45"/>
+              <rect x="8" y="32" width="26" height="6" rx="3" fill="#fff" opacity=".6"/>
+              <circle cx="58" cy="35" r="6" fill="#fff" opacity=".6"/>
+            </g>
+          </svg>
+          <div class="kpi-top">
+            <span class="kpi-label">TOTAL TRANSAKSI</span>
+            <div class="kpi-icon-wrap" style="color:#a855f7">
+>>>>>>> b800731308c4e40c9af0693c781267216e961c99:transforma-umkm/index.html
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="2" y="5" width="20" height="14" rx="2" stroke="currentColor" stroke-width="2.2"/><line x1="2" y1="10" x2="22" y2="10" stroke="currentColor" stroke-width="2.2"/></svg>
             </div>
           </div>
@@ -194,10 +454,32 @@
           </div>
         </div>
 
+<<<<<<< HEAD:index.html
         <div class="kpi-card" style="--accent:#FF6B35">
           <div class="kpi-top">
             <span class="kpi-label">PERINGATAN STOK</span>
             <div class="kpi-icon-wrap" style="color:#FF6B35">
+=======
+        <div class="kpi-card kpi-stock" style="--accent:#f97316;">
+          <svg class="kpi-art kpi-art-boxes" viewBox="0 0 200 120" preserveAspectRatio="xMaxYMax meet" aria-hidden="true">
+            <defs>
+              <g id="kaBox">
+                <polygon points="0,0 30,17 0,34 -30,17" fill="#ffe0c2"/>
+                <polygon points="-30,17 0,34 0,68 -30,51" fill="#fdba74"/>
+                <polygon points="0,34 30,17 30,51 0,68" fill="#fb923c"/>
+                <polygon points="-6,6 6,13 6,43 -6,36" fill="#fff" opacity=".35" transform="translate(0 0)"/>
+                <polygon points="-4,3 4,8 -4,13 -12,8" fill="#fff" opacity=".0"/>
+              </g>
+            </defs>
+            <ellipse cx="146" cy="112" rx="58" ry="7" fill="#f97316" opacity=".16"/>
+            <use href="#kaBox" transform="translate(112 44) scale(.9)"/>
+            <use href="#kaBox" transform="translate(166 52) scale(.9)"/>
+            <use href="#kaBox" transform="translate(140 14) scale(.9)"/>
+          </svg>
+          <div class="kpi-top">
+            <span class="kpi-label">PERINGATAN STOK</span>
+            <div class="kpi-icon-wrap" style="color:#f97316">
+>>>>>>> b800731308c4e40c9af0693c781267216e961c99:transforma-umkm/index.html
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0zM12 9v4M12 17h.01" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </div>
           </div>
@@ -219,11 +501,19 @@
             <span class="chart-tag">Realtime Sync</span>
           </div>
           <div class="chart-body">
+<<<<<<< HEAD:index.html
             <canvas id="salesTrendChart" height="220"></canvas>
           </div>
         </div>
 
         <div class="chart-card flex-1">
+=======
+            <canvas id="salesTrendChart"></canvas>
+          </div>
+        </div>
+
+        <div class="chart-card flex-1 card-category">
+>>>>>>> b800731308c4e40c9af0693c781267216e961c99:transforma-umkm/index.html
           <div class="card-head">
             <div>
               <h3>Kontribusi Kategori</h3>
@@ -365,8 +655,13 @@
     <section class="tab-pane" id="pane-inventory">
       <div class="pane-header">
         <div>
+<<<<<<< HEAD:index.html
           <h2>Manajemen Stok &amp; Inventori</h2>
           <p class="pane-sub">Kelola stok produk, pantau ambang batas minimum, dan dapatkan rekomendasi restock tepat waktu.</p>
+=======
+          <h2>Manajemen Inventori &amp; Smart Restock</h2>
+          <p class="pane-sub">Kelola stok produk, pantau ambang batas minimum, dan dapatkan rekomendasi restock otomatis.</p>
+>>>>>>> b800731308c4e40c9af0693c781267216e961c99:transforma-umkm/index.html
         </div>
         <div class="quick-actions">
           <button class="btn btn-primary" onclick="openAddProductModal()">
@@ -437,8 +732,13 @@
     <section class="tab-pane" id="pane-crm">
       <div class="pane-header">
         <div>
+<<<<<<< HEAD:index.html
           <h2>Manajemen Pelanggan (CRM)</h2>
           <p class="pane-sub">Kelola loyalitas pelanggan, pantau riwayat belanja, dan jangkau pelanggan via WhatsApp.</p>
+=======
+          <h2>CRM &amp; Otomatisasi Pemasaran WhatsApp</h2>
+          <p class="pane-sub">Kelola loyalitas pelanggan, pantau riwayat belanja, dan kirim pesan promosi berulang.</p>
+>>>>>>> b800731308c4e40c9af0693c781267216e961c99:transforma-umkm/index.html
         </div>
         <div class="quick-actions">
           <button class="btn btn-primary" onclick="openAddCustomerModal()">
@@ -505,17 +805,27 @@
     <section class="tab-pane" id="pane-storefront">
       <div class="pane-header">
         <div>
+<<<<<<< HEAD:index.html
           <h2>Katalog Online Toko</h2>
           <p class="pane-sub">Halaman katalog publik yang tersinkronisasi otomatis dengan stok kasir untuk pemesanan langsung via WhatsApp.</p>
+=======
+          <h2>Katalog Digital Publik UMKM (Digital Economy Enabler)</h2>
+          <p class="pane-sub">Halaman katalog online instan yang otomatis tersinkronisasi dengan stok kasir untuk pemesanan langsung via WhatsApp.</p>
+>>>>>>> b800731308c4e40c9af0693c781267216e961c99:transforma-umkm/index.html
         </div>
         <div class="quick-actions">
           <button class="btn btn-outline-cyan" onclick="copyStorefrontLink()">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="9" y="9" width="13" height="13" rx="2" stroke="currentColor" stroke-width="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" stroke="currentColor" stroke-width="2"/></svg>
+<<<<<<< HEAD:index.html
             <span>Salin Link Katalog</span>
+=======
+            <span>Salin Link Katalog Toko</span>
+>>>>>>> b800731308c4e40c9af0693c781267216e961c99:transforma-umkm/index.html
           </button>
         </div>
       </div>
 
+<<<<<<< HEAD:index.html
       <!-- PUBLIC STOREFRONT CONTAINER -->
       <div class="public-store-wrapper">
         <div class="store-hero">
@@ -526,6 +836,18 @@
             <div class="store-contacts">
               <span>Jl. Merdeka No. 45, Bandung</span> &bull; 
               <span>WhatsApp: 0812-3456-7890</span>
+=======
+      <!-- SIMULATED PUBLIC STOREFRONT CONTAINER -->
+      <div class="public-store-wrapper">
+        <div class="store-hero">
+          <div class="store-hero-content">
+            <span class="store-badge-live">&#9679; Toko Buka Sekarang</span>
+            <h1 class="store-title" id="pubStoreTitle">Kopi &amp; Ritel Nusantara</h1>
+            <p class="store-desc" id="pubStoreDesc">Menyediakan aneka biji kopi pilihan, camilan tradisional, dan sembako berkualitas dengan harga ramah UMKM.</p>
+            <div class="store-contacts">
+              <span>&#128205; Jl. Merdeka No. 45, Bandung</span> &bull; 
+              <span>&#128222; WA: 0812-3456-7890</span>
+>>>>>>> b800731308c4e40c9af0693c781267216e961c99:transforma-umkm/index.html
             </div>
           </div>
         </div>
@@ -550,6 +872,7 @@
     <!-- TAB PANE: ASISTEN BISNIS BERBASIS AI (TRANSFORMA-AI)     -->
     <!-- ======================================================== -->
     <section class="tab-pane" id="pane-ai-assistant">
+<<<<<<< HEAD:index.html
       <div class="pane-header">
         <div>
           <h2>Asisten &amp; Analisis Bisnis</h2>
@@ -618,6 +941,63 @@
         </button>
         <button class="ai-tab-btn" id="btnAiTab-chat" onclick="switchAiTab('chat-consultant')">
           <span>Konsultasi Bisnis</span>
+=======
+      <!-- AI COPILOT HERO BANNER -->
+      <div class="ai-hero-card">
+        <div class="ai-hero-content">
+          <div class="ai-badge-row">
+            <span class="ai-chip-pill">✨ SMART AI INNOVATION</span>
+            <span class="ai-model-tag">TransformaAI v3.4 Engine</span>
+            <span class="ai-live-pulse"><span class="pulse-dot"></span> Live Data: Transaksi &amp; Inventori</span>
+          </div>
+          <h2>Asisten Bisnis UMKM Berbasis AI</h2>
+          <p class="ai-hero-desc">
+            Kecerdasan buatan terpadu yang menganalisis data riil kasir dan inventori: menyajikan <strong>saran stok cerdas</strong>, <strong>generator deskripsi produk otomatis</strong>, dan <strong>caption promosi media sosial cerdas</strong> untuk memicu percepatan omzet usaha Anda.
+          </p>
+        </div>
+        <div class="ai-hero-quick-actions">
+          <div class="ai-stat-box">
+            <span class="ai-stat-icon">📦</span>
+            <div>
+              <strong id="aiStatRestockCount">2 Produk</strong>
+              <small>Perlu Restock Segera</small>
+            </div>
+          </div>
+          <div class="ai-stat-box">
+            <span class="ai-stat-icon">🔥</span>
+            <div>
+              <strong id="aiStatBestSeller">Kopi Gayo</strong>
+              <small>Produk Terlaris Saat Ini</small>
+            </div>
+          </div>
+          <div class="ai-stat-box">
+            <span class="ai-stat-icon">📈</span>
+            <div>
+              <strong id="aiStatGrowthPotential">+28.4%</strong>
+              <small>Estimasi Peluang Omzet</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI SUB-NAVIGATION BAR (4 PILAR FITUR AI) -->
+      <div class="ai-subnav">
+        <button class="ai-tab-btn active" id="btnAiTab-stock" onclick="switchAiTab('stock-advisor')">
+          <span class="ai-btn-icon">📦</span>
+          <span>1. Saran Stok &amp; Prediksi Kritis</span>
+        </button>
+        <button class="ai-tab-btn" id="btnAiTab-copywriter" onclick="switchAiTab('product-copywriter')">
+          <span class="ai-btn-icon">✍️</span>
+          <span>2. Generator Deskripsi Produk</span>
+        </button>
+        <button class="ai-tab-btn" id="btnAiTab-caption" onclick="switchAiTab('social-caption')">
+          <span class="ai-btn-icon">📱</span>
+          <span>3. Caption Promosi WA &amp; Medsos</span>
+        </button>
+        <button class="ai-tab-btn" id="btnAiTab-chat" onclick="switchAiTab('chat-consultant')">
+          <span class="ai-btn-icon">💬</span>
+          <span>4. Tanya Konsultan AI Bisnis</span>
+>>>>>>> b800731308c4e40c9af0693c781267216e961c99:transforma-umkm/index.html
         </button>
       </div>
 
@@ -626,6 +1006,7 @@
         <div class="card">
           <div class="card-header flex-between">
             <div>
+<<<<<<< HEAD:index.html
               <h3>Rekomendasi Restock &amp; Prediksi Kebutuhan Stok</h3>
               <p class="card-sub">Analisis laju penjualan harian (sales velocity) dan sisa hari sebelum barang habis (runout forecast).</p>
             </div>
@@ -633,6 +1014,15 @@
               <button class="btn btn-sm btn-outline-cyan" onclick="refreshAiStockAnalysis()">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
                 <span>Analisis Ulang</span>
+=======
+              <h3>📦 Rekomendasi Restock &amp; Prediksi Kebutuhan Stok</h3>
+              <p class="card-sub">AI menganalisis laju penjualan harian (sales velocity) dan sisa hari sebelum barang habis (runout forecast).</p>
+            </div>
+            <div class="header-actions">
+              <button class="btn btn-sm btn-smart" onclick="refreshAiStockAnalysis()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                <span>Analisis Ulang AI</span>
+>>>>>>> b800731308c4e40c9af0693c781267216e961c99:transforma-umkm/index.html
               </button>
             </div>
           </div>
@@ -668,8 +1058,13 @@
           <!-- INPUT CONFIGURATION -->
           <div class="card">
             <div class="card-header">
+<<<<<<< HEAD:index.html
               <h3>Parameter Deskripsi Produk</h3>
               <p class="card-sub">Pilih produk toko atau masukkan detail baru untuk membuat copywriting katalog online.</p>
+=======
+              <h3>✍️ Parameter Generator Deskripsi Produk</h3>
+              <p class="card-sub">Pilih produk toko atau masukkan detail baru. AI akan meracik copywriting persuasif untuk katalog online.</p>
+>>>>>>> b800731308c4e40c9af0693c781267216e961c99:transforma-umkm/index.html
             </div>
             <form id="aiCopywriterForm" onsubmit="handleGenerateAiDescription(event)">
               <div class="form-group">
@@ -705,10 +1100,17 @@
                 <div class="form-group">
                   <label for="aiCopyTone" class="form-label">Gaya Bahasa (Tone of Voice):</label>
                   <select id="aiCopyTone" class="form-input">
+<<<<<<< HEAD:index.html
                     <option value="storytelling">Santai, Hangat &amp; Ramah (Storytelling)</option>
                     <option value="persuasive">Menjual &amp; Persuasif (Komersial / Diskon)</option>
                     <option value="premium">Elegan &amp; Premium (Artisan)</option>
                     <option value="fomo">Cepat, Terbatas &amp; Urgen (Flash Sale)</option>
+=======
+                    <option value="storytelling">☕ Santai, Hangat &amp; Storytelling (Friendly)</option>
+                    <option value="persuasive">🌟 Menjual &amp; Persuasif (Komersial / Diskon)</option>
+                    <option value="premium">💎 Elegan, Mewah &amp; Artisan (Luxury)</option>
+                    <option value="fomo">⚡ Cepat, Urgen &amp; FOMO (Flash Sale)</option>
+>>>>>>> b800731308c4e40c9af0693c781267216e961c99:transforma-umkm/index.html
                   </select>
                 </div>
                 <div class="form-group">
@@ -722,8 +1124,13 @@
                 </div>
               </div>
 
+<<<<<<< HEAD:index.html
               <button type="submit" class="btn btn-primary btn-block btn-lg mt-3" id="btnRunAiCopywriter">
                 <span>Buat Deskripsi Produk</span>
+=======
+              <button type="submit" class="btn btn-smart btn-block btn-lg mt-3" id="btnRunAiCopywriter">
+                <span>✨ Hasilkan Deskripsi AI Otomatis</span>
+>>>>>>> b800731308c4e40c9af0693c781267216e961c99:transforma-umkm/index.html
               </button>
             </form>
           </div>
@@ -732,17 +1139,30 @@
           <div class="card ai-result-card">
             <div class="card-header flex-between">
               <div>
+<<<<<<< HEAD:index.html
                 <h3>Hasil Deskripsi Produk</h3>
                 <p class="card-sub">Format naratif persuasif dengan hook, value proposition, dan hashtag SEO.</p>
               </div>
               <span class="badge" style="background:rgba(59,130,246,0.1); color:#3b82f6; border:1px solid rgba(59,130,246,0.25); font-size:0.72rem; padding:2px 8px; border-radius:9999px;">Hasil Siap Pakai</span>
+=======
+                <h3>📄 Hasil Copywriting AI Siap Pakai</h3>
+                <p class="card-sub">Format naratif persuasif dengan hook, value proposition, dan hashtag SEO.</p>
+              </div>
+              <span class="badge-ai-model">AI Generated</span>
+>>>>>>> b800731308c4e40c9af0693c781267216e961c99:transforma-umkm/index.html
             </div>
 
             <div class="ai-preview-box" id="aiCopywriterOutputBox">
               <div class="ai-empty-placeholder">
+<<<<<<< HEAD:index.html
                 <svg width="40" height="40" viewBox="0 0 24 24" fill="none" style="margin-bottom:0.75rem; color:var(--text-subtle);"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 <strong>Deskripsi produk akan muncul di sini</strong>
                 <p>Pilih produk di sebelah kiri atau isi parameter, lalu klik tombol "Buat Deskripsi Produk".</p>
+=======
+                <span class="placeholder-icon">✍️</span>
+                <strong>Deskripsi AI akan muncul di sini</strong>
+                <p>Pilih produk di sebelah kiri atau isi parameter, lalu klik tombol "Hasilkan Deskripsi AI Otomatis".</p>
+>>>>>>> b800731308c4e40c9af0693c781267216e961c99:transforma-umkm/index.html
               </div>
             </div>
 
@@ -751,9 +1171,15 @@
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="9" y="9" width="13" height="13" rx="2" stroke="currentColor" stroke-width="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" stroke="currentColor" stroke-width="2"/></svg>
                 <span>Salin Deskripsi</span>
               </button>
+<<<<<<< HEAD:index.html
               <button type="button" class="btn btn-secondary" onclick="applyAiDescriptionToSelectedProduct()">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z" stroke="currentColor" stroke-width="2"/><polyline points="17 21 17 13 7 13 7 21" stroke="currentColor" stroke-width="2"/></svg>
                 <span>Simpan ke Data Produk</span>
+=======
+              <button type="button" class="btn btn-smart" onclick="applyAiDescriptionToSelectedProduct()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z" stroke="currentColor" stroke-width="2"/><polyline points="17 21 17 13 7 13 7 21" stroke="currentColor" stroke-width="2"/></svg>
+                <span>Simpan ke Data Produk Toko</span>
+>>>>>>> b800731308c4e40c9af0693c781267216e961c99:transforma-umkm/index.html
               </button>
             </div>
           </div>
@@ -766,8 +1192,13 @@
           <!-- CONFIGURATION -->
           <div class="card">
             <div class="card-header">
+<<<<<<< HEAD:index.html
               <h3>Konfigurasi Caption Promosi</h3>
               <p class="card-sub">Rumuskan pesan promosi media sosial berdasarkan tren penjualan dan ketersediaan stok toko.</p>
+=======
+              <h3>📱 Konfigurasi Generator Caption Promosi</h3>
+              <p class="card-sub">AI membaca data produk terlaris dan stok berlebih untuk merumuskan caption media sosial siap konversi.</p>
+>>>>>>> b800731308c4e40c9af0693c781267216e961c99:transforma-umkm/index.html
             </div>
 
             <form id="aiCaptionForm" onsubmit="handleGenerateAiCaption(event)">
@@ -776,6 +1207,7 @@
                 <div class="ai-platform-chips">
                   <label class="platform-chip">
                     <input type="radio" name="aiPlatform" value="whatsapp" checked />
+<<<<<<< HEAD:index.html
                     <span class="chip-inner">WhatsApp Broadcast &amp; Status</span>
                   </label>
                   <label class="platform-chip">
@@ -785,11 +1217,23 @@
                   <label class="platform-chip">
                     <input type="radio" name="aiPlatform" value="tiktok" />
                     <span class="chip-inner">TikTok Video Caption</span>
+=======
+                    <span class="chip-inner">🟢 WhatsApp Broadcast &amp; Status</span>
+                  </label>
+                  <label class="platform-chip">
+                    <input type="radio" name="aiPlatform" value="instagram" />
+                    <span class="chip-inner">📸 Instagram Feed &amp; Story</span>
+                  </label>
+                  <label class="platform-chip">
+                    <input type="radio" name="aiPlatform" value="tiktok" />
+                    <span class="chip-inner">🎵 TikTok Video Caption</span>
+>>>>>>> b800731308c4e40c9af0693c781267216e961c99:transforma-umkm/index.html
                   </label>
                 </div>
               </div>
 
               <div class="form-group">
+<<<<<<< HEAD:index.html
                 <label class="form-label">2. Pilih Strategi Promosi:</label>
                 <select id="aiCaptionStrategy" class="form-input">
                   <option value="bestseller">Produk Terlaris (#1 Best Seller) — Promosikan Produk Paling Laku</option>
@@ -797,6 +1241,15 @@
                   <option value="weekend">Promo Akhir Pekan (Weekend Special Offer)</option>
                   <option value="payday">Promo Awal Bulan / Gajian (Payday Special Diskon)</option>
                   <option value="loyalty">Apresiasi Pelanggan Setia (Poin &amp; Reward)</option>
+=======
+                <label class="form-label">2. Pilih Strategi Promosi Berbasis Data Penjualan:</label>
+                <select id="aiCaptionStrategy" class="form-input">
+                  <option value="bestseller">🔥 Produk Terlaris (#1 Best Seller) &mdash; Rekomendasikan Produk Paling Laku</option>
+                  <option value="slowmoving">⏳ Flash Sale Habiskan Stok (Cuci Gudang) &mdash; Putar Modal Stok Menumpuk</option>
+                  <option value="weekend">🎉 Promo Spesial Akhir Pekan (Weekend Special Offer)</option>
+                  <option value="payday">💰 Promo Gajian / Awal Bulan (Payday Special Diskon)</option>
+                  <option value="loyalty">⭐ Apresiasi Pelanggan Setia (Penukaran Poin &amp; Hadiah)</option>
+>>>>>>> b800731308c4e40c9af0693c781267216e961c99:transforma-umkm/index.html
                 </select>
               </div>
 
@@ -822,8 +1275,13 @@
                 </div>
               </div>
 
+<<<<<<< HEAD:index.html
               <button type="submit" class="btn btn-primary btn-block btn-lg mt-3" id="btnRunAiCaption">
                 <span>Buat Caption Promosi</span>
+=======
+              <button type="submit" class="btn btn-smart btn-block btn-lg mt-3" id="btnRunAiCaption">
+                <span>🚀 Buat Caption AI Berdasarkan Data Penjualan</span>
+>>>>>>> b800731308c4e40c9af0693c781267216e961c99:transforma-umkm/index.html
               </button>
             </form>
           </div>
@@ -832,17 +1290,30 @@
           <div class="card ai-result-card">
             <div class="card-header flex-between">
               <div>
+<<<<<<< HEAD:index.html
                 <h3>Pratinjau Caption Siap Kirim</h3>
                 <p class="card-sub">Format rapi dengan tata bahasa menarik dan call-to-action langsung ke kontak toko.</p>
               </div>
               <span class="badge" style="background:rgba(59,130,246,0.1); color:#3b82f6; border:1px solid rgba(59,130,246,0.25); font-size:0.72rem; padding:2px 8px; border-radius:9999px;">Siap Kirim</span>
+=======
+                <h3>📢 Preview Caption Promosi Siap Bagikan</h3>
+                <p class="card-sub">Format rapi dengan emoji, tagar, dan call-to-action langsung ke nomor WhatsApp.</p>
+              </div>
+              <span class="badge-ai-model">Ready-to-Post</span>
+>>>>>>> b800731308c4e40c9af0693c781267216e961c99:transforma-umkm/index.html
             </div>
 
             <div class="ai-preview-box" id="aiCaptionOutputBox">
               <div class="ai-empty-placeholder">
+<<<<<<< HEAD:index.html
                 <svg width="40" height="40" viewBox="0 0 24 24" fill="none" style="margin-bottom:0.75rem; color:var(--text-subtle);"><rect x="2" y="2" width="20" height="20" rx="5" stroke="currentColor" stroke-width="2"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z" stroke="currentColor" stroke-width="2"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" stroke="currentColor" stroke-width="2"/></svg>
                 <strong>Caption promosi akan dibuatkan di sini</strong>
                 <p>Pilih platform dan strategi promo di samping, lalu klik tombol "Buat Caption Promosi".</p>
+=======
+                <span class="placeholder-icon">📱</span>
+                <strong>Caption Promosi AI akan dibuatkan di sini</strong>
+                <p>Pilih platform dan strategi promo di samping, lalu klik "Buat Caption AI Berdasarkan Data Penjualan".</p>
+>>>>>>> b800731308c4e40c9af0693c781267216e961c99:transforma-umkm/index.html
               </div>
             </div>
 
@@ -865,12 +1336,19 @@
         <div class="card ai-chat-container">
           <div class="ai-chat-header">
             <div class="ai-chat-profile">
+<<<<<<< HEAD:index.html
               <div class="ai-chat-avatar">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2a2 2 0 012 2v2a2 2 0 01-2 2 2 2 0 01-2-2V4a2 2 0 012-2zM4 11a2 2 0 012-2h12a2 2 0 012 2v7a2 2 0 01-2 2H6a2 2 0 01-2-2v-7z" stroke="currentColor" stroke-width="2"/><line x1="9" y1="13" x2="9" y2="15" stroke="currentColor" stroke-width="2"/><line x1="15" y1="13" x2="15" y2="15" stroke="currentColor" stroke-width="2"/></svg>
               </div>
               <div>
                 <strong>Konsultan Usaha Transforma</strong>
                 <small class="ai-status-online">● Siap Menganalisis Data Toko &bull; Respon Cepat</small>
+=======
+              <div class="ai-chat-avatar">🤖</div>
+              <div>
+                <strong>TransformaAI Business Advisor</strong>
+                <small class="ai-status-online">● Online &bull; Menganalisis Data Riil Toko &bull; Respon Instan</small>
+>>>>>>> b800731308c4e40c9af0693c781267216e961c99:transforma-umkm/index.html
               </div>
             </div>
             <button type="button" class="btn btn-sm btn-ghost" onclick="resetAiChatHistory()">Bersihkan Chat</button>
@@ -880,8 +1358,13 @@
           <div class="ai-chat-messages" id="aiChatMessages">
             <div class="chat-msg assistant">
               <div class="chat-bubble">
+<<<<<<< HEAD:index.html
                 <p>Halo, <strong>Hendra Wijaya</strong>! Selamat datang di sesi konsultasi toko <strong>Kopi &amp; Ritel Nusantara</strong>.</p>
                 <p>Data transaksi dan inventori Anda telah disinkronkan. Apa yang ingin Anda diskusikan atau analisis hari ini? Pilih salah satu topik cepat di bawah atau tulis pertanyaan langsung.</p>
+=======
+                <p>Halo, <strong>Hendra Wijaya</strong>! Saya adalah <strong>TransformaAI</strong>, asisten bisnis cerdas untuk toko Anda.</p>
+                <p>Saya telah menganalisis catatan transaksi dan ketersediaan stok Anda. Apa yang ingin Anda konsultasikan hari ini? Silakan klik salah satu topik cepat di bawah atau ketik pertanyaan apa pun!</p>
+>>>>>>> b800731308c4e40c9af0693c781267216e961c99:transforma-umkm/index.html
               </div>
             </div>
           </div>
@@ -889,6 +1372,7 @@
           <!-- QUICK PROMPT CHIPS -->
           <div class="ai-quick-prompts">
             <button type="button" class="chip-prompt" onclick="sendAiQuickPrompt('omzet')">
+<<<<<<< HEAD:index.html
               Strategi menaikkan omzet toko 25% minggu ini
             </button>
             <button type="button" class="chip-prompt" onclick="sendAiQuickPrompt('profit')">
@@ -899,6 +1383,18 @@
             </button>
             <button type="button" class="chip-prompt" onclick="sendAiQuickPrompt('restock')">
               Daftar produk paling kritis kehabisan stok
+=======
+              💡 Bagaimana strategi menaikkan omzet toko 25% minggu ini?
+            </button>
+            <button type="button" class="chip-prompt" onclick="sendAiQuickPrompt('profit')">
+              💰 Analisis margin keuntungan &amp; HPP toko saya saat ini
+            </button>
+            <button type="button" class="chip-prompt" onclick="sendAiQuickPrompt('bundling')">
+              🎁 Buatkan ide paket bundling produk terlaris + snack
+            </button>
+            <button type="button" class="chip-prompt" onclick="sendAiQuickPrompt('restock')">
+              📦 Produk apa yang paling berisiko kehabisan stok?
+>>>>>>> b800731308c4e40c9af0693c781267216e961c99:transforma-umkm/index.html
             </button>
           </div>
 
@@ -913,6 +1409,7 @@
         </div>
       </div>
     </section>
+<<<<<<< HEAD:index.html
   </main>
 
   <!-- RESPONSIVE MOBILE BOTTOM NAVIGATION (TAMPIL PADA LAYAR SMARTPHONE ASLI) -->
@@ -948,6 +1445,48 @@
       <span class="mob-lbl">Akun</span>
     </button>
   </nav>
+=======
+
+    <section class="tab-pane" id="pane-settings">
+      <div class="pane-header">
+        <div>
+          <h2>Pengaturan</h2>
+          <p class="pane-sub">Tampilan, performa, dan preferensi aplikasi.</p>
+        </div>
+      </div>
+
+      <p class="settings-section-title">Performa &amp; Tampilan</p>
+      <div class="settings-section">
+        <div class="settings-toggle-row">
+          <div class="settings-toggle-label">
+            <strong>Welcoming Page &amp; Parallax</strong>
+            <span>Layar sambutan penuh sebelum halaman Login/Register. Matikan agar langsung ke form (cocok untuk perangkat spek rendah).</span>
+          </div>
+          <label class="toggle-switch" for="toggleWelcomingPage">
+            <input type="checkbox" id="toggleWelcomingPage" checked onchange="handleWpToggle(this.checked)" />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <p class="settings-section-title">Tentang</p>
+      <div class="settings-section">
+        <div class="settings-toggle-row">
+          <div class="settings-toggle-label">
+            <strong>TransformaUMKM</strong>
+            <span>Platform operasi digital untuk POS, inventori, CRM, dan analitik UMKM.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Toasts -->
+  <div class="toast-container" id="toastContainer"></div>
+>>>>>>> b800731308c4e40c9af0693c781267216e961c99:transforma-umkm/index.html
 
   <!-- ======================================================== -->
   <!-- MODALS                                                   -->
@@ -1090,7 +1629,11 @@
           </div>
           <div class="rc-footer">
             <p>Terima Kasih Atas Kunjungan Anda!</p>
+<<<<<<< HEAD:index.html
             <small>Didukung oleh TransformaUMKM &bull; GTNIC 2026</small>
+=======
+            <small>Didukung oleh TransformaUMKM</small>
+>>>>>>> b800731308c4e40c9af0693c781267216e961c99:transforma-umkm/index.html
           </div>
         </div>
       </div>
@@ -1223,6 +1766,7 @@
         <div class="promo-templates-list">
           <div class="promo-card" onclick="selectPromoTemplate('weekend')">
             <div class="promo-tag">Diskon Akhir Pekan</div>
+<<<<<<< HEAD:index.html
             <h4>Promo Spesial Weekend — Diskon 15%</h4>
             <p>Halo [Nama], nikmati diskon spesial 15% untuk semua varian kopi favoritmu akhir pekan ini!</p>
           </div>
@@ -1234,6 +1778,19 @@
           <div class="promo-card" onclick="selectPromoTemplate('new')">
             <div class="promo-tag">Produk Baru</div>
             <h4>Peluncuran Varian Baru</h4>
+=======
+            <h4>🎉 Promo Spesial Weekend — Diskon 15%</h4>
+            <p>Halo [Nama], nikmati diskon spesial 15% untuk semua varian kopi favoritmu akhir pekan ini di Transforma UMKM!</p>
+          </div>
+          <div class="promo-card" onclick="selectPromoTemplate('loyalty')">
+            <div class="promo-tag">Loyalty Reward</div>
+            <h4>⭐ Penukaran Poin Belanja</h4>
+            <p>Halo [Nama], kamu memiliki poin loyalitas yang dapat ditukarkan dengan gratis minuman atau potongan harga langsung!</p>
+          </div>
+          <div class="promo-card" onclick="selectPromoTemplate('new')">
+            <div class="promo-tag">Menu / Produk Baru</div>
+            <h4>✨ Peluncuran Varian Baru</h4>
+>>>>>>> b800731308c4e40c9af0693c781267216e961c99:transforma-umkm/index.html
             <p>Halo [Nama], kami baru saja kedatangan stok baru pilihan terbaik. Cek katalog online kami sebelum kehabisan!</p>
           </div>
         </div>
@@ -1252,6 +1809,7 @@
     </div>
   </div>
 
+<<<<<<< HEAD:index.html
   <!-- MODAL: KONFIRMASI KELUAR (LOGOUT) -->
   <div class="modal-overlay" id="logoutModal">
     <div class="modal-box modal-sm" style="text-align: center; padding: 2.25rem 1.75rem;">
@@ -1270,6 +1828,26 @@
         <button type="button" class="btn btn-secondary btn-block btn-lg" onclick="proceedLogout('register')" id="btnGoToRegister" style="justify-content: center;">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke="currentColor" stroke-width="2"/><circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="2"/><line x1="19" y1="8" x2="19" y2="14" stroke="currentColor" stroke-width="2"/><line x1="22" y1="11" x2="16" y2="11" stroke="currentColor" stroke-width="2"/></svg>
           <span>Daftar Akun Baru (Register)</span>
+=======
+  <!-- MODAL: KONFIRMASI KELUAR (LOGOUT) & NAVIGASI KE LOGIN / BUAT AKUN -->
+  <div class="modal-overlay" id="logoutModal">
+    <div class="modal-box modal-sm" style="text-align: center; padding: 2.25rem 1.75rem;">
+      <div style="width: 58px; height: 58px; margin: 0 auto 1.25rem auto; border-radius: 50%; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); display: flex; align-items: center; justify-content: center; font-size: 1.8rem;">
+        🚪
+      </div>
+      <h3 style="font-size: 1.3rem; font-weight: 800; margin-bottom: 0.4rem; color: var(--text-main);">Keluar dari Akun UMKM</h3>
+      <p style="color: var(--text-muted); font-size: 0.88rem; line-height: 1.5; margin-bottom: 1.5rem;">
+        Sesi usaha Anda akan ditutup. Silakan pilih halaman terpisah yang ingin Anda tuju:
+      </p>
+      <div style="display: flex; flex-direction: column; gap: 0.85rem;">
+        <button type="button" class="btn btn-primary btn-block btn-lg" onclick="proceedLogout('login')" id="btnGoToLogin" style="justify-content: center;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="11" width="18" height="11" rx="2" stroke="currentColor" stroke-width="2"/><path d="M7 11V7a5 5 0 0110 0v4" stroke="currentColor" stroke-width="2"/></svg>
+          <span>🔑 Menuju Halaman Masuk (Login)</span>
+        </button>
+        <button type="button" class="btn btn-smart btn-block btn-lg" onclick="proceedLogout('register')" id="btnGoToRegister" style="justify-content: center;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke="currentColor" stroke-width="2"/><circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="2"/><line x1="19" y1="8" x2="19" y2="14" stroke="currentColor" stroke-width="2"/><line x1="22" y1="11" x2="16" y2="11" stroke="currentColor" stroke-width="2"/></svg>
+          <span>📝 Menuju Halaman Buat Akun (Register)</span>
+>>>>>>> b800731308c4e40c9af0693c781267216e961c99:transforma-umkm/index.html
         </button>
         <button type="button" class="btn btn-ghost btn-block" onclick="closeModal('logoutModal')" style="margin-top: 0.25rem;">
           <span>Batal &amp; Tetap di Dashboard</span>
@@ -1278,6 +1856,7 @@
     </div>
   </div>
 
+<<<<<<< HEAD:index.html
   <!-- FOOTER -->
   <footer class="app-footer">
     <div class="footer-inner">
@@ -1294,5 +1873,10 @@
 
   <!-- Main JavaScript File -->
   <script src="script.js"></script>
+=======
+
+  <script src="script.js"></script>
+  <script src="welcome.js"></script>
+>>>>>>> b800731308c4e40c9af0693c781267216e961c99:transforma-umkm/index.html
 </body>
 </html>
