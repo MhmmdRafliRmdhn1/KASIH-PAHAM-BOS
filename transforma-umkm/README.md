@@ -67,7 +67,7 @@ Sistem dibangun dengan arsitektur **Zero-Heavy-Dependency Single Page Applicatio
 │  Semantic HTML5       │             │  Stock Safety Triggers│
 │  Vanilla CSS3 Tokens  │             │  Auto PO Generator WA │
 │  Responsive Flex/Grid │             │  Profit Margin Engine │
-│  Glassmorphism Dark   │             │  QRIS Canvas Painter  │
+│  Glassmorphism Light  │             │  QRIS Canvas Painter  │
 └───────────┬───────────┘             └───────────┬───────────┘
             │                                     │
             └──────────────────┬──────────────────┘
@@ -92,7 +92,7 @@ Sesuai dengan standar teknis industri modern:
 ```
 transforma-umkm/
 ├── index.html              # Aplikasi web utama (SPA 5 Modul Terintegrasi)
-├── style.css               # Desain sistem responsif, dark/light theme, komponen kasir
+├── style.css               # Desain sistem responsif (light theme), komponen kasir
 ├── script.js               # Business logic, state management, CRUD, kalkulasi laba, canvas chart
 ├── vercel.json             # Konfigurasi deployment platform Vercel
 ├── .gitignore              # Proteksi file kredensial, env, dan runtime logs
@@ -163,6 +163,6 @@ Aplikasi telah dilengkapi `vercel.json` dan siap dideploy langsung ke hosting pu
 - **Fungsionalitas & Implementasi (25%)**: Alur kasir, cetak struk, kalkulasi diskon/pajak, dan CRUD inventori bekerja 100% tanpa mock statis.
 - **Relevansi Masalah & Solusi (20%)**: Menjawab langsung subtema *Accelerating Digital Transformation for Business and SMEs*.
 - **Kualitas Teknis & Arsitektur (20%)**: Struktur kode modular, clean code, semantik standar W3C, performa load < 1 detik.
-- **UI/UX & Design (15%)**: Dark glassmorphism modern, visual hierarchy teruji, responsive di smartphone/tablet/desktop.
+- **UI/UX & Design (15%)**: Light glassmorphism modern, visual hierarchy teruji, responsive di smartphone/tablet/desktop.
 - **Dampak Bisnis (10%)**: Efisiensi waktu pembukuan hingga 80%, nol kertas kasir, dan integrasi WhatsApp marketing.
 - **Dokumentasi (10%)**: Dilengkapi proposal lengkap di `docs/PROPOSAL_UX_CASE_STUDY.md`, skema database, dan README berstandar tinggi.

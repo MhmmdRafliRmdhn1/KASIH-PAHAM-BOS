@@ -3,248 +3,140 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Pendaftaran Akun Usaha Baru — TransformaUMKM Solusi Operasi Digital UMKM." />
-  <title>Pendaftaran Akun UMKM Baru — TransformaUMKM</title>
-  
-  <!-- Fonts -->
+  <meta name="description" content="TransformaUMKM — Platform Operasi Digital Terpadu untuk Bisnis &amp; UMKM Indonesia." />
+  <title>Daftar — TransformaUMKM</title>
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
-  
-  <!-- Main Stylesheet (includes clean B2B SaaS Auth styling) -->
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
-<body data-theme="dark" class="auth-page">
+<body class="auth-page">
+    <div class="nusa-deco" aria-hidden="true">
+      <svg class="nusa-tr" viewBox="0 0 560 400" preserveAspectRatio="xMaxYMin meet" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <path id="nusaCloud" d="M0 260 C0 205 48 180 84 204 C96 150 170 132 206 178 C240 146 316 166 308 232 C352 228 392 262 368 304 L0 304 Z"/>
+        </defs>
+        <g transform="translate(150 -118)">
+          <g transform="translate(0 0) scale(1.05)">
+            <use href="#nusaCloud" fill="#7c9cf0"/>
+            <use href="#nusaCloud" fill="#97b2f5" transform="translate(30 56) scale(.84)"/>
+            <use href="#nusaCloud" fill="#b2c7f8" transform="translate(54 104) scale(.68)"/>
+            <use href="#nusaCloud" fill="#cddbfb" transform="translate(74 144) scale(.53)"/>
+            <use href="#nusaCloud" fill="#e4ecfd" transform="translate(90 176) scale(.4)"/>
+          </g>
+        </g>
+        <g fill="none" stroke="#7c9cf0" stroke-width="2.2" stroke-linecap="round">
+          <path d="M30 150 C70 120 110 118 150 80"/>
+        </g>
+        <g fill="#93b0f3">
+          <path d="M150 80 C140 52 168 38 190 52 C176 62 164 70 150 80Z"/>
+          <path d="M118 108 C100 90 112 64 138 66 C132 84 126 96 118 108Z"/>
+          <path d="M84 126 C62 118 58 90 80 82 C86 98 86 112 84 126Z"/>
+          <path d="M60 140 C42 138 30 118 44 102 C54 114 58 126 60 140Z"/>
+        </g>
+      </svg>
 
-  <!-- TOP MINIMALIST NAVIGATION -->
-  <nav class="auth-top-nav">
-    <div class="auth-top-left">
-      <a href="index.html" class="auth-brand-link" title="Beranda TransformaUMKM">
-        <div class="auth-logo-badge">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
-        <span class="auth-brand-name">Transforma<span>UMKM</span></span>
-      </a>
-      <div class="auth-nav-divider"></div>
-      <span class="auth-nav-tag">Pendaftaran Akun Usaha</span>
+      <svg class="nusa-br" viewBox="0 0 440 320" preserveAspectRatio="xMaxYMax meet" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <pattern id="nusaKawung" width="36" height="36" patternUnits="userSpaceOnUse">
+            <g fill="none" stroke="#5b7fe0" stroke-width="1.4">
+              <ellipse cx="18" cy="9" rx="4.5" ry="9"/><ellipse cx="18" cy="27" rx="4.5" ry="9"/>
+              <ellipse cx="9" cy="18" rx="9" ry="4.5"/><ellipse cx="27" cy="18" rx="9" ry="4.5"/>
+            </g>
+            <circle cx="18" cy="18" r="1.8" fill="#5b7fe0"/>
+          </pattern>
+          <radialGradient id="nusaFade" cx="100%" cy="100%" r="95%">
+            <stop offset="0" stop-color="#fff"/><stop offset=".55" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/>
+          </radialGradient>
+          <mask id="nusaMask"><rect width="440" height="320" fill="url(#nusaFade)"/></mask>
+        </defs>
+        <rect width="440" height="320" fill="url(#nusaKawung)" mask="url(#nusaMask)"/>
+        <g fill="#8fb0f5" opacity=".9">
+          <path d="M440 190 C400 190 372 160 376 118 C410 126 436 150 440 190Z"/>
+          <path d="M440 250 C392 258 348 226 344 180 C392 186 436 210 440 250Z"/>
+        </g>
+      </svg>
     </div>
 
-    <div class="auth-top-right">
-      <div class="auth-nav-switch">
-        <a href="login.html" class="auth-nav-btn">Masuk</a>
-        <a href="register.html" class="auth-nav-btn active">Daftar Baru</a>
-      </div>
-      <a href="index.html" class="auth-btn-ghost-back" title="Buka Dashboard Aplikasi">
-        <span>Buka Dashboard</span>
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-          <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </a>
-    </div>
-  </nav>
 
-  <!-- MAIN AUTH CONTAINER -->
-  <main class="auth-main-viewport">
-    <div class="auth-split-grid register-grid">
 
-      <!-- LEFT: VALUE PROPOSITION SHOWCASE -->
-      <section class="auth-hero-pane">
-        <div class="auth-eyebrow">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
-            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="currentColor"/>
-          </svg>
-          <span>Pendaftaran Toko Gratis &bull; 100% Bebas Komisi</span>
-        </div>
 
-        <h1 class="auth-hero-h1">
-          Mulai Transformasi Digital <span class="hl-accent">Toko Anda</span>
-        </h1>
+  <main class="auth-wrap wide">
+    <a href="login.html" class="auth-brand" aria-label="TransformaUMKM">
+      <span class="brand-mark"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></span>
+      <span class="brand-name">Transforma<span>UMKM</span></span>
+    </a>
 
-        <p class="auth-hero-lead">
-          Daftarkan bisnis Anda dalam hitungan detik. Dapatkan sistem kasir POS siap pakai, katalog publik mandiri, dan laporan finansial tanpa potongan biaya transaksi.
-        </p>
+    <section class="auth-card" aria-labelledby="registerHeading">
+      <h1 id="registerHeading">Buat akun usaha</h1>
+      <p class="auth-sub">Gratis dan tanpa komisi. Lengkapi profil toko untuk mulai.</p>
 
-        <div class="auth-feature-list">
-          <div class="auth-feat-item">
-            <div class="af-icon-container">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <circle cx="7" cy="7" r="1.5" fill="currentColor"/>
-              </svg>
-            </div>
-            <div>
-              <div class="af-text-title">0% Biaya Komisi Transaksi</div>
-              <div class="af-text-desc">Berbeda dari marketplace konvensional, seluruh omzet dan laba transaksi adalah milik usaha Anda sepenuhnya.</div>
-            </div>
+      <form id="standaloneRegisterForm" onsubmit="handleRegisterSubmit(event)" novalidate>
+        <div class="a-grid">
+          <div class="a-section">Informasi usaha</div>
+          <div class="a-field">
+            <label for="regOwnerName" class="a-label"><span>Nama pemilik <span class="req">*</span></span></label>
+            <input type="text" id="regOwnerName" class="a-input" required placeholder="Hendra Wijaya" autocomplete="name" />
+          </div>
+          <div class="a-field">
+            <label for="regBusinessName" class="a-label"><span>Nama toko / UMKM <span class="req">*</span></span></label>
+            <input type="text" id="regBusinessName" class="a-input" required placeholder="Kopi Nusantara"  />
+          </div>
+          <div class="a-field full">
+            <label for="regCategory" class="a-label"><span>Kategori usaha <span class="req">*</span></span></label>
+            <select id="regCategory" class="a-input" required>
+              <option value="Kuliner & F&B">Kuliner &amp; Minuman (F&amp;B / Warung / Kafe)</option>
+              <option value="Retail & Toko Kelontong">Retail, Toko Kelontong &amp; Minimarket</option>
+              <option value="Fashion & Kerajinan">Fashion, Tekstil &amp; Kerajinan Lokal</option>
+              <option value="Bahan Pokok & Sembako">Bahan Pokok, Sayur &amp; Sembako</option>
+              <option value="Jasa & Agribisnis">Jasa Usaha &amp; Agribisnis</option>
+            </select>
           </div>
 
-          <div class="auth-feat-item">
-            <div class="af-icon-container">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
-                <line x1="2" y1="12" x2="22" y2="12" stroke="currentColor" stroke-width="2"/>
-                <path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z" stroke="currentColor" stroke-width="2"/>
-              </svg>
-            </div>
-            <div>
-              <div class="af-text-title">Katalog Digital Mandiri Siap Pakai</div>
-              <div class="af-text-desc">Otomatis memiliki etalase web toko yang dapat dibagikan langsung ke status WhatsApp dan media sosial pelanggan.</div>
+          <div class="a-section" style="margin-top:.3rem">Kontak &amp; kredensial</div>
+          <div class="a-field">
+            <label for="regPhone" class="a-label"><span>WhatsApp usaha <span class="req">*</span></span></label>
+            <input type="tel" id="regPhone" class="a-input" required placeholder="081234567890" autocomplete="tel" />
+          </div>
+          <div class="a-field">
+            <label for="regEmail" class="a-label"><span>Email usaha <span class="req">*</span></span></label>
+            <input type="email" id="regEmail" class="a-input" required placeholder="toko@nusantara.id" autocomplete="email" />
+          </div>
+          <div class="a-field">
+            <label for="regPassword" class="a-label"><span>Kata sandi <span class="req">*</span></span></label>
+            <div class="a-control">
+              <input type="password" id="regPassword" class="a-input has-action" required placeholder="Min. 6 karakter" minlength="6" autocomplete="new-password" />
+              <button type="button" class="a-action" onclick="togglePasswordVisibility('regPassword', this)" aria-label="Tampilkan kata sandi">
+                <span class="eye-open" style="display:flex"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span><span class="eye-closed" style="display:none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><path d="M1 1l22 22"/></svg></span>
+              </button>
             </div>
           </div>
-
-          <div class="auth-feat-item">
-            <div class="af-icon-container">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </div>
-            <div>
-              <div class="af-text-title">Penyimpanan Privat &amp; Akses Offline-First</div>
-              <div class="af-text-desc">Basis data inventori, transaksi kasir, dan kontak pelanggan tersimpan secara persisten pada peramban peranti Anda.</div>
+          <div class="a-field">
+            <label for="regConfirmPassword" class="a-label"><span>Ulangi kata sandi <span class="req">*</span></span></label>
+            <div class="a-control">
+              <input type="password" id="regConfirmPassword" class="a-input has-action" required placeholder="Ulangi kata sandi" minlength="6" autocomplete="new-password" />
+              <button type="button" class="a-action" onclick="togglePasswordVisibility('regConfirmPassword', this)" aria-label="Tampilkan kata sandi">
+                <span class="eye-open" style="display:flex"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span><span class="eye-closed" style="display:none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><path d="M1 1l22 22"/></svg></span>
+              </button>
             </div>
           </div>
         </div>
 
-        <div class="auth-trust-note">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          <span>Platform Bisnis Terpercaya &bull; Keamanan Data Terenkripsi</span>
-        </div>
-      </section>
+        <button type="submit" class="a-submit" id="btnRegisterSubmit" style="margin-top:.4rem"><span>Daftar &amp; buka dashboard</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+      </form>
 
-      <!-- RIGHT: REGISTRATION FORM CARD -->
-      <section class="auth-form-card" aria-labelledby="registerHeading">
-        <div class="auth-card-head">
-          <h2 id="registerHeading" class="auth-card-title">Pendaftaran Akun UMKM</h2>
-          <p class="auth-card-sub">Lengkapi profil toko di bawah ini untuk membuka akses penuh ke dashboard usaha Anda.</p>
-        </div>
-
-        <!-- DEDICATED REGISTER FORM -->
-        <form id="standaloneRegisterForm" onsubmit="handleRegisterSubmit(event)" novalidate>
-          <div class="form-grid">
-            
-            <!-- SECTION 1: PROFIL USAHA -->
-            <div class="form-section-title">1. Informasi Usaha</div>
-
-            <div class="form-group">
-              <label for="regOwnerName" class="form-label">
-                <span>Nama Pemilik</span>
-                <span class="req">*</span>
-              </label>
-              <input type="text" id="regOwnerName" class="form-input" required placeholder="Contoh: Hendra Wijaya" autocomplete="name" />
-            </div>
-
-            <div class="form-group">
-              <label for="regBusinessName" class="form-label">
-                <span>Nama Toko / UMKM</span>
-                <span class="req">*</span>
-              </label>
-              <input type="text" id="regBusinessName" class="form-input" required placeholder="Contoh: Kopi Nusantara" />
-            </div>
-
-            <div class="form-group full">
-              <label for="regCategory" class="form-label">
-                <span>Kategori Bidang Usaha</span>
-                <span class="req">*</span>
-              </label>
-              <select id="regCategory" class="form-input" required>
-                <option value="Kuliner & F&B">Kuliner &amp; Minuman (F&B / Warung / Kafe)</option>
-                <option value="Retail & Toko Kelontong">Retail, Toko Kelontong &amp; Minimarket</option>
-                <option value="Fashion & Kerajinan">Fashion, Tekstil &amp; Kerajinan Lokal</option>
-                <option value="Bahan Pokok & Sembako">Bahan Pokok, Sayur &amp; Sembako</option>
-                <option value="Jasa & Agribisnis">Jasa Usaha &amp; Agribisnis</option>
-              </select>
-            </div>
-
-            <!-- SECTION 2: KONTAK & KREDENSIAL AKUN -->
-            <div class="form-section-title">2. Kontak &amp; Kredensial Akun</div>
-
-            <div class="form-group">
-              <label for="regPhone" class="form-label">
-                <span>WhatsApp Usaha</span>
-                <span class="req">*</span>
-              </label>
-              <input type="tel" id="regPhone" class="form-input" required placeholder="081234567890" autocomplete="tel" />
-            </div>
-
-            <div class="form-group">
-              <label for="regEmail" class="form-label">
-                <span>Email Usaha</span>
-                <span class="req">*</span>
-              </label>
-              <input type="email" id="regEmail" class="form-input" required placeholder="toko@nusantara.id" autocomplete="email" />
-            </div>
-
-            <div class="form-group">
-              <label for="regPassword" class="form-label">
-                <span>Kata Sandi</span>
-                <span class="req">*</span>
-              </label>
-              <div class="input-with-icon" style="position:relative;">
-                <input type="password" id="regPassword" class="form-input" required placeholder="Min. 6 karakter" minlength="6" style="padding-right:38px;" autocomplete="new-password" />
-                <button type="button" class="btn-toggle-pw" onclick="togglePasswordVisibility('regPassword', this)" aria-label="Tampilkan kata sandi">
-                  <svg class="eye-open" width="16" height="16" viewBox="0 0 24 24" fill="none">
-                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
-                  </svg>
-                  <svg class="eye-closed" style="display:none;" width="16" height="16" viewBox="0 0 24 24" fill="none">
-                    <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <line x1="1" y1="1" x2="23" y2="23" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                </button>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label for="regConfirmPassword" class="form-label">
-                <span>Ulangi Kata Sandi</span>
-                <span class="req">*</span>
-              </label>
-              <div class="input-with-icon" style="position:relative;">
-                <input type="password" id="regConfirmPassword" class="form-input" required placeholder="Ulangi kata sandi" minlength="6" style="padding-right:38px;" autocomplete="new-password" />
-                <button type="button" class="btn-toggle-pw" onclick="togglePasswordVisibility('regConfirmPassword', this)" aria-label="Tampilkan kata sandi">
-                  <svg class="eye-open" width="16" height="16" viewBox="0 0 24 24" fill="none">
-                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
-                  </svg>
-                  <svg class="eye-closed" style="display:none;" width="16" height="16" viewBox="0 0 24 24" fill="none">
-                    <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <line x1="1" y1="1" x2="23" y2="23" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                </button>
-              </div>
-            </div>
-
-          </div>
-
-          <button type="submit" class="btn-auth-submit" id="btnRegisterSubmit" style="margin-top: 1rem;">
-            <span>Daftarkan Akun &amp; Buka Dashboard</span>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-              <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </button>
-        </form>
-
-        <!-- SEPARATED LINK TO LOGIN PAGE -->
-        <div class="auth-switch-box">
-          <span>Sudah memiliki akun usaha?</span>
-          <a href="login.html">Masuk ke Akun Toko &rarr;</a>
-        </div>
-      </section>
-
-    </div>
+      <p class="auth-switch">Sudah punya akun?<a href="login.html">Masuk</a></p>
+    </section>
+    <p class="auth-foot">&copy; TransformaUMKM</p>
   </main>
 
-  <!-- Notification Toast Container -->
   <div class="toast-container" id="toastContainer"></div>
 
   <script>
     const STORAGE_KEY_AUTH = 'transforma_umkm_session';
 
-    function showToast(msg, type = 'info') {
+    function showToast(msg) {
       const container = document.getElementById('toastContainer');
       const toast = document.createElement('div');
       toast.className = 'toast';
@@ -260,15 +152,11 @@
     function togglePasswordVisibility(inputId, btn) {
       const input = document.getElementById(inputId);
       if (!input) return;
-      const isPassword = input.type === 'password';
-      input.type = isPassword ? 'text' : 'password';
-      const eyeOpen = btn.querySelector('.eye-open');
-      const eyeClosed = btn.querySelector('.eye-closed');
-      if (eyeOpen && eyeClosed) {
-        eyeOpen.style.display = isPassword ? 'none' : 'block';
-        eyeClosed.style.display = isPassword ? 'block' : 'none';
-      }
-      btn.setAttribute('aria-label', isPassword ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi');
+      const show = input.type === 'password';
+      input.type = show ? 'text' : 'password';
+      btn.querySelector('.eye-open').style.display = show ? 'none' : 'flex';
+      btn.querySelector('.eye-closed').style.display = show ? 'flex' : 'none';
+      btn.setAttribute('aria-label', show ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi');
     }
 
     function normalizeIndonesianPhone(rawPhone) {
@@ -340,12 +228,14 @@
         sessionStorage.removeItem(STORAGE_KEY_AUTH);
       } catch (err) {}
 
+      try { sessionStorage.removeItem('transforma_wp_seen'); } catch (err) {}
       localStorage.setItem(STORAGE_KEY_AUTH, JSON.stringify(user));
-      showToast(`Pendaftaran berhasil! Mengalihkan ke Dashboard...`);
+      showToast('Pendaftaran berhasil. Mengalihkan ke dashboard…');
       setTimeout(() => {
         window.location.href = 'index.html';
       }, 500);
     }
   </script>
+  <script src="welcome.js"></script>
 </body>
 </html>
