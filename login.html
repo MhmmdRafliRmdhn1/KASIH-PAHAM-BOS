@@ -1,19 +1,33 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="landing">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="TransformaUMKM — Platform Operasi Digital Terpadu untuk Bisnis &amp; UMKM Indonesia." />
-  <title>Masuk — TransformaUMKM</title>
+  <meta name="description" content="TransformaUMKM — Platform Operasi Digital Terpadu untuk Bisnis &amp; UMKM Indonesia. Kasir POS, inventori, dan AI Restock dalam satu dasbor." />
+  <title>TransformaUMKM — Digitalisasi UMKM Indonesia · Masuk</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>" />
   <link rel="alternate icon" href="favicon.ico" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- Pra-render: mode "langsung ke form" (Pengaturan) & izin animasi, mencegah kedipan -->
+  <script>
+    (function () {
+      var h = document.documentElement;
+      try { if (localStorage.getItem('transforma_wp_enabled') === 'false') h.classList.add('lp-skip'); } catch (e) {}
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if ('IntersectionObserver' in window && !reduce) {
+        h.classList.add('lp-anim');
+        // Jaring pengaman: bila welcome.js gagal termuat, jangan biarkan konten tersembunyi.
+        setTimeout(function () { if (!h.classList.contains('lp-ready')) h.classList.remove('lp-anim'); }, 2500);
+      }
+    })();
+  </script>
   <link rel="stylesheet" href="style.css" />
 </head>
-<body class="auth-page">
+<body class="auth-page lp-body">
     <div class="nusa-deco" aria-hidden="true">
       <svg class="nusa-tr" viewBox="0 0 560 400" preserveAspectRatio="xMaxYMin meet" xmlns="http://www.w3.org/2000/svg">
         <defs>
@@ -61,56 +75,234 @@
       </svg>
     </div>
 
+  <main class="lp-main">
 
+    <!-- ===================== SECTION 1 — HERO / WELCOMING PAGE ===================== -->
+    <section class="lp-section lp-hero" id="beranda" aria-labelledby="heroTitle">
+      <div class="wp-bg" id="wpBg" aria-hidden="true"></div>
+      <div class="wp-orb wp-orb-1" aria-hidden="true"></div>
+      <div class="wp-orb wp-orb-2" aria-hidden="true"></div>
+      <div class="wp-orb wp-orb-3" aria-hidden="true"></div>
+      <canvas id="wpParticlesCanvas" aria-hidden="true"></canvas>
 
-
-  <main class="auth-wrap">
-    <a href="login.html" class="auth-brand" aria-label="TransformaUMKM">
-      <span class="brand-mark"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></span>
-      <span class="brand-name">Transforma<span>UMKM</span></span>
-    </a>
-
-    <section class="auth-card" aria-labelledby="loginHeading">
-      <h1 id="loginHeading">Selamat datang kembali</h1>
-      <p class="auth-sub">Masuk ke akun usaha Anda untuk membuka dashboard.</p>
-
-      <div class="demo-row">
-        <span>Akun demo:</span>
-        <button type="button" class="demo-pill" onclick="quickFillLogin('owner')">Pemilik</button>
-        <button type="button" class="demo-pill" onclick="quickFillLogin('cashier')">Kasir</button>
+      <div class="wp-content" id="wpContent">
+        <div class="wp-logo" aria-hidden="true"><svg width="32" height="32" viewBox="0 0 24 24" fill="none"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="wp-kicker lp-reveal" style="--lp-d:60ms"><span class="wp-kicker-dot"></span>Solusi Digital &nbsp;·&nbsp; Untuk UMKM Indonesia</div>
+        <h1 class="wp-headline lp-reveal" id="heroTitle" style="--lp-d:120ms">Kelola UMKM dengan <span class="hl-gradient">Transformasi Digital</span></h1>
+        <p class="wp-sub lp-reveal" style="--lp-d:180ms">Platform operasi digital terpadu untuk POS, inventori, CRM, dan analitik bisnis &mdash; semua dalam satu dasbor yang intuitif.</p>
+        <div class="wp-features lp-reveal" style="--lp-d:240ms">
+          <span class="wp-feature-chip">📊 Dashboard Real-time</span><span class="wp-feature-chip">🛒 Smart POS Kasir</span>
+          <span class="wp-feature-chip">📦 Manajemen Stok</span><span class="wp-feature-chip">👥 CRM Pelanggan</span>
+          <span class="wp-feature-chip">✨ Asisten AI</span><span class="wp-feature-chip">🌐 Katalog Digital</span>
+        </div>
+        <a href="#login" class="wp-cta-btn lp-reveal" style="--lp-d:300ms" data-lp-scroll aria-label="Mulai sekarang, lanjut ke form Login">
+          <span>Mulai Sekarang</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
       </div>
 
-      <form id="standaloneLoginForm" onsubmit="handleLoginSubmit(event)" novalidate>
-        <div class="a-field">
-          <label for="loginEmail" class="a-label"><span>Email atau nama pengguna</span></label>
-          <div class="a-control">
-            <span class="a-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/></svg></span>
-            <input type="text" id="loginEmail" class="a-input has-icon" required placeholder="owner@nusantara.id" value="owner@nusantara.id" autocomplete="username" />
-          </div>
-        </div>
-
-        <div class="a-field">
-          <div class="a-label">
-            <label for="loginPassword">Kata sandi</label>
-            <a href="javascript:void(0)" onclick="showToast('Petunjuk demo: kata sandi default adalah demo1234')">Lupa sandi?</a>
-          </div>
-          <div class="a-control">
-            <span class="a-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span>
-            <input type="password" id="loginPassword" class="a-input has-icon has-action" required placeholder="••••••••" value="demo1234" autocomplete="current-password" />
-            <button type="button" class="a-action" onclick="togglePasswordVisibility('loginPassword', this)" aria-label="Tampilkan kata sandi">
-              <span class="eye-open" style="display:flex"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span><span class="eye-closed" style="display:none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><path d="M1 1l22 22"/></svg></span>
-            </button>
-          </div>
-        </div>
-
-        <label class="a-check"><input type="checkbox" id="loginRemember" checked /><span>Ingat saya di perangkat ini</span></label>
-
-        <button type="submit" class="a-submit" id="btnLoginSubmit"><span>Masuk</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
-      </form>
-
-      <p class="auth-switch">Belum punya akun?<a href="register.html">Daftar gratis</a></p>
+      <a href="#tentang" class="wp-scroll-cue" data-lp-scroll aria-label="Scroll ke Potensi UMKM">
+        <span>Scroll untuk Selengkapnya</span>
+        <span class="wp-scroll-cue-chevron" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </a>
     </section>
-    <p class="auth-foot">&copy; TransformaUMKM</p>
+
+    <!-- ===================== NAVBAR (sticky) — dimulai dari Section 2, tidak ada di Section 1 ===================== -->
+    <header class="lp-nav" id="lpNav">
+      <div class="lp-nav-inner">
+        <a href="#tentang" class="lp-brand" data-lp-scroll aria-label="TransformaUMKM — ke awal halaman">
+          <span class="brand-mark"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></span>
+          <span class="brand-name">Transforma<span>UMKM</span></span>
+        </a>
+
+        <nav class="lp-links" aria-label="Navigasi halaman">
+          <a href="#tentang" class="lp-link" data-lp-scroll data-lp-link="tentang">Potensi UMKM</a>
+          <a href="#solusi" class="lp-link" data-lp-scroll data-lp-link="solusi">Fitur &amp; Solusi</a>
+        </nav>
+
+        <a href="#login" class="lp-cta" id="btnQuickLogin" data-lp-scroll data-lp-link="login">
+          <span>Langsung Login</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg>
+        </a>
+      </div>
+    </header>
+
+    <!-- Panggung "tirai": Section 2 diam (sticky) di bawah Hero; Hero terangkat menyingkapnya.
+         Spacer menentukan lama Section 2 tertahan (= tinggi Hero + tinggi navbar). -->
+    <div class="lp-curtain-stage" id="lpCurtainStage">
+      <!-- ===================== SECTION 2 — POTENSI UMKM INDONESIA ===================== -->
+      <section class="lp-section lp-about" id="tentang" aria-labelledby="aboutTitle">
+        <div class="lp-container">
+          <div class="lp-about-grid">
+            <div class="lp-about-copy">
+              <span class="lp-kicker lp-reveal"><span class="lp-step">02</span>Potensi UMKM Indonesia</span>
+              <h2 class="lp-h2 lp-reveal" id="aboutTitle" style="--lp-d:60ms">Tulang punggung ekonomi Indonesia, <span class="lp-hl">siap melangkah ke era digital</span></h2>
+              <p class="lp-lead lp-reveal" style="--lp-d:120ms">UMKM menggerakkan lapangan kerja dan perekonomian di hampir setiap daerah. Di era digital, usaha yang mencatat transaksi dengan rapi, memantau stok secara akurat, dan menjangkau pelanggan lewat kanal online akan lebih siap tumbuh dan naik kelas.</p>
+              <div class="lp-actions lp-reveal" style="--lp-d:180ms">
+                <a href="#solusi" class="lp-btn lp-btn-primary" data-lp-scroll>
+                  <span>Lihat Fitur &amp; Solusi</span>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+                </a>
+              </div>
+            </div>
+
+            <div class="lp-stats" role="list" aria-label="Peran UMKM Indonesia">
+              <div class="lp-stat lp-reveal" role="listitem" style="--lp-d:100ms"><strong>±65 juta</strong><span>unit usaha UMKM tersebar di seluruh Indonesia</span></div>
+              <div class="lp-stat lp-reveal" role="listitem" style="--lp-d:160ms"><strong>±61%</strong><span>kontribusi UMKM terhadap PDB nasional</span></div>
+              <div class="lp-stat lp-reveal" role="listitem" style="--lp-d:220ms"><strong>±97%</strong><span>tenaga kerja Indonesia terserap oleh UMKM</span></div>
+              <div class="lp-stat lp-reveal" role="listitem" style="--lp-d:280ms"><strong>44,9 juta</strong><span>merchant QRIS per Juni 2026, hampir seluruhnya UMKM</span></div>
+            </div>
+          </div>
+
+          <div class="lp-split">
+            <div>
+              <h3 class="lp-label lp-reveal">Tantangan yang masih dihadapi</h3>
+              <ul class="lp-why lp-why-stack lp-why-warn">
+                <li class="lp-reveal" style="--lp-d:60ms">
+                  <span class="lp-why-ico" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg></span>
+                  <div><h4>Pencatatan masih manual</h4><p>Nota kertas dan buku catatan rawan salah hitung serta menyita waktu saat direkap.</p></div>
+                </li>
+                <li class="lp-reveal" style="--lp-d:120ms">
+                  <span class="lp-why-ico" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><path d="M12 8v4M12 16h.01"/></svg></span>
+                  <div><h4>Stok sulit diprediksi</h4><p>Barang laris habis mendadak, sementara barang lambat laku menumpuk dan mengikat modal.</p></div>
+                </li>
+                <li class="lp-reveal" style="--lp-d:180ms">
+                  <span class="lp-why-ico" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></span>
+                  <div><h4>Jangkauan pasar terbatas</h4><p>Pemasaran bertumpu pada pelanggan sekitar toko, tanpa data untuk menyusun promo yang tepat.</p></div>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 class="lp-label lp-reveal">Mengapa digitalisasi penting</h3>
+              <ul class="lp-why lp-why-stack">
+                <li class="lp-reveal" style="--lp-d:60ms">
+                  <span class="lp-why-ico" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg></span>
+                  <div><h4>Pasar lebih luas</h4><p>Katalog online dan WhatsApp membuka akses ke pelanggan di luar lingkungan sekitar toko.</p></div>
+                </li>
+                <li class="lp-reveal" style="--lp-d:120ms">
+                  <span class="lp-why-ico" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10M12 20V4M6 20v-6"/></svg></span>
+                  <div><h4>Keputusan berbasis data</h4><p>Omzet, margin, dan stok terekam otomatis, jadi strategi tidak lagi bergantung pada firasat.</p></div>
+                </li>
+                <li class="lp-reveal" style="--lp-d:180ms">
+                  <span class="lp-why-ico" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></span>
+                  <div><h4>Operasional lebih efisien</h4><p>Pencatatan digital mengurangi salah hitung dan waktu rekap manual setiap akhir hari.</p></div>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <p class="lp-source">Sumber: Kementerian Koperasi dan UKM, Kemenko Perekonomian, dan Bank Indonesia (2024–2026); angka dibulatkan.</p>
+        </div>
+      </section>
+      <div class="lp-curtain-spacer" aria-hidden="true"></div>
+    </div>
+
+    <!-- ===================== SECTION 3 — FITUR & SOLUSI TRANSFORMAUMKM ===================== -->
+    <section class="lp-section lp-solution" id="solusi" aria-labelledby="solutionTitle">
+      <div class="lp-container">
+        <header class="lp-head">
+          <span class="lp-kicker lp-reveal"><span class="lp-step">03</span>Fitur &amp; Solusi TransformaUMKM</span>
+          <h2 class="lp-h2 lp-reveal" id="solutionTitle" style="--lp-d:60ms">Satu platform untuk kasir, stok, dan keputusan bisnis</h2>
+          <p class="lp-lead lp-reveal" style="--lp-d:120ms">Tiga fitur inti yang menjawab masalah harian pelaku UMKM — dari meja kasir sampai gudang.</p>
+        </header>
+
+        <div class="lp-features">
+          <article class="lp-card lp-reveal" style="--lp-d:60ms">
+            <span class="lp-card-ico" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><path d="M3 6h18M16 10a4 4 0 01-8 0"/></svg></span>
+            <h3>Kasir POS</h3>
+            <p>Catat penjualan langsung dari satu layar — tanpa nota kertas dan hitung manual.</p>
+            <ul class="lp-checks">
+              <li>Pembayaran QRIS, tunai (kembalian otomatis), dan transfer</li>
+              <li>Diskon persen dan PPN yang bisa diaktifkan sesuai kebutuhan</li>
+              <li>Struk digital yang bisa dikirim ke pelanggan lewat WhatsApp</li>
+            </ul>
+          </article>
+
+          <article class="lp-card lp-reveal" style="--lp-d:140ms">
+            <span class="lp-card-ico" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><path d="M3.3 7L12 12l8.7-5M12 22V12"/></svg></span>
+            <h3>Manajemen Inventori</h3>
+            <p>Pantau stok setiap produk dan tahu persis kapan harus bertindak.</p>
+            <ul class="lp-checks">
+              <li>Batas minimum per produk dengan status aman, menipis, atau habis</li>
+              <li>Harga modal (HPP), harga jual, dan margin terhitung otomatis</li>
+              <li>Tambah, ubah, dan cari produk lewat satu tabel terpadu</li>
+            </ul>
+          </article>
+
+          <article class="lp-card lp-card-featured lp-reveal" style="--lp-d:220ms">
+            <span class="lp-badge">Unggulan</span>
+            <span class="lp-card-ico" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9L12 3z"/><path d="M19 17l.7 1.8L21.5 19.5l-1.8.7L19 22l-.7-1.8-1.8-.7 1.8-.7L19 17z"/></svg></span>
+            <h3>Smart Restock AI</h3>
+            <p>Berhenti menebak-nebak stok: sistem membaca laju penjualan dan memberi saran restock.</p>
+            <ul class="lp-checks">
+              <li>Prediksi sisa hari sebelum stok habis berdasarkan laju penjualan</li>
+              <li>Rekomendasi jumlah restock, termasuk peringatan produk kritis dan overstock</li>
+              <li>Draf Purchase Order ke supplier via WhatsApp dalam sekali klik</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="lp-cta-row lp-reveal" style="--lp-d:80ms">
+          <a href="#login" class="lp-btn lp-btn-primary" data-lp-scroll>
+            <span>Masuk ke Dasbor</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+          <p class="lp-more">Juga tersedia: CRM &amp; promo WhatsApp · Katalog digital · Asisten bisnis AI</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== SECTION 4 — FORM / AKSES LOGIN UTAMA ===================== -->
+    <section class="lp-section lp-login-sec" id="login" aria-labelledby="loginHeading">
+      <div class="lp-container lp-login-wrap">
+        <span class="lp-kicker lp-reveal"><span class="lp-step">04</span>Masuk ke dasbor</span>
+
+        <div class="auth-wrap lp-reveal" style="--lp-d:80ms">
+          <div class="auth-card">
+            <h2 id="loginHeading">Selamat datang kembali</h2>
+            <p class="auth-sub">Masuk ke akun usaha Anda untuk membuka dashboard.</p>
+
+            <div class="demo-row">
+              <span>Akun demo:</span>
+              <button type="button" class="demo-pill" onclick="quickFillLogin('owner')">Pemilik</button>
+              <button type="button" class="demo-pill" onclick="quickFillLogin('cashier')">Kasir</button>
+            </div>
+
+            <form id="standaloneLoginForm" onsubmit="handleLoginSubmit(event)" novalidate>
+              <div class="a-field">
+                <label for="loginEmail" class="a-label"><span>Email atau nama pengguna</span></label>
+                <div class="a-control">
+                  <span class="a-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/></svg></span>
+                  <input type="text" id="loginEmail" class="a-input has-icon" required placeholder="owner@nusantara.id" value="owner@nusantara.id" autocomplete="username" />
+                </div>
+              </div>
+
+              <div class="a-field">
+                <div class="a-label">
+                  <label for="loginPassword">Kata sandi</label>
+                  <a href="javascript:void(0)" onclick="showToast('Petunjuk demo: kata sandi default adalah demo1234')">Lupa sandi?</a>
+                </div>
+                <div class="a-control">
+                  <span class="a-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span>
+                  <input type="password" id="loginPassword" class="a-input has-icon has-action" required placeholder="••••••••" value="demo1234" autocomplete="current-password" />
+                  <button type="button" class="a-action" onclick="togglePasswordVisibility('loginPassword', this)" aria-label="Tampilkan kata sandi">
+                    <span class="eye-open" style="display:flex"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span><span class="eye-closed" style="display:none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><path d="M1 1l22 22"/></svg></span>
+                  </button>
+                </div>
+              </div>
+
+              <label class="a-check"><input type="checkbox" id="loginRemember" checked /><span>Ingat saya di perangkat ini</span></label>
+
+              <button type="submit" class="a-submit" id="btnLoginSubmit"><span>Masuk</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+            </form>
+
+            <p class="auth-switch">Belum punya akun?<a href="register.html">Daftar gratis</a></p>
+          </div>
+          <p class="auth-foot">&copy; TransformaUMKM<span class="lp-back"> · <a href="#tentang" data-lp-scroll>Pelajari selengkapnya ↑</a></span></p>
+        </div>
+      </div>
+    </section>
+
   </main>
 
   <div class="toast-container" id="toastContainer"></div>
