@@ -154,14 +154,8 @@ let currentUser = null;
 // ========================================================
 document.addEventListener('DOMContentLoaded', () => {
   initStorage();
-<<<<<<< HEAD:script.js
-  initAuth();
-  initMobileSimulator();
-  initTheme();
-=======
   const isAuthenticated = initAuth();
   if (!isAuthenticated) return;
->>>>>>> b800731308c4e40c9af0693c781267216e961c99:transforma-umkm/script.js
   initClock();
   initNav();
   initShell();
@@ -204,7 +198,7 @@ function generateInitialTransactions() {
     const d = new Date(now.getTime() - i * 86400000);
     const dateStr = d.toISOString().split('T')[0];
     const timeStr = `${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}`;
-
+    
     trxs.push({
       id: `TRX-${1000 + i}`,
       date: dateStr,
@@ -1572,7 +1566,7 @@ function orderViaWhatsApp(productId) {
   const storeName = (currentUser && currentUser.storeName) || 'Transforma UMKM';
   const storePhone = (currentUser && currentUser.phone) || (DEFAULT_USER && DEFAULT_USER.phone) || '081234567890';
   const msg = `Halo ${storeName}! Saya ingin memesan *${p.name}* seharga ${formatRupiah(p.sellPrice)}. Apakah stok masih tersedia?`;
-
+  
   const waUrl = getWhatsAppUrl(storePhone, msg);
   if (waUrl) {
     window.open(waUrl, '_blank');
@@ -1853,26 +1847,6 @@ function proceedLogout(target = 'login') {
   }
 }
 
-<<<<<<< HEAD:script.js
-function handleMobileAccountClick() {
-  handleLogout();
-}
-
-// ========================================================
-// 10. RESPONSIVE MOBILE NAVIGATION
-// ========================================================
-function initMobileNav() {
-  // Mobile Bottom Navigation Tabs Event Listeners (for actual mobile screens)
-  document.querySelectorAll('#mobileBottomNav .mob-nav-btn[data-tab]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const tab = btn.getAttribute('data-tab');
-      switchTab(tab);
-    });
-  });
-}
-
-=======
->>>>>>> b800731308c4e40c9af0693c781267216e961c99:transforma-umkm/script.js
 // Modal generic helpers
 function openModal(id) {
   const el = document.getElementById(id);
