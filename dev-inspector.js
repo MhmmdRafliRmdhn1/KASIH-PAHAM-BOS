@@ -490,24 +490,27 @@
     });
   });
 
-  // Built-in starter security & configuration insights matching the user screenshot!
+  // Built-in starter security & configuration audits
   document.addEventListener('DOMContentLoaded', () => {
-    // Insight 1: Security Insight (mirrors screenshot)
-    window.addDevIssue({
-      category: 'Security Insight',
-      badgeClass: 'sec',
-      title: 'Tingkatkan keamanan penyimpanan sesi (Session Storage).',
-      description: 'Saat ini sesi login UMKM disimpan di browser localStorage. Untuk standar keamanan enterprise, disarankan menggunakan httpOnly Secure Cookie atau enkripsi token.',
-      agentPrompt: 'Audit modul otentikasi di script.js dan implementasikan enkripsi session atau token expiry otomatis.',
-      instruction: "Ask your coding agent to upgrade: Run 'next upgrade --agent=security' and follow its instructions."
-    });
+    // Audit 1: Session Security & Token Expiry Check
+    const hasSecureSession = typeof SessionSecurity !== 'undefined';
+    if (!hasSecureSession) {
+      window.addDevIssue({
+        category: 'Security Insight',
+        badgeClass: 'sec',
+        title: 'Tingkatkan keamanan penyimpanan sesi (Session Storage).',
+        description: 'Saat ini sesi login UMKM disimpan tanpa enkripsi di localStorage. Disarankan menggunakan enkripsi token dan auto-expiry.',
+        agentPrompt: 'Audit modul otentikasi di script.js dan implementasikan enkripsi session atau token expiry otomatis.',
+        instruction: "Ask your coding agent to upgrade: Run 'next upgrade --agent=security' and follow its instructions."
+      });
+    }
 
-    // Insight 2: Network / Asset optimization insight
+    // Audit 2: Network / Favicon Asset Check
     if (!document.querySelector('link[rel*="icon"]')) {
       window.addDevIssue({
         category: 'Asset Insight',
         badgeClass: 'warn',
-        title: 'Tambahkan icon favicon.ico pada index.html',
+        title: 'Tambahkan icon favicon pada halaman web',
         description: 'Browser meminta favicon secara berkala. Menambahkan favicon SVG atau ICO akan mengeliminasi request 404 dari terminal live server.',
         agentPrompt: 'Tambahkan link favicon SVG inline di <head> index.html untuk menghilangkan request 404 /favicon.ico.',
         instruction: 'Ask your coding agent to configure the website favicon.'

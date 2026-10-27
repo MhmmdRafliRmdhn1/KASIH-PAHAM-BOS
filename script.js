@@ -1624,16 +1624,16 @@ function updateAlertBadges() {
 // untuk keperluan purwarupa (prototype) standalone offline-first.
 // Pada fase produksi penuh, verifikasi token JWT/session harus dikelola oleh backend server.
 function initAuth() {
-  const savedSession = localStorage.getItem(STORAGE_KEY_AUTH) || sessionStorage.getItem(STORAGE_KEY_AUTH);
-  if (savedSession) {
-    try {
-      currentUser = JSON.parse(savedSession);
-    } catch (err) {
-      currentUser = null;
-    }
-  }
+  currentUser = typeof SessionSecurity !== 'undefined'
+    ? SessionSecurity.getSession()
+    : (function () {
+        try {
+          const s = localStorage.getItem(STORAGE_KEY_AUTH) || sessionStorage.getItem(STORAGE_KEY_AUTH);
+          return s ? JSON.parse(s) : null;
+        } catch (e) { return null; }
+      })();
 
-  // Jika tidak ada sesi aktif, alihkan langsung ke portal login mandiri
+  // Jika tidak ada sesi aktif atau token kedaluwarsa, alihkan langsung ke portal login mandiri
   if (!currentUser) {
     window.location.replace('login.html');
     return false;
@@ -1831,12 +1831,16 @@ function handleLogout() {
 
 // Proceed Logout action with target redirection
 function proceedLogout(target = 'login') {
-  try {
-    localStorage.removeItem(STORAGE_KEY_AUTH);
-    sessionStorage.removeItem(STORAGE_KEY_AUTH);
-    sessionStorage.removeItem('transforma_wp_seen');
-  } catch (err) {
-    console.warn('Storage error on logout:', err);
+  if (typeof SessionSecurity !== 'undefined') {
+    SessionSecurity.clearSession();
+  } else {
+    try {
+      localStorage.removeItem(STORAGE_KEY_AUTH);
+      sessionStorage.removeItem(STORAGE_KEY_AUTH);
+      sessionStorage.removeItem('transforma_wp_seen');
+    } catch (err) {
+      console.warn('Storage error on logout:', err);
+    }
   }
   currentUser = null;
 
