@@ -570,8 +570,8 @@ function renderSalesTrendChart() {
 
   // Area Fill
   const grad = ctx.createLinearGradient(0, padTop, 0, h - padBottom);
-  grad.addColorStop(0, 'rgba(99, 102, 241, 0.32)');
-  grad.addColorStop(1, 'rgba(99, 102, 241, 0)');
+  grad.addColorStop(0, 'rgba(20, 184, 166, 0.32)');
+  grad.addColorStop(1, 'rgba(20, 184, 166, 0)');
 
   ctx.beginPath();
   ctx.moveTo(points[0].x, h - padBottom);
@@ -585,7 +585,7 @@ function renderSalesTrendChart() {
   ctx.beginPath();
   ctx.moveTo(points[0].x, points[0].y);
   points.forEach(p => ctx.lineTo(p.x, p.y));
-  ctx.strokeStyle = '#6366f1';
+  ctx.strokeStyle = '#14b8a6';
   ctx.lineWidth = 2.5;
   ctx.stroke();
 
@@ -595,7 +595,7 @@ function renderSalesTrendChart() {
     ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
     ctx.fillStyle = cssVar('--bg-card');
     ctx.fill();
-    ctx.strokeStyle = '#6366f1';
+    ctx.strokeStyle = '#14b8a6';
     ctx.lineWidth = 2;
     ctx.stroke();
 
@@ -635,7 +635,7 @@ function renderCategoryDonutChart() {
   });
 
   const categories = Object.keys(catSums);
-  const colors = ['#6366f1', '#f97316', '#10b981', '#8b5cf6'];
+  const colors = ['#14b8a6', '#f97316', '#10b981', '#06b6d4'];
   let totalVal = Object.values(catSums).reduce((a, b) => a + b, 0);
   if (totalVal === 0) totalVal = 1; // avoid division by zero
 
@@ -1409,7 +1409,7 @@ function renderCrmTable() {
   filtered.forEach(c => {
     const isVip = c.totalSpent >= 200000;
     const segmentBadge = isVip
-      ? '<span class="status-badge" style="background:rgba(168,85,247,0.2);color:#c084fc;">⭐ VIP Member</span>'
+      ? '<span class="status-badge" style="background:rgba(34, 211, 238,0.2);color:#67e8f9;">⭐ VIP Member</span>'
       : '<span class="status-badge" style="background:var(--bg-hover);color:var(--text-muted);">Regular</span>';
 
     const tr = document.createElement('tr');
