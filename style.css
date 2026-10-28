@@ -3829,3 +3829,329 @@ html.lp-skip .lp-login-sec { min-height: 100vh; min-height: 100svh; padding-top:
   .lp-cta { padding: 0 0.85rem; font-size: 0.82rem; }
   .lp-stat { padding: 1rem 0.9rem; }
 }
+
+
+/* ==========================================================================
+   11. SIDEBAR — floating (expanded) & icon-bar (collapsed)
+   ========================================================================== */
+:root { --sb-w: 264px; --sb-w-collapsed: 76px; --sb-gap: 14px; --sb-ease: cubic-bezier(0.4, 0, 0.2, 1); }
+
+.sidebar {
+  inset: var(--sb-gap) auto var(--sb-gap) var(--sb-gap);
+  width: var(--sb-w);
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.92);
+  -webkit-backdrop-filter: blur(18px) saturate(1.2);
+          backdrop-filter: blur(18px) saturate(1.2);
+  box-shadow: 0 18px 48px -18px rgba(15, 23, 42, 0.22), 0 2px 6px rgba(15, 23, 42, 0.04);
+  overflow: hidden;
+  transition: width 0.35s var(--sb-ease), transform 0.3s var(--sb-ease), border-radius 0.35s var(--sb-ease);
+}
+.sidebar::before, .sidebar::after { display: none; }
+
+.sb-brand { height: 76px; padding: 0 1.5rem; border-bottom: 0; transition: padding 0.35s var(--sb-ease); }
+.brand-name, .nav-label, .sb-profile-text, .sb-group-label {
+  overflow: hidden; white-space: nowrap;
+  transition: opacity 0.2s ease, max-width 0.35s var(--sb-ease);
+}
+.brand-name { max-width: 180px; }
+.nav-label { max-width: 180px; }
+
+.sb-scroll { padding: 0.25rem 1rem 0.75rem; overflow-x: hidden; }
+.sb-group-label { max-width: 200px; max-height: 40px; transition: opacity 0.2s ease, max-height 0.35s var(--sb-ease), padding 0.35s var(--sb-ease); }
+
+.nav-link {
+  gap: 0.85rem; padding: 0.8rem 1.05rem; margin-bottom: 6px;
+  border-radius: 999px; color: #475569; font-weight: 500;
+  transition: background-color 0.2s ease, color 0.2s ease, padding 0.35s var(--sb-ease), gap 0.35s var(--sb-ease), box-shadow 0.2s ease;
+}
+.nav-link:hover { background: #f1f3f7; color: #0f172a; }
+.nav-link.active {
+  background: #0b0b10; color: #fff; font-weight: 600;
+  box-shadow: 0 8px 20px -8px rgba(11, 11, 16, 0.55);
+}
+.nav-link.active::before { display: none; }
+.nav-link.active svg, .nav-link:hover svg { filter: none; }
+.nav-link svg { width: 20px; height: 20px; }
+.nav-link .nav-badge { transition: opacity 0.2s ease; }
+.nav-link.active .nav-badge { background: #fff; color: #0b0b10; }
+
+/* Profile card */
+.sb-footer { padding: 0.5rem 1rem 1rem; border-top: 0; }
+.sb-profile {
+  display: flex; align-items: center; gap: 0.75rem; min-width: 0;
+  padding: 0.7rem; border-radius: 22px;
+  background: #f3f4f7; border: 1px solid rgba(15, 23, 42, 0.05);
+  transition: padding 0.35s var(--sb-ease), gap 0.35s var(--sb-ease), background-color 0.2s ease;
+}
+.sb-avatar {
+  width: 42px; height: 42px; flex-shrink: 0; display: grid; place-items: center;
+  border-radius: 50%; background: #0b0b10; color: #fff; font-weight: 700; font-size: 1rem;
+  box-shadow: 0 0 0 3px #fff, 0 4px 10px rgba(15, 23, 42, 0.18);
+}
+.sb-profile-text { max-width: 170px; line-height: 1.25; min-width: 0; }
+.sb-profile-text strong { display: block; font-size: 0.88rem; font-weight: 700; color: #0f172a; overflow: hidden; text-overflow: ellipsis; }
+.sb-profile-text span { display: block; font-size: 0.74rem; color: #64748b; overflow: hidden; text-overflow: ellipsis; }
+.sb-profile-text small { display: block; font-size: 0.68rem; color: #94a3b8; overflow: hidden; text-overflow: ellipsis; }
+
+.app-main { margin-left: calc(var(--sb-w) + var(--sb-gap) * 2); transition: margin-left 0.35s var(--sb-ease); }
+
+/* ---- Collapsed: icon bar (desktop only) ---- */
+@media (min-width: 1025px) {
+  body.sb-collapsed .sidebar { width: var(--sb-w-collapsed); border-radius: 999px; }
+  body.sb-collapsed .app-main { margin-left: calc(var(--sb-w-collapsed) + var(--sb-gap) * 2); }
+
+  body.sb-collapsed .brand-name,
+  body.sb-collapsed .nav-label,
+  body.sb-collapsed .sb-profile-text { display: block; opacity: 0; max-width: 0; pointer-events: none; }
+  body.sb-collapsed .sb-group-label { display: block; opacity: 0; max-height: 0; padding-top: 0; padding-bottom: 0; }
+
+  body.sb-collapsed .sb-brand { padding: 0; justify-content: center; gap: 0; }
+  body.sb-collapsed .sb-scroll { padding: 0.25rem 0 0.75rem; display: flex; flex-direction: column; align-items: center; overflow: visible; }
+  body.sb-collapsed .nav-link {
+    width: 46px; height: 46px; padding: 0; gap: 0; margin-bottom: 8px;
+    justify-content: center; align-items: center;
+  }
+  body.sb-collapsed .nav-badge { position: absolute; top: 3px; right: 3px; min-width: 16px; margin: 0; padding: 0 4px; font-size: 0.6rem; }
+  body.sb-collapsed .sb-footer { padding: 0.5rem 0 1rem; display: flex; justify-content: center; }
+  body.sb-collapsed .sb-profile { padding: 0; gap: 0; background: transparent; border-color: transparent; }
+  body.sb-collapsed .sidebar { overflow: visible; }
+  body.sb-collapsed .nav-link:hover::after { z-index: 300; }
+}
+
+@media (max-width: 1024px) {
+  :root { --sb-w: 272px; }
+  .sidebar { inset: 10px auto 10px 10px; transform: translateX(calc(-100% - 20px)); box-shadow: var(--shadow-lg); }
+  body.sb-open .sidebar { transform: none; }
+  .app-main, body.sb-collapsed .app-main { margin-left: 0; }
+}
+
+
+/* ==========================================================================
+   12. SIDEBAR (compact, jitter-free) & FLOATING TOPBAR
+   Icon column is fixed (center x = 32px), so collapse only clips/fades labels.
+   ========================================================================== */
+:root { --sb-w: 224px; --sb-w-collapsed: 64px; --sb-gap: 12px; --sb-dur: 0.3s; --sb-ease: cubic-bezier(0.4, 0, 0.2, 1); }
+
+.sidebar {
+  inset: var(--sb-gap) auto var(--sb-gap) var(--sb-gap);
+  border-radius: 24px; overflow: hidden;
+  will-change: width;
+  transition: width var(--sb-dur) var(--sb-ease), transform var(--sb-dur) var(--sb-ease);
+}
+.sb-brand { height: 64px; padding: 0 0 0 16px; gap: 0.6rem; transition: none; }
+.brand-name { font-size: 0.98rem; }
+.brand-name, .nav-label, .sb-profile-text, .sb-group-label {
+  max-width: none; max-height: none; overflow: visible;
+  transition: opacity var(--sb-dur) var(--sb-ease);
+}
+.sb-scroll { padding: 0 10px 0.5rem; overflow-x: hidden; }
+.sb-group-label { padding: 0.8rem 0.6rem 0.35rem; font-size: 0.64rem; }
+
+.nav-link {
+  width: 100%; height: 44px; padding: 0 0 0 12px; gap: 0.75rem; margin-bottom: 4px;
+  border-radius: 999px; font-size: 0.86rem;
+  transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+.nav-link .nav-badge { margin-right: 10px; }
+
+.sb-footer { padding: 0.4rem 10px 10px; }
+.sb-profile { padding: 6px; gap: 0.6rem; border-radius: 999px; overflow: hidden; transition: none; }
+.sb-avatar { width: 32px; height: 32px; font-size: 0.85rem; box-shadow: 0 0 0 2px #fff; }
+.sb-profile-text { padding-right: 10px; max-width: none; }
+
+.app-main { margin-left: calc(var(--sb-w) + var(--sb-gap) * 2); transition: margin-left var(--sb-dur) var(--sb-ease); }
+
+/* Floating navbar */
+.topbar {
+  top: var(--sb-gap);
+  height: 56px;
+  margin: var(--sb-gap) var(--sb-gap) 0 0;
+  padding: 0 1rem;
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 10px 30px -14px rgba(15, 23, 42, 0.2), 0 1px 3px rgba(15, 23, 42, 0.04);
+}
+
+@media (min-width: 1025px) {
+  body.sb-collapsed .sidebar { width: var(--sb-w-collapsed); border-radius: 32px; }
+  body.sb-collapsed .app-main { margin-left: calc(var(--sb-w-collapsed) + var(--sb-gap) * 2); }
+  body.sb-collapsed .brand-name,
+  body.sb-collapsed .nav-label,
+  body.sb-collapsed .sb-profile-text,
+  body.sb-collapsed .sb-group-label { display: block; opacity: 0; max-width: none; max-height: none; padding-top: 0.8rem; padding-bottom: 0.35rem; pointer-events: none; }
+  body.sb-collapsed .sb-brand { padding: 0 0 0 16px; justify-content: flex-start; gap: 0.6rem; }
+  body.sb-collapsed .sb-scroll { display: block; padding: 0 10px 0.5rem; overflow-x: hidden; overflow-y: hidden; }
+  body.sb-collapsed .nav-link { width: 100%; height: 44px; padding: 0 0 0 12px; gap: 0.75rem; margin-bottom: 4px; justify-content: flex-start; }
+  body.sb-collapsed .nav-badge { position: absolute; top: 2px; left: 28px; right: auto; min-width: 16px; margin: 0; padding: 0 4px; font-size: 0.58rem; }
+  body.sb-collapsed .sb-footer { display: block; padding: 0.4rem 10px 10px; }
+  body.sb-collapsed .sb-profile { padding: 6px; gap: 0.6rem; background: #f3f4f7; border-color: rgba(15, 23, 42, 0.05); }
+  body.sb-collapsed .sidebar { overflow: hidden; }
+  body.sb-collapsed .nav-link:hover::after { display: none; }
+}
+@media (max-width: 1024px) {
+  :root { --sb-w: 244px; }
+  .topbar { margin-left: var(--sb-gap); }
+}
+@media (prefers-reduced-motion: reduce) { :root { --sb-dur: 0.01s; } }
+
+
+/* ==========================================================================
+   13. SIDEBAR — vertical stability (same box model in both modes)
+   ========================================================================== */
+.sb-group-label { height: 30px; padding: 0.8rem 0.6rem 0.2rem; line-height: 1; box-sizing: border-box; display: flex; align-items: flex-end; }
+.sb-group-label:first-child { padding-top: 0.8rem; }
+.nav-link { display: flex; align-items: center; height: 44px; box-sizing: border-box; }
+.nav-link svg { width: 20px; height: 20px; flex: 0 0 20px; }
+.sb-profile { height: 52px; box-sizing: border-box; align-items: center; }
+.sb-profile-text { height: 40px; display: flex; flex-direction: column; justify-content: center; overflow: hidden; }
+@media (min-width: 1025px) {
+  body.sb-collapsed .sb-group-label { height: 30px; padding: 0.8rem 0.6rem 0.2rem; }
+  body.sb-collapsed .nav-link { height: 44px; }
+  body.sb-collapsed .sb-profile { height: 52px; padding: 6px; }
+}
+
+
+/* ==========================================================================
+   14. SIDEBAR — label/icon alignment & collapsed avatar
+   ========================================================================== */
+.nav-link { display: flex; align-items: center; }
+.nav-label { display: block; line-height: 1; padding: 0; margin: 0; align-self: center; white-space: nowrap; }
+.nav-link svg { align-self: center; }
+.brand-name { line-height: 1; align-self: center; }
+
+.sb-footer { padding: 0.4rem 10px 10px; }
+.sb-profile {
+  height: 48px; padding: 6px 4px; gap: 0.6rem; border-radius: 999px; box-sizing: border-box;
+  align-items: center; overflow: hidden;
+  transition: background-color var(--sb-dur) var(--sb-ease), border-color var(--sb-dur) var(--sb-ease);
+}
+.sb-avatar {
+  width: 36px; height: 36px; flex: 0 0 36px; border-radius: 50%; font-size: 0.95rem;
+  display: grid; place-items: center; line-height: 1;
+  box-shadow: 0 0 0 2px #fff, 0 3px 8px rgba(15, 23, 42, 0.18);
+}
+.sb-profile-text { height: 36px; justify-content: center; line-height: 1.15; }
+.sb-profile-text small { display: none; }
+
+@media (min-width: 1025px) {
+  body.sb-collapsed .nav-label, body.sb-collapsed .sb-profile-text, body.sb-collapsed .brand-name { pointer-events: none; }
+  body.sb-collapsed .sb-profile { height: 48px; padding: 6px 4px; gap: 0.6rem; background: transparent; border-color: transparent; }
+}
+
+.sb-profile, body.sb-collapsed .sb-profile { padding-left: 3px; padding-right: 3px; }
+
+
+/* ==========================================================================
+   15. SIDEBAR — isolated icon boxes; labels collapse via opacity + max-width
+   Icon box = 40x40 fixed, always at x = 2px inside the item => centre x = 32px.
+   ========================================================================== */
+.nav-ico { width: 40px; height: 40px; flex: 0 0 40px; display: flex; align-items: center; justify-content: center; }
+.nav-ico svg { width: 20px; height: 20px; flex: 0 0 20px; margin: 0; }
+
+.nav-link, body.sb-collapsed .nav-link { padding: 0 2px; gap: 0.6rem; height: 44px; align-items: center; }
+.nav-link .nav-badge { margin-left: auto; }
+
+.sb-brand, body.sb-collapsed .sb-brand { padding: 0 0 0 16px; gap: 0.6rem; }
+
+.brand-name, .nav-label, .sb-profile-text {
+  display: block; overflow: hidden; white-space: nowrap; opacity: 1;
+  transition: opacity var(--sb-dur) var(--sb-ease), max-width var(--sb-dur) var(--sb-ease);
+}
+.brand-name { max-width: 170px; }
+.nav-label { max-width: 150px; }
+.sb-profile-text { max-width: 140px; padding-right: 0; }
+
+.sb-profile, body.sb-collapsed .sb-profile { height: 48px; padding: 4px 2px; gap: 0.6rem; box-sizing: border-box; align-items: center; }
+.sb-avatar { width: 40px; height: 40px; flex: 0 0 40px; border-radius: 50%; }
+.sb-profile-text { height: 40px; }
+
+@media (min-width: 1025px) {
+  body.sb-collapsed .brand-name,
+  body.sb-collapsed .nav-label,
+  body.sb-collapsed .sb-profile-text { opacity: 0; max-width: 0; pointer-events: none; }
+  body.sb-collapsed .nav-link, body.sb-collapsed .sb-profile { gap: 0; }
+  body.sb-collapsed .sb-brand { gap: 0; }
+  body.sb-collapsed .nav-badge { left: 30px; top: 3px; }
+}
+
+.sb-profile, body.sb-collapsed .sb-profile { padding-left: 1px; padding-right: 1px; }
+
+/* ==========================================================================
+   16. SIDEBAR — pure fade: text keeps its box, only opacity changes
+   ========================================================================== */
+.brand-name, .nav-label, .sb-profile-text { transition: opacity var(--sb-dur) var(--sb-ease); flex: 0 0 auto; }
+@media (min-width: 1025px) {
+  body.sb-collapsed .brand-name { max-width: 170px; }
+  body.sb-collapsed .nav-label { max-width: 150px; }
+  body.sb-collapsed .sb-profile-text { max-width: 140px; }
+  body.sb-collapsed .nav-link, body.sb-collapsed .sb-profile { gap: 0.6rem; }
+  body.sb-collapsed .sb-brand { gap: 0.6rem; }
+  body.sb-collapsed .brand-name, body.sb-collapsed .nav-label, body.sb-collapsed .sb-profile-text { opacity: 0; pointer-events: none; }
+}
+
+/* ==========================================================================
+   17. SIDEBAR — text taken out of flow (absolute), pure opacity fade
+   ========================================================================== */
+.sb-brand, .nav-link, .sb-profile { position: relative; }
+.brand-name, .nav-label, .sb-profile-text {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  margin: 0; padding: 0; gap: 0; height: auto; max-width: none; overflow: hidden; white-space: nowrap;
+  transition: opacity var(--sb-dur) var(--sb-ease), visibility 0s linear 0s;
+}
+.brand-name { left: 56px; width: 150px; }
+.nav-label { left: 52px; width: 130px; text-overflow: ellipsis; }
+.sb-profile-text { left: 48px; width: 140px; height: 40px; transform: translateY(-50%); }
+.nav-link .nav-badge { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); margin: 0; }
+@media (min-width: 1025px) {
+  body.sb-collapsed .brand-name, body.sb-collapsed .nav-label, body.sb-collapsed .sb-profile-text {
+    opacity: 0; visibility: hidden; pointer-events: none; max-width: none;
+    transition: opacity var(--sb-dur) var(--sb-ease), visibility 0s linear var(--sb-dur);
+  }
+  body.sb-collapsed .nav-link .nav-badge { right: auto; left: 30px; top: 3px; transform: none; }
+}
+
+/* 18. Lock text boxes: identical box (no padding/size change) in both modes */
+.brand-name, .nav-label, .sb-profile-text, body.sb-collapsed .brand-name, body.sb-collapsed .nav-label, body.sb-collapsed .sb-profile-text { padding: 0 !important; margin: 0 !important; }
+.brand-name, body.sb-collapsed .brand-name { height: 20px; line-height: 20px; }
+.nav-label, body.sb-collapsed .nav-label { height: 20px; line-height: 20px; }
+.sb-group-label, body.sb-collapsed .sb-group-label { width: 200px; max-width: none; overflow: hidden; white-space: nowrap; }
+
+/* 19. Profile text centred on avatar (both modes); smooth inventory badge */
+.sb-profile-text, body.sb-collapsed .sb-profile-text { display: flex !important; flex-direction: column; justify-content: center; align-items: flex-start; height: 40px; line-height: 1.2; }
+.sb-profile-text strong, .sb-profile-text span { display: block; line-height: 1.2; }
+.nav-link .nav-badge, body.sb-collapsed .nav-link .nav-badge {
+  position: absolute; left: 30px; right: auto; top: 3px; margin: 0; width: 20px; min-width: 20px; height: 18px; padding: 0; display: grid; place-items: center;
+  font-size: 0.64rem; line-height: 1; transform: translate(144px, 10px) scale(1); transform-origin: center;
+  transition: transform var(--sb-dur) var(--sb-ease); will-change: transform;
+}
+@media (min-width: 1025px) { body.sb-collapsed .nav-link .nav-badge { transform: translate(0, 0) scale(0.9); } }
+
+/* 19b. badge stays inside link bounds */
+.nav-link .nav-badge, body.sb-collapsed .nav-link .nav-badge { left: 22px; top: 4px; width: 18px; min-width: 18px; height: 18px; border-radius: 999px; box-sizing: border-box; overflow: visible; font-size: 0.62rem; transform: translate(158px, 9px); }
+@media (min-width: 1025px) { body.sb-collapsed .nav-link .nav-badge { transform: translate(0, 0); } }
+.nav-link .nav-badge, body.sb-collapsed .nav-link .nav-badge { display: flex !important; align-items: center; justify-content: center; line-height: 1 !important; padding: 0 !important; }
+
+/* 20. Group labels: identical box + text baseline in both modes */
+.sb-group-label, body.sb-collapsed .sb-group-label { display: flex !important; align-items: flex-end; height: 30px; padding: 0 0.6rem 0.35rem !important; margin: 0 !important; line-height: 1 !important; box-sizing: border-box; }
+
+
+/* 21. Smooth sidebar resize: content slides via transform (see toggleSidebar), no margin transition */
+.app-main, body.sb-collapsed .app-main { transition: none !important; }
+html, body { overflow-x: clip; }
+.sidebar { contain: layout paint style; will-change: width; transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important; }
+.sb-brand, .sb-scroll, .sb-footer, .nav-link, .sb-profile { contain: layout style; }
+
+
+/* 22. While the sidebar animates, drop expensive backdrop blurs (they dominate frame time) */
+body.sb-animating *, body.sb-animating *::before, body.sb-animating *::after {
+  -webkit-backdrop-filter: none !important; backdrop-filter: none !important;
+}
+body.sb-animating .sidebar { background: rgba(255, 255, 255, 0.98); }
+body.sb-animating .topbar { background: rgba(255, 255, 255, 0.96); }
+body.sb-animating .nusa-deco, body.sb-animating .nusa-deco * { animation-play-state: paused !important; }
+
+/* 23. Sidebar corners: same radius in both modes (no jump) */
+.sidebar, body.sb-collapsed .sidebar { border-radius: 28px !important; }

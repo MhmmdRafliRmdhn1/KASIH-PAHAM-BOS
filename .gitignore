@@ -1,12 +1,3 @@
 node_modules/
 .DS_Store
 *.log
-
-# Database files (binary, jangan di-commit)
-database/*.db
-database/*.db-shm
-database/*.db-wal
-
-# Environment variables
-.env
-.env.local

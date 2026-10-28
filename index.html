@@ -88,56 +88,25 @@
 
       <div class="sb-scroll">
         <div class="sb-group-label">Menu Utama</div>
-        <button type="button" class="nav-link active" data-tab="dashboard" data-label="Dashboard" title="Dashboard"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg><span class="nav-label">Dashboard</span></button>
-        <button type="button" class="nav-link" data-tab="pos" data-label="Kasir (POS)" title="Kasir (POS)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><path d="M3 6h18M16 10a4 4 0 01-8 0"/></svg><span class="nav-label">Kasir (POS)</span><span class="nav-badge" id="navCartCount" style="display:none">0</span></button>
-        <button type="button" class="nav-link" data-tab="inventory" data-label="Inventori" title="Inventori"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><path d="M3.3 7L12 12l8.7-5M12 22V12"/></svg><span class="nav-label">Inventori</span><span class="nav-badge warn" id="navStockAlertCount" style="display:none">0</span></button>
-        <button type="button" class="nav-link" data-tab="crm" data-label="Pelanggan (CRM)" title="Pelanggan (CRM)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg><span class="nav-label">Pelanggan (CRM)</span></button>
+        <button type="button" class="nav-link active" data-tab="dashboard" data-label="Dashboard" title="Dashboard"><span class="nav-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg></span><span class="nav-label">Dashboard</span></button>
+        <button type="button" class="nav-link" data-tab="pos" data-label="Kasir (POS)" title="Kasir (POS)"><span class="nav-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><path d="M3 6h18M16 10a4 4 0 01-8 0"/></svg></span><span class="nav-label">Kasir (POS)</span><span class="nav-badge" id="navCartCount" style="display:none">0</span></button>
+        <button type="button" class="nav-link" data-tab="inventory" data-label="Inventori" title="Inventori"><span class="nav-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><path d="M3.3 7L12 12l8.7-5M12 22V12"/></svg></span><span class="nav-label">Inventori</span><span class="nav-badge warn" id="navStockAlertCount" style="display:none">0</span></button>
+        <button type="button" class="nav-link" data-tab="crm" data-label="Pelanggan (CRM)" title="Pelanggan (CRM)"><span class="nav-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></span><span class="nav-label">Pelanggan (CRM)</span></button>
 
         <div class="sb-group-label">Lainnya</div>
-        <button type="button" class="nav-link" data-tab="storefront" data-label="Katalog Digital" title="Katalog Digital"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l1.5-5h15L21 9"/><path d="M4 9v11h16V9"/><path d="M9 20v-6h6v6"/><path d="M3 9a3 3 0 006 0 3 3 0 006 0 3 3 0 006 0"/></svg><span class="nav-label">Katalog Digital</span></button>
-        <button type="button" class="nav-link" data-tab="ai-assistant" data-label="Asisten AI" title="Asisten AI"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9L12 3z"/><path d="M19 17l.7 1.8L21.5 19.5l-1.8.7L19 22l-.7-1.8-1.8-.7 1.8-.7L19 17z"/></svg><span class="nav-label">Asisten AI</span></button>
-        <button type="button" class="nav-link" data-tab="settings" data-label="Pengaturan" title="Pengaturan"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09a1.65 1.65 0 00-1-1.51 1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09a1.65 1.65 0 001.51-1 1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33h0a1.65 1.65 0 001-1.51V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51h0a1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82v0a1.65 1.65 0 001.51 1H21a2 2 0 110 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg><span class="nav-label">Pengaturan</span></button>
+        <button type="button" class="nav-link" data-tab="storefront" data-label="Katalog Digital" title="Katalog Digital"><span class="nav-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l1.5-5h15L21 9"/><path d="M4 9v11h16V9"/><path d="M9 20v-6h6v6"/><path d="M3 9a3 3 0 006 0 3 3 0 006 0 3 3 0 006 0"/></svg></span><span class="nav-label">Katalog Digital</span></button>
+        <button type="button" class="nav-link" data-tab="ai-assistant" data-label="Asisten AI" title="Asisten AI"><span class="nav-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9L12 3z"/><path d="M19 17l.7 1.8L21.5 19.5l-1.8.7L19 22l-.7-1.8-1.8-.7 1.8-.7L19 17z"/></svg></span><span class="nav-label">Asisten AI</span></button>
+        <button type="button" class="nav-link" data-tab="settings" data-label="Pengaturan" title="Pengaturan"><span class="nav-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09a1.65 1.65 0 00-1-1.51 1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09a1.65 1.65 0 001.51-1 1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33h0a1.65 1.65 0 001-1.51V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51h0a1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82v0a1.65 1.65 0 001.51 1H21a2 2 0 110 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></span><span class="nav-label">Pengaturan</span></button>
       </div>
 
       <div class="sb-footer">
-        <div class="sb-illustration" aria-hidden="true">
-          <svg viewBox="0 0 220 150" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="stBody" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b7a4fb"/><stop offset="1" stop-color="#8b73f0"/></linearGradient>
-              <linearGradient id="stHill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e5defd"/><stop offset="1" stop-color="#f3f0ff"/></linearGradient>
-            </defs>
-            <path d="M0 150 L0 98 C34 74 70 100 110 88 C150 76 186 92 220 70 L220 150Z" fill="url(#stHill)"/>
-            <ellipse cx="112" cy="140" rx="82" ry="7" fill="#7c6bd6" opacity=".18"/>
-            <rect x="52" y="64" width="118" height="74" rx="5" fill="url(#stBody)"/>
-            <rect x="52" y="64" width="118" height="74" rx="5" fill="none" stroke="#7a62e0" stroke-width="1" opacity=".5"/>
-            <path d="M44 50 H178 L186 68 H36Z" fill="#7a5ce8"/>
-            <g>
-              <path d="M36 68 H56 V60 H44 Z" fill="#fff" opacity=".0"/>
-              <path d="M44 50 H62 L58 68 H36Z" fill="#fff" opacity=".92"/>
-              <path d="M80 50 H98 L98 68 H76Z" fill="#fff" opacity=".92"/>
-              <path d="M116 50 H134 L138 68 H116Z" fill="#fff" opacity=".92"/>
-              <path d="M152 50 H170 L178 68 H156Z" fill="#fff" opacity=".92"/>
-            </g>
-            <path d="M36 68 q9 10 18 0 q9 10 18 0 q9 10 18 0 q9 10 18 0 q9 10 18 0 q9 10 18 0 q9 10 18 0 q4 4 8 0 L186 68Z" fill="#6d4fdc" opacity=".0"/>
-            <rect x="60" y="36" width="102" height="14" rx="4" fill="#fff"/>
-            <rect x="68" y="40" width="40" height="6" rx="3" fill="#8b73f0"/>
-            <rect x="114" y="40" width="40" height="6" rx="3" fill="#c9bffa"/>
-            <rect x="64" y="86" width="34" height="52" rx="3" fill="#6a52d8"/>
-            <rect x="70" y="92" width="22" height="28" rx="2" fill="#cfc6fb" opacity=".55"/>
-            <circle cx="92" cy="114" r="2" fill="#fff"/>
-            <rect x="108" y="84" width="52" height="38" rx="3" fill="#e9e4ff"/>
-            <path d="M134 84 V122 M108 103 H160" stroke="#8b73f0" stroke-width="2"/>
-            <g fill="#34b37e">
-              <path d="M14 142 C2 126 8 104 26 100 C28 118 24 132 14 142Z"/>
-              <path d="M26 144 C26 126 38 112 52 112 C52 128 42 140 26 144Z" fill="#5fcf9d"/>
-              <path d="M206 144 C196 128 200 108 216 104 C218 120 216 134 206 144Z"/>
-              <path d="M190 144 C188 130 176 122 168 124 C170 136 178 142 190 144Z" fill="#5fcf9d"/>
-            </g>
-          </svg>
-        </div>
-        <div class="sb-store" title="Toko aktif">
-          <span class="sb-store-dot"></span>
-          <div class="sb-store-text"><small>Toko aktif</small><strong id="currentStoreName">Kopi &amp; Ritel Nusantara</strong></div>
+        <div class="sb-profile" title="Profil pengguna">
+          <span class="sb-avatar" id="sbUserAvatar">H</span>
+          <div class="sb-profile-text">
+            <strong id="sbUserName">Pengguna</strong>
+            <span id="sbUserRole">Pengguna</span>
+            <small id="currentStoreName">Kopi &amp; Ritel Nusantara</small>
+          </div>
         </div>
       </div>
     </aside>
@@ -1387,7 +1356,6 @@
 
 
   <script src="auth-security.js"></script>
-  <script src="api.js"></script>
   <script src="script.js"></script>
   <script src="welcome.js"></script>
   <script src="dev-inspector.js"></script>

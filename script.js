@@ -1642,6 +1642,15 @@ function initAuth() {
   return true;
 }
 
+function syncSidebarProfile(name, role, ch) {
+  const n = document.getElementById('sbUserName');
+  const r = document.getElementById('sbUserRole');
+  const a = document.getElementById('sbUserAvatar');
+  if (n) n.textContent = name;
+  if (r) r.textContent = role;
+  if (a) a.textContent = ch;
+}
+
 function updateAuthUI() {
   const headerName = document.getElementById('headerUserName');
   const headerRole = document.getElementById('headerUserRole');
@@ -1656,12 +1665,14 @@ function updateAuthUI() {
     if (headerName) headerName.textContent = 'Belum Masuk';
     if (headerRole) headerRole.textContent = 'Tamu (Guest)';
     if (avatarChar) avatarChar.textContent = '?';
+    syncSidebarProfile('Belum Masuk', 'Tamu (Guest)', '?');
     return;
   }
 
   if (headerName) headerName.textContent = currentUser.name;
   if (headerRole) headerRole.textContent = currentUser.roleLabel || 'Pengguna';
   if (avatarChar) avatarChar.textContent = (currentUser.name || 'U').charAt(0).toUpperCase();
+  syncSidebarProfile(currentUser.name, currentUser.roleLabel || 'Pengguna', (currentUser.name || 'U').charAt(0).toUpperCase());
   if (udName) udName.textContent = currentUser.name;
   if (udEmail) udEmail.textContent = currentUser.email || 'user@umkm.id';
   if (udRoleBadge) udRoleBadge.textContent = currentUser.roleLabel || 'Member';
@@ -1708,7 +1719,24 @@ function toggleSidebar() {
     document.body.classList.toggle('sb-open');
     return;
   }
+  const main = document.querySelector('.app-main');
+  const before = main ? main.getBoundingClientRect().left : 0;
+  document.body.classList.add('sb-animating');
+  clearTimeout(toggleSidebar._t);
+  toggleSidebar._t = setTimeout(() => document.body.classList.remove('sb-animating'), 380);
   const collapsed = document.body.classList.toggle('sb-collapsed');
+  // FLIP: content gets its final layout immediately (one reflow) and only SLIDES
+  // by transform, in sync with the sidebar width -> no per-frame reflow / chart resize.
+  if (main && main.animate && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const delta = before - main.getBoundingClientRect().left;
+    if (delta) {
+      if (main._sbAnim) main._sbAnim.cancel();
+      main._sbAnim = main.animate(
+        [{ transform: 'translate3d(' + delta + 'px,0,0)' }, { transform: 'translate3d(0,0,0)' }],
+        { duration: 300, easing: 'cubic-bezier(0.4, 0, 0.2, 1)' }
+      );
+    }
+  }
   try { localStorage.setItem(SB_KEY, collapsed ? '1' : '0'); } catch (e) {}
   const btn = document.getElementById('btnSidebarToggle');
   if (btn) { btn.setAttribute('aria-expanded', String(!collapsed)); }
