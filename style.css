@@ -4510,3 +4510,175 @@ html {
 
 /* 32b. overflow-x:clip on html/body (dashboard FLIP) breaks position:sticky on the landing curtain -> restrict it to non-landing pages */
 html.landing, html.landing body { overflow-x: visible !important; }
+
+/* ===== POS: pencarian & filter kategori dipisah (tanpa card pembungkus) ===== */
+.pos-catalog { gap: 1rem; }
+.pos-search-bar {
+  background: transparent; border: 0; box-shadow: none; border-radius: 0; padding: 0;
+}
+.pos-search-bar .search-input-wrap {
+  background: rgba(255,255,255,.92); border: 1px solid #E2E8F0;
+  border-radius: 14px; box-shadow: var(--shadow-sm); padding: 0.65rem 0.95rem;
+}
+.pos-search-bar .search-input-wrap:focus-within {
+  border-color: #14B8A6; box-shadow: 0 0 0 3px rgba(20,184,166,.18);
+}
+#posCategoryChips { gap: 0.6rem; margin-bottom: 0.75rem; }  /* ruang napas sebelum grid produk */
+#posCategoryChips .chip {
+  background: rgba(255,255,255,.72); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  border: 1px solid #E2E8F0; color: #475569; box-shadow: none;
+  padding: 0.42rem 0.9rem;
+}
+#posCategoryChips .chip:hover {
+  background: rgba(20,184,166,.12); border-color: rgba(20,184,166,.45); color: #0D9488;
+}
+#posCategoryChips .chip.active {
+  background: #0D9488; border-color: #0D9488; color: #fff;
+  box-shadow: 0 6px 16px -6px rgba(20,184,166,.7);
+}
+#posCategoryChips .chip.active:hover { background: #0F766E; border-color: #0F766E; color: #fff; }
+
+/* ===== Tabel Rekomendasi AI (Smart Restock): spacing, alignment, tema slate-teal ===== */
+.ai-table { width: 100%; min-width: 980px; border-collapse: collapse; table-layout: auto; }
+.ai-table th, .ai-table td { padding: 0.875rem 1rem; vertical-align: middle; line-height: 1.5; text-align: left; }
+.ai-table thead th {
+  background: #F0FDF4; color: #475569; font-size: 0.72rem; font-weight: 700;
+  letter-spacing: 0.04em; text-transform: uppercase; white-space: nowrap;
+  border-bottom: 1px solid #E2E8F0;
+}
+.ai-table tbody td { border-bottom: 1px solid #F1F5F9; color: #334155; font-size: 0.86rem; }
+.ai-table tbody tr:last-child td { border-bottom: 0; }
+.ai-table tbody tr { transition: background .15s ease; }
+.ai-table tbody tr:hover { background: rgba(248,250,252,.6); }
+.ai-table tbody tr:hover td { background: rgba(248,250,252,.6); }
+.ai-table td strong { font-weight: 600; color: #0F172A; line-height: 1.5; }
+.ai-table .ai-sub, .ai-table td small.ai-sub { font-size: 0.75rem; color: #94A3B8; line-height: 1.4; }
+/* Produk & Rekomendasi: kiri · Stok, Laju, Prediksi, Status: tengah · Aksi: kanan, lebar tetap */
+.ai-table th:nth-child(1), .ai-table td:nth-child(1),
+.ai-table th:nth-child(6), .ai-table td:nth-child(6) { text-align: left; }
+.ai-table th:nth-child(2), .ai-table td:nth-child(2),
+.ai-table th:nth-child(3), .ai-table td:nth-child(3),
+.ai-table th:nth-child(4), .ai-table td:nth-child(4),
+.ai-table th:nth-child(5), .ai-table td:nth-child(5) { text-align: center; }
+.ai-table th:nth-child(7), .ai-table td:nth-child(7) { text-align: right; width: 9rem; min-width: 9rem; }
+.ai-table td:nth-child(7) .btn { white-space: nowrap; }
+
+/* ===== Card Asisten AI diselaraskan dengan card Inventori (.data-card) ===== */
+.ai-stock-card { padding: 1.5rem; margin-bottom: 1.5rem; }
+.ai-stock-card .card-head.ai-card-head {
+  align-items: center; padding-bottom: 1rem; margin-bottom: 1rem;
+  border-bottom: 1px solid #F1F5F9; gap: 1rem; flex-wrap: wrap;
+}
+.ai-stock-card .ai-card-head .header-actions { margin-left: auto; display: flex; align-items: center; flex-shrink: 0; }
+.ai-table-wrap { border: 1px solid #F1F5F9; border-radius: 12px; overflow: hidden; background: rgba(255,255,255,.9); }
+.ai-table-wrap .table-responsive { margin: 0; border-radius: 0; }
+.ai-table thead th { background: #ecfeff; color: #0f766e; border-bottom: 1px solid #E2F3F2; }
+.ai-table tbody tr:hover, .ai-table tbody tr:hover td { background: #f4fbfa; }
+.ai-stock-card .ai-summary-footer { margin-top: 1rem; }
+
+/* ===== Custom dropdown (Asisten AI Tab 2 & 3) — soft modern slate-teal ===== */
+.cs-wrap { position: relative; width: 100%; }
+.cs-native { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; pointer-events: none; }
+.cs-btn {
+  width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;
+  padding: 0.625rem 1rem; text-align: left; cursor: pointer;
+  font-family: var(--font-sans); font-size: 0.85rem; line-height: 1.5; color: #334155;
+  background: rgba(255,255,255,.9); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
+  border: 1px solid rgba(226,232,240,.8); border-radius: 12px;
+  box-shadow: 0 1px 2px rgba(15,23,42,.05);
+  transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
+}
+.cs-btn:hover { border-color: #cbd5e1; background: #fff; }
+.cs-btn:focus-visible, .cs-wrap.open .cs-btn {
+  outline: none; border-color: #14b8a6; box-shadow: 0 0 0 2px rgba(20,184,166,.2);
+}
+.cs-label { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cs-chevron { flex-shrink: 0; color: #64748b; transition: transform .2s ease, color .2s ease; }
+.cs-btn:hover .cs-chevron { color: #0d9488; }
+.cs-wrap.open .cs-chevron { transform: rotate(180deg); color: #0d9488; }
+
+.cs-list {
+  position: absolute; left: 0; right: 0; top: calc(100% + 0.375rem); z-index: 60;
+  max-height: 15rem; overflow-y: auto; padding: 0.375rem;
+  background: rgba(255,255,255,.97); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  border: 1px solid rgba(226,232,240,.9); border-radius: 12px;
+  box-shadow: 0 12px 28px -8px rgba(15,23,42,.18), 0 2px 6px rgba(15,23,42,.05);
+  animation: cs-pop .14s ease-out;
+}
+.cs-list[hidden] { display: none; }
+.cs-wrap.up .cs-list { top: auto; bottom: calc(100% + 0.375rem); }
+@keyframes cs-pop { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+.cs-option {
+  display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;
+  padding: 0.5rem 0.75rem; border-radius: 8px; cursor: pointer;
+  font-size: 0.85rem; line-height: 1.5; color: #334155; transition: background .12s ease, color .12s ease;
+}
+.cs-option:hover, .cs-option.active { background: #ecfdf5; color: #047857; }
+.cs-option.selected { background: #f0fdfa; color: #0f766e; font-weight: 600; }
+.cs-option.selected:hover, .cs-option.selected.active { background: #ecfdf5; color: #047857; }
+.cs-option .cs-check { flex-shrink: 0; opacity: 0; color: #0d9488; }
+.cs-option.selected .cs-check { opacity: 1; }
+.cs-option.disabled { opacity: .45; cursor: not-allowed; }
+
+/* ===== Banner Asisten AI — ringkas & minimalis ===== */
+.ai-hero-card.ai-hero-compact {
+  padding: 1rem 1.5rem; gap: 0; margin-bottom: 1rem;
+}
+.ai-hero-compact .ai-hero-top { display: flex; align-items: center; flex-wrap: wrap; gap: 0.75rem; }
+.ai-hero-compact h2 {
+  margin: 0; font-size: 1.25rem; font-weight: 700; line-height: 1.4; letter-spacing: -0.01em;
+  color: #1e293b; background: none; -webkit-background-clip: border-box; background-clip: border-box;
+  -webkit-text-fill-color: #1e293b;
+}
+.ai-hero-compact .ai-live-pulse {
+  display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.2rem 0.65rem;
+  font-size: 0.72rem; font-weight: 600; color: #047857;
+  background: rgba(236,253,245,.9); border: 1px solid rgba(16,185,129,.25); border-radius: 999px;
+}
+.ai-hero-compact .pulse-dot { width: 7px; height: 7px; }
+.ai-hero-compact .ai-stat-pills {
+  display: flex; flex-direction: row; flex-wrap: wrap; gap: 0.75rem;
+  margin-top: 0.75rem; padding-top: 0; border-top: 0;
+}
+.ai-stat-pill {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  padding: 0.375rem 0.75rem; border-radius: 8px;
+  background: rgba(255,255,255,.7); border: 1px solid rgba(226,232,240,.6);
+  font-size: 0.75rem; line-height: 1.4; white-space: nowrap;
+}
+.ai-stat-pill .ai-pill-ico { width: 16px; height: 16px; flex-shrink: 0; color: #0d9488; }
+.ai-stat-pill strong { font-size: 0.75rem; font-weight: 600; color: #1e293b; }
+.ai-stat-pill small { font-size: 0.75rem; font-weight: 500; color: #64748b; }
+@media (max-width: 560px) { .ai-hero-card.ai-hero-compact { padding: 0.875rem 1rem; } .ai-stat-pill { white-space: normal; } }
+
+/* ===== Chatbot AI — tinggi pas layar, hanya riwayat pesan yang di-scroll ===== */
+.ai-chat-container {
+  display: flex; flex-direction: column; justify-content: space-between;
+  height: clamp(380px, calc(100vh - 300px), 620px);   /* topbar + banner + sub-tab + ruang napas */
+  padding: 0; overflow: hidden;
+  background: rgba(255,255,255,.92); border: 1px solid rgba(226,232,240,.8); border-radius: 16px;
+  box-shadow: 0 1px 2px rgba(15,23,42,.05), 0 8px 24px -14px rgba(15,23,42,.18);
+}
+@supports (height: 100dvh) { .ai-chat-container { height: clamp(380px, calc(100dvh - 300px), 620px); } }
+.ai-chat-container .ai-chat-header {
+  margin: 0; padding: 0.75rem 1rem; border-bottom: 1px solid #F1F5F9; background: rgba(255,255,255,.7);
+}
+.ai-chat-container .ai-chat-avatar { width: 36px; height: 36px; font-size: 1.1rem; }
+.ai-chat-container .ai-chat-messages {
+  flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain;
+  padding: 0.75rem 1rem; gap: 0.75rem;
+}
+.ai-chat-container .chat-msg.assistant .chat-bubble { padding: 0.6rem 0.9rem; line-height: 1.5; }
+.ai-chat-container .chat-msg.user .chat-bubble { padding: 0.6rem 0.9rem; }
+.ai-chat-container .chat-bubble p { margin: 0; }
+.ai-chat-container .chat-bubble p + p { margin-top: 0.4rem; }
+.ai-chat-container .ai-quick-prompts {
+  flex: 0 0 auto; flex-wrap: wrap; gap: 0.5rem; overflow: visible;
+  padding: 0.6rem 1rem 0.25rem; margin: 0; border-top: 1px solid #F1F5F9;
+}
+.ai-chat-container .chip-prompt { white-space: normal; text-align: left; line-height: 1.4; padding: 0.35rem 0.75rem; }
+.ai-chat-container .chip-prompt:hover { color: #0f766e; background: rgba(20,184,166,.12); border-color: rgba(20,184,166,.45); }
+.ai-chat-container .ai-chat-input-bar {
+  flex: 0 0 auto; align-items: center; gap: 0.5rem; padding: 0.75rem;
+  background: #fff; border-top: 1px solid #F1F5F9; border-radius: 0 0 16px 16px;
+}

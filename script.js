@@ -2040,17 +2040,17 @@ function renderAiStockAdvisor() {
           <span style="font-size:1.3rem;">${escapeHtml(p.icon || '📦')}</span>
           <div>
             <strong>${escapeHtml(p.name)}</strong><br/>
-            <small style="color:var(--text-muted);">${escapeHtml(p.category)} &bull; SKU: ${escapeHtml(p.sku)}</small>
+            <small class="ai-sub">${escapeHtml(p.category)} &bull; SKU: ${escapeHtml(p.sku)}</small>
           </div>
         </div>
       </td>
       <td>
         <strong style="font-family:var(--font-mono);">${p.stock}</strong>
-        <small style="color:var(--text-muted);">/ min ${p.minStock}</small>
+        <small class="ai-sub">/ min ${p.minStock}</small>
       </td>
       <td>
         <span style="font-family:var(--font-mono); font-weight:600;">${dailyRate}</span>
-        <small style="color:var(--text-muted);">unit/hari</small>
+        <small class="ai-sub">unit/hari</small>
       </td>
       <td>
         <strong style="font-family:var(--font-mono); color:${runoutDays <= 3 ? '#f87171' : runoutDays <= 7 ? '#fbbf24' : '#34d399'};">
@@ -2614,4 +2614,155 @@ function resetAiChatHistory() {
       if (typeof renderCategoryDonutChart === 'function') renderCategoryDonutChart();
     }, 150);
   });
+})();
+
+// ========================================================
+// CUSTOM DROPDOWN — Asisten AI Tab 2 (Deskripsi Produk) & Tab 3 (Caption Promosi)
+// <select> asli tetap ada (tersembunyi) sebagai sumber nilai, sehingga seluruh
+// logika lama (.value, onchange, validasi form) berjalan tanpa perubahan.
+// ========================================================
+(function initAiCustomSelects() {
+  const CHEVRON = '<svg class="cs-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>';
+  const CHECK = '<svg class="cs-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>';
+  const valueDesc = Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, 'value');
+  const instances = [];
+  let uid = 0;
+
+  function closeAll(except) { instances.forEach(i => { if (i !== except) i.close(); }); }
+
+  function enhance(sel) {
+    if (sel.dataset.csReady) return;
+    sel.dataset.csReady = '1';
+    const id = 'cs' + (++uid);
+
+    const wrap = document.createElement('div');
+    wrap.className = 'cs-wrap';
+    sel.parentNode.insertBefore(wrap, sel);
+    wrap.appendChild(sel);
+    sel.classList.add('cs-native');
+    sel.tabIndex = -1;
+    sel.setAttribute('aria-hidden', 'true');
+
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'cs-btn';
+    btn.setAttribute('aria-haspopup', 'listbox');
+    btn.setAttribute('aria-expanded', 'false');
+    btn.setAttribute('aria-controls', id + '-list');
+    const lbl = sel.id ? document.querySelector('label[for="' + sel.id + '"]') : null;
+    if (lbl) { if (!lbl.id) lbl.id = id + '-label'; btn.setAttribute('aria-labelledby', lbl.id); }
+    btn.innerHTML = '<span class="cs-label"></span>' + CHEVRON;
+
+    const list = document.createElement('div');
+    list.className = 'cs-list';
+    list.id = id + '-list';
+    list.setAttribute('role', 'listbox');
+    list.hidden = true;
+
+    wrap.append(btn, list);
+    const labelEl = btn.querySelector('.cs-label');
+    let active = -1;
+
+    function items() { return Array.from(list.children); }
+
+    function sync() {
+      const opt = sel.options[sel.selectedIndex];
+      labelEl.textContent = opt ? opt.textContent : '';
+      items().forEach((el, i) => {
+        const on = i === sel.selectedIndex;
+        el.classList.toggle('selected', on);
+        el.setAttribute('aria-selected', on ? 'true' : 'false');
+      });
+    }
+
+    function build() {
+      list.innerHTML = '';
+      Array.from(sel.options).forEach((o, i) => {
+        const el = document.createElement('div');
+        el.className = 'cs-option';
+        el.setAttribute('role', 'option');
+        el.dataset.index = i;
+        el.innerHTML = '<span class="cs-opt-text"></span>' + CHECK;
+        el.firstChild.textContent = o.textContent;
+        if (o.disabled) el.classList.add('disabled');
+        el.addEventListener('mousedown', e => e.preventDefault());
+        el.addEventListener('click', () => { if (!o.disabled) choose(i); });
+        el.addEventListener('mousemove', () => setActive(i));
+        list.appendChild(el);
+      });
+      sync();
+    }
+
+    function setActive(i) {
+      active = i;
+      items().forEach((el, k) => el.classList.toggle('active', k === i));
+      const el = items()[i];
+      if (el && el.scrollIntoView) el.scrollIntoView({ block: 'nearest' });
+    }
+
+    function choose(i) {
+      const changed = sel.selectedIndex !== i;
+      valueDesc.set.call(sel, sel.options[i].value);
+      sync();
+      close();
+      btn.focus();
+      if (changed) sel.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+
+    function open() {
+      closeAll(api);
+      if (!list.hidden) return;
+      list.hidden = false;
+      wrap.classList.add('open');
+      btn.setAttribute('aria-expanded', 'true');
+      const r = btn.getBoundingClientRect();
+      const below = window.innerHeight - r.bottom, above = r.top;
+      wrap.classList.toggle('up', below < 260 && above > below);
+      setActive(Math.max(0, sel.selectedIndex));
+    }
+
+    function close() {
+      if (list.hidden) return;
+      list.hidden = true;
+      wrap.classList.remove('open', 'up');
+      btn.setAttribute('aria-expanded', 'false');
+    }
+
+    btn.addEventListener('click', () => (list.hidden ? open() : close()));
+    btn.addEventListener('keydown', e => {
+      const n = sel.options.length;
+      if (list.hidden) {
+        if (['ArrowDown', 'ArrowUp', 'Enter', ' '].includes(e.key)) { e.preventDefault(); open(); }
+        return;
+      }
+      if (e.key === 'ArrowDown') { e.preventDefault(); setActive(Math.min(n - 1, active + 1)); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); setActive(Math.max(0, active - 1)); }
+      else if (e.key === 'Home') { e.preventDefault(); setActive(0); }
+      else if (e.key === 'End') { e.preventDefault(); setActive(n - 1); }
+      else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); if (active >= 0) choose(active); }
+      else if (e.key === 'Escape') { e.preventDefault(); close(); }
+      else if (e.key === 'Tab') { close(); }
+    });
+
+    // Fokus dari <label for> diteruskan ke tombol kustom
+    sel.addEventListener('focus', () => btn.focus());
+    // Nilai yang diubah lewat kode (select.value = ...) ikut menyegarkan tampilan
+    Object.defineProperty(sel, 'value', {
+      configurable: true,
+      get() { return valueDesc.get.call(sel); },
+      set(v) { valueDesc.set.call(sel, v); sync(); }
+    });
+    // Opsi yang diisi ulang lewat kode (mis. daftar produk toko) ikut dibangun ulang
+    new MutationObserver(build).observe(sel, { childList: true, subtree: true, characterData: true });
+
+    build();
+    const api = { close };
+    instances.push(api);
+  }
+
+  document.addEventListener('mousedown', e => { if (!e.target.closest('.cs-wrap')) closeAll(); });
+  window.addEventListener('resize', () => closeAll());
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeAll(); });
+
+  document.querySelectorAll('#aiTab-product-copywriter select, #aiTab-social-caption select').forEach(enhance);
 })();
