@@ -1113,15 +1113,16 @@ select.a-input { appearance: none; padding-right: 2rem; background-image: url("d
 }
 
 .discount-inline input {
-  width: 44px;
+  width: 50px;
+  height: 28px;
   background: var(--bg-input);
   border: 1px solid var(--border-color);
   color: var(--text-main);
   text-align: center;
-  padding: 2px;
+  padding: 2px 4px;
   border-radius: var(--radius-sm);
   font-family: var(--font-mono);
-  font-size: 0.78rem;
+  font-size: 0.82rem;
 }
 
 .disc-amount {
@@ -2406,6 +2407,7 @@ select.a-input { appearance: none; padding-right: 2rem; background-image: url("d
   padding-bottom: 0.85rem;
   border-bottom: 1px solid var(--border-color);
   margin-bottom: 0.85rem;
+  flex-shrink: 0;
 }
 
 .ai-chat-profile {
@@ -2434,6 +2436,7 @@ select.a-input { appearance: none; padding-right: 2rem; background-image: url("d
 
 .ai-chat-messages {
   flex: 1;
+  min-height: 0;
   overflow-y: auto;
   padding: 0.5rem;
   display: flex;
@@ -2482,6 +2485,7 @@ select.a-input { appearance: none; padding-right: 2rem; background-image: url("d
   overflow-x: auto;
   padding: 0.5rem 0;
   margin-bottom: 0.5rem;
+  flex-shrink: 0;
 }
 
 .chip-prompt {
@@ -2509,10 +2513,17 @@ select.a-input { appearance: none; padding-right: 2rem; background-image: url("d
   gap: 0.5rem;
   padding-top: 0.5rem;
   border-top: 1px solid var(--border-color);
+  flex-shrink: 0;
 }
 
 .ai-chat-input-bar input {
   flex: 1;
+  min-width: 0;
+}
+
+.ai-chat-input-bar .btn {
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 /* Modal link button */
@@ -2709,6 +2720,70 @@ select.a-input { appearance: none; padding-right: 2rem; background-image: url("d
   .main-content { padding: 1rem 0.85rem 2rem; }
   .notif-dropdown { position: fixed; left: 0.75rem; right: 0.75rem; top: calc(var(--topbar-h) + 6px); width: auto; }
   .kpi-grid { grid-template-columns: 1fr 1fr; }
+
+  /* Responsiveness Fixes: AI Assistant Chat Container */
+  .ai-chat-container {
+    height: clamp(380px, 62vh, 520px);
+  }
+  .ai-chat-header {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .ai-chat-profile {
+    min-width: 0;
+  }
+
+  /* Responsiveness Fixes: Touch Targets & POS */
+  .cir-qty-ctrl {
+    gap: 0.4rem;
+  }
+  .qty-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 1rem;
+    position: relative;
+    border-radius: var(--radius-sm);
+  }
+  .qty-btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 44px;
+    min-height: 44px;
+  }
+  .cir-qty-num {
+    font-size: 0.9rem;
+    min-width: 22px;
+  }
+  .pos-cart-panel .customer-row button {
+    min-width: 36px;
+    min-height: 36px;
+    font-size: 1rem;
+  }
+  #btnClearCart {
+    min-height: 32px;
+    padding: 0.35rem 0.65rem;
+  }
+  .quick-cash-chips .btn-chip {
+    min-height: 36px;
+    padding: 0.35rem 0.75rem;
+    font-size: 0.8rem;
+  }
+  .btn-xs {
+    min-height: 30px;
+    padding: 0.3rem 0.6rem;
+  }
+
+  /* Responsiveness Fixes: POS Discount Input */
+  .discount-inline input {
+    width: 60px;
+    height: 38px;
+    font-size: 16px;
+    padding: 0.35rem 0.5rem;
+    border-radius: var(--radius-sm);
+  }
 }
 @media (max-width: 520px) {
   .kpi-grid { grid-template-columns: 1fr; }
@@ -2730,6 +2805,11 @@ select.a-input { appearance: none; padding-right: 2rem; background-image: url("d
 @media (max-width: 1100px) { .charts-row { flex-direction: column; } }
 @media (max-width: 900px) {
   .pos-layout { grid-template-columns: 1fr; }
+  .pos-cart-panel {
+    position: static;
+    top: auto;
+    max-height: none;
+  }
   .inv-stats-row { display: grid; grid-template-columns: 1fr 1fr; }
   .method-options { grid-template-columns: 1fr; }
   .pane-header { flex-direction: column; align-items: stretch; }
