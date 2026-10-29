@@ -234,8 +234,14 @@ function saveCustomers() {
 // ========================================================
 // UTILITIES
 // ========================================================
-function cssVar(name) {
-  return getComputedStyle(document.body).getPropertyValue(name).trim() || '#888';
+function cssVar(name, el) {
+  return getComputedStyle(el || document.body).getPropertyValue(name).trim() || '#888';
+}
+
+// Warna kanvas dibaca dari kartu pemiliknya (var --cv-*), fallback ke palet lama.
+function cardVar(el, name, fallback) {
+  const v = getComputedStyle(el).getPropertyValue(name).trim();
+  return v || fallback;
 }
 
 function initClock() {
@@ -544,7 +550,16 @@ function renderSalesTrendChart() {
   const chartH = h - padBottom - padTop;
 
   // Grid Lines
-  ctx.strokeStyle = cssVar('--border-color');
+  const host = canvas.closest('.chart-card') || canvas;
+  const cvGrid  = cardVar(host, '--cv-grid',  cssVar('--border-color'));
+  const cvLabY  = cardVar(host, '--cv-label-y', cssVar('--text-subtle'));
+  const cvLabX  = cardVar(host, '--cv-label-x', cssVar('--text-muted'));
+  const cvLineA = cardVar(host, '--cv-line-a', '#0d9488');
+  const cvLineB = cardVar(host, '--cv-line-b', '#0d9488');
+  const cvDot   = cardVar(host, '--cv-dot-fill', cssVar('--bg-card'));
+  const cvAreaA = cardVar(host, '--cv-area-a', 'rgba(16, 185, 129, 0.30)');
+  const cvAreaB = cardVar(host, '--cv-area-b', 'rgba(13, 148, 136, 0)');
+  ctx.strokeStyle = cvGrid;
   ctx.lineWidth = 1;
   for (let i = 0; i <= 3; i++) {
     const y = padTop + (chartH / 3) * i;
@@ -554,7 +569,7 @@ function renderSalesTrendChart() {
     ctx.stroke();
 
     const val = Math.round(maxVal - (maxVal / 3) * i);
-    ctx.fillStyle = cssVar('--text-subtle');
+    ctx.fillStyle = cvLabY;
     ctx.font = '10px "JetBrains Mono"';
     ctx.textAlign = 'right';
     ctx.fillText((val / 1000) + 'k', padLeft - 8, y + 3);
@@ -568,38 +583,53 @@ function renderSalesTrendChart() {
     points.push({ x, y });
   });
 
+  // Kurva halus (monotone: tidak melampaui nilai antar titik, segmen datar tetap datar)
+  function smoothPath(pts) {
+    ctx.moveTo(pts[0].x, pts[0].y);
+    for (let i = 0; i < pts.length - 1; i++) {
+      const p0 = pts[i - 1] || pts[i], p1 = pts[i], p2 = pts[i + 1], p3 = pts[i + 2] || p2;
+      const lo = Math.min(p1.y, p2.y), hi = Math.max(p1.y, p2.y);
+      const c1y = Math.min(hi, Math.max(lo, p1.y + (p2.y - p0.y) / 6));
+      const c2y = Math.min(hi, Math.max(lo, p2.y - (p3.y - p1.y) / 6));
+      ctx.bezierCurveTo(p1.x + (p2.x - p0.x) / 6, c1y, p2.x - (p3.x - p1.x) / 6, c2y, p2.x, p2.y);
+    }
+  }
+
   // Area Fill
   const grad = ctx.createLinearGradient(0, padTop, 0, h - padBottom);
-  grad.addColorStop(0, 'rgba(20, 184, 166, 0.32)');
-  grad.addColorStop(1, 'rgba(20, 184, 166, 0)');
+  grad.addColorStop(0, cvAreaA);
+  grad.addColorStop(1, cvAreaB);
 
   ctx.beginPath();
-  ctx.moveTo(points[0].x, h - padBottom);
-  points.forEach(p => ctx.lineTo(p.x, p.y));
+  smoothPath(points);
   ctx.lineTo(points[points.length - 1].x, h - padBottom);
+  ctx.lineTo(points[0].x, h - padBottom);
   ctx.closePath();
   ctx.fillStyle = grad;
   ctx.fill();
 
-  // Stroke Line
+  // Stroke Line (gradien horizontal)
+  const lineGrad = ctx.createLinearGradient(padLeft, 0, w - padRight, 0);
+  lineGrad.addColorStop(0, cvLineA);
+  lineGrad.addColorStop(1, cvLineB);
   ctx.beginPath();
-  ctx.moveTo(points[0].x, points[0].y);
-  points.forEach(p => ctx.lineTo(p.x, p.y));
-  ctx.strokeStyle = '#14b8a6';
-  ctx.lineWidth = 2.5;
+  smoothPath(points);
+  ctx.strokeStyle = lineGrad;
+  ctx.lineWidth = 3;
+  ctx.lineCap = 'round';
   ctx.stroke();
 
   // Dots & Labels
   points.forEach((p, idx) => {
     ctx.beginPath();
     ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
-    ctx.fillStyle = cssVar('--bg-card');
+    ctx.fillStyle = cvDot;
     ctx.fill();
-    ctx.strokeStyle = '#14b8a6';
+    ctx.strokeStyle = idx / (points.length - 1) < 0.5 ? cvLineA : cvLineB;
     ctx.lineWidth = 2;
     ctx.stroke();
 
-    ctx.fillStyle = cssVar('--text-muted');
+    ctx.fillStyle = cvLabX;
     ctx.font = '11px "Inter"';
     ctx.textAlign = 'center';
     ctx.fillText(days[idx], p.x, h - 8);
@@ -635,7 +665,7 @@ function renderCategoryDonutChart() {
   });
 
   const categories = Object.keys(catSums);
-  const colors = ['#14b8a6', '#f97316', '#10b981', '#06b6d4'];
+  const colors = ['#0d9488', '#38bdf8', '#10b981', '#5eead4'];
   let totalVal = Object.values(catSums).reduce((a, b) => a + b, 0);
   if (totalVal === 0) totalVal = 1; // avoid division by zero
 
@@ -1719,29 +1749,17 @@ function toggleSidebar() {
     document.body.classList.toggle('sb-open');
     return;
   }
-  const main = document.querySelector('.app-main');
-  const before = main ? main.getBoundingClientRect().left : 0;
-  document.body.classList.add('sb-animating');
-  clearTimeout(toggleSidebar._t);
-  toggleSidebar._t = setTimeout(() => document.body.classList.remove('sb-animating'), 380);
+  // Semua gerak (lebar sidebar, margin konten, fade teks) dikendalikan CSS lewat
+  // satu durasi/easing (--sb-dur / --sb-ease, lihat style.css bagian 40).
   const collapsed = document.body.classList.toggle('sb-collapsed');
-  // FLIP: content gets its final layout immediately (one reflow) and only SLIDES
-  // by transform, in sync with the sidebar width -> no per-frame reflow / chart resize.
-  if (main && main.animate && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    const delta = before - main.getBoundingClientRect().left;
-    if (delta) {
-      if (main._sbAnim) main._sbAnim.cancel();
-      main._sbAnim = main.animate(
-        [{ transform: 'translate3d(' + delta + 'px,0,0)' }, { transform: 'translate3d(0,0,0)' }],
-        { duration: 300, easing: 'cubic-bezier(0.4, 0, 0.2, 1)' }
-      );
-    }
-  }
   try { localStorage.setItem(SB_KEY, collapsed ? '1' : '0'); } catch (e) {}
   const btn = document.getElementById('btnSidebarToggle');
   if (btn) { btn.setAttribute('aria-expanded', String(!collapsed)); }
-  // Charts depend on container width — redraw after the width transition
-  setTimeout(() => { renderSalesTrendChart(); renderCategoryDonutChart(); }, 260);
+  // Canvas chart bergantung pada lebar kontainer: gambar ulang SEKALI setelah transisi selesai
+  // (klik beruntun hanya memicu satu redraw di akhir).
+  clearTimeout(toggleSidebar._chartT);
+  const dur = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--sb-dur')) || 0.4;
+  toggleSidebar._chartT = setTimeout(() => { renderSalesTrendChart(); renderCategoryDonutChart(); }, dur * 1000 + 40);
 }
 
 function closeSidebarMobile() { document.body.classList.remove('sb-open'); }

@@ -387,7 +387,6 @@ select.a-input { appearance: none; padding-right: 2rem; background-image: url("d
 .auth-foot { text-align: center; font-size: 0.74rem; color: var(--text-subtle); margin-top: 1.1rem; }
 
 /* 7. COMPONENT LAYER (legacy panes, re-themed) ----------------------------- */
-}
 
 @keyframes fadeIn {
   from {
@@ -3492,58 +3491,77 @@ body.auth-page.lp-body {
 
 /* 12.2 Sticky top navbar ---------------------------------------------------- */
 .lp-nav {
-  /* Fixed di atas layar, keluar dari alur dokumen (tidak ikut bertumpuk dengan Hero).
-     Default tersembunyi; class .show-nav ditambahkan welcome.js (IntersectionObserver)
-     hanya setelah Section 1 benar-benar keluar dari layar. */
-  position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
   height: var(--lp-nav-h);
-  opacity: 0; transform: translateY(-100%); pointer-events: none;
-  visibility: hidden;                       /* tidak bisa difokus keyboard saat tersembunyi */
-  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s linear 0.3s;
-  /* Glassmorphism */
-  background: rgba(255, 255, 255, 0.8);
+  opacity: 0;
+  transform: translateY(-100%);
+  pointer-events: none;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-          backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+  border-bottom: 1px solid var(--border-color);
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 .lp-nav.show-nav {
-  opacity: 1; transform: translateY(0); pointer-events: auto;
-  visibility: visible; transition-delay: 0s;
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
 }
 @media (prefers-reduced-motion: reduce) { .lp-nav { transition: none; } }
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   .lp-nav { background: rgba(255, 255, 255, 0.95); }
 }
 .lp-nav-inner {
-  height: 100%; max-width: calc(1160px + 2.5rem); margin: 0 auto; padding: 0 1.25rem;   /* tepi sejajar dengan .lp-container */
-  display: flex; align-items: center; gap: 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  height: 100%;
+  padding: 0 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 .lp-brand {
-  display: flex; align-items: center; gap: 0.6rem; flex-shrink: 0;
-  text-decoration: none; color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-decoration: none;
 }
 .lp-brand:hover .brand-mark { box-shadow: 0 0 0 1px rgba(20, 184, 166, 0.5), 0 0 22px rgba(20, 184, 166, 0.55); }
 
-.lp-links { display: flex; align-items: center; gap: 0.2rem; margin-left: 1.25rem; }
-.lp-link {
-  padding: 0.45rem 0.9rem; border-radius: var(--radius-full);
-  font-size: 0.88rem; font-weight: 500; color: var(--text-muted); text-decoration: none;
-  transition: background-color 0.16s ease, color 0.16s ease;
+.lp-links {
+  display: flex;
+  gap: 1.5rem;
 }
-.lp-link:hover { background: var(--bg-hover); color: var(--text-main); }
-.lp-link[aria-current="true"] { background: var(--accent-soft); color: var(--accent-text); font-weight: 600; }
-
+.lp-link {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+.lp-link:hover,
+.lp-link[aria-current="true"] {
+  color: var(--accent-text);
+}
 /* Tombol aksi di sudut kanan: jalan pintas ke Section 4 (Login) */
 .lp-cta {
-  margin-left: auto; flex-shrink: 0;
-  display: inline-flex; align-items: center; gap: 0.5rem;
-  height: 40px; padding: 0 1.1rem; border-radius: 12px;
-  background: var(--accent); color: #fff; text-decoration: none; white-space: nowrap;
-  font-size: 0.88rem; font-weight: 600;
-  box-shadow: 0 8px 18px -8px rgba(13, 148, 136, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.14);
-  transition: background-color 0.16s ease, transform 0.16s ease, box-shadow 0.16s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.9rem;
+  background: var(--accent);
+  color: #fff;
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.85rem;
 }
-.lp-cta:hover { background: var(--accent-hover); transform: translateY(-1px); box-shadow: 0 12px 22px -10px rgba(13, 148, 136, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.14); }
+.lp-cta:hover {
+  background: var(--accent-hover);
+}
 .lp-cta:active { transform: none; }
 .lp-cta[aria-current="true"] { box-shadow: 0 0 0 3px var(--accent-ring), 0 8px 18px -8px rgba(13, 148, 136, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.14); }
 
@@ -4224,13 +4242,6 @@ html, body { overflow-x: clip; }
 .sb-brand, .sb-scroll, .sb-footer, .nav-link, .sb-profile { contain: layout style; }
 
 
-/* 22. While the sidebar animates, drop expensive backdrop blurs (they dominate frame time) */
-body.sb-animating *, body.sb-animating *::before, body.sb-animating *::after {
-  -webkit-backdrop-filter: none !important; backdrop-filter: none !important;
-}
-body.sb-animating .sidebar { background: rgba(255, 255, 255, 0.98); }
-body.sb-animating .topbar { background: rgba(255, 255, 255, 0.96); }
-body.sb-animating .nusa-deco, body.sb-animating .nusa-deco * { animation-play-state: paused !important; }
 
 /* 23. Sidebar corners: same radius in both modes (no jump) */
 .sidebar, body.sb-collapsed .sidebar { border-radius: 28px !important; }
@@ -4240,7 +4251,7 @@ body.sb-animating .nusa-deco, body.sb-animating .nusa-deco * { animation-play-st
    24. SIDEBAR — vibrant gradient glass container (container only)
    Text/positioning rules from sections 15-20 are untouched (stable transitions).
    ========================================================================== */
-.sidebar, body.sb-collapsed .sidebar, body.sb-animating .sidebar {
+.sidebar, body.sb-collapsed .sidebar {
   background:
     radial-gradient(120% 55% at 0% 0%, rgba(94, 234, 212, 0.75) 0%, rgba(94, 234, 212, 0) 60%),
     radial-gradient(110% 50% at 100% 100%, rgba(56, 189, 248, 0.55) 0%, rgba(56, 189, 248, 0) 62%),
@@ -4294,7 +4305,7 @@ body.sb-animating .nusa-deco, body.sb-animating .nusa-deco * { animation-play-st
 /* ==========================================================================
    25. SIDEBAR — soft pastel glass gradient (lavender -> lilac -> sky), per reference
    ========================================================================== */
-.sidebar, body.sb-collapsed .sidebar, body.sb-animating .sidebar {
+.sidebar, body.sb-collapsed .sidebar {
   background:
     radial-gradient(120% 40% at 50% 0%, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0) 70%),
     linear-gradient(180deg, rgba(214, 210, 246, 0.92) 0%, rgba(232, 216, 246, 0.90) 42%, rgba(205, 224, 250, 0.92) 100%) !important;
@@ -4331,7 +4342,7 @@ body.sb-animating .nusa-deco, body.sb-animating .nusa-deco * { animation-play-st
 }
 
 /* 26. Softer / lighter sidebar gradient */
-.sidebar, body.sb-collapsed .sidebar, body.sb-animating .sidebar {
+.sidebar, body.sb-collapsed .sidebar {
   background:
     radial-gradient(120% 36% at 50% 0%, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 72%),
     linear-gradient(180deg, rgba(238, 236, 252, 0.94) 0%, rgba(245, 237, 252, 0.93) 45%, rgba(232, 241, 253, 0.94) 100%) !important;
@@ -4409,7 +4420,7 @@ body::after  { opacity: 0.05; }
 .wp-bg::after  { opacity: 0.05; }
 
 /* sidebar: translucent teal -> soft cyan frosted glass, slate text */
-.sidebar, body.sb-collapsed .sidebar, body.sb-animating .sidebar {
+.sidebar, body.sb-collapsed .sidebar {
   background:
     radial-gradient(120% 34% at 50% 0%, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 72%),
     linear-gradient(165deg, rgba(20, 184, 166, 0.30) 0%, rgba(45, 212, 191, 0.22) 45%, rgba(56, 189, 248, 0.32) 100%),
@@ -4451,7 +4462,7 @@ body::after  { opacity: 0.05; }
 .wp-headline .hl-gradient { background: linear-gradient(135deg, #0f766e 0%, #14b8a6 50%, #38bdf8 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
 
 /* 29. Sidebar: softer / lighter teal-cyan glass */
-.sidebar, body.sb-collapsed .sidebar, body.sb-animating .sidebar {
+.sidebar, body.sb-collapsed .sidebar {
   background:
     radial-gradient(120% 30% at 50% 0%, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0) 72%),
     linear-gradient(165deg, rgba(20, 184, 166, 0.12) 0%, rgba(45, 212, 191, 0.09) 45%, rgba(56, 189, 248, 0.14) 100%),
@@ -4681,4 +4692,886 @@ html.landing, html.landing body { overflow-x: visible !important; }
 .ai-chat-container .ai-chat-input-bar {
   flex: 0 0 auto; align-items: center; gap: 0.5rem; padding: 0.75rem;
   background: #fff; border-top: 1px solid #F1F5F9; border-radius: 0 0 16px 16px;
+}
+
+/* ==========================================================================
+   LOGO BRAND — Logo.svg (ikon) + Teks_Logo.svg (teks), berdampingan
+   Dipakai di: Navbar landing (.lp-brand), Sidebar (.sb-brand), Login/Register (.auth-brand)
+   Ukuran ringkas: ikon 24px, teks 16px (rasio asli terjaga)
+   ========================================================================== */
+.lp-brand, .auth-brand, .sb-brand { display: flex; align-items: center; gap: 8px; }
+.brand-icon { display: block; height: 24px; width: auto; max-height: 26px; flex-shrink: 0; object-fit: contain; }
+.brand-text { display: block; height: 16px; width: auto; max-height: 18px; flex-shrink: 0; object-fit: contain; max-width: none; }
+
+/* Sidebar: pusat ikon logo (x=32px dari tepi luar sidebar) = pusat ikon menu, baik expanded maupun collapsed */
+.sidebar .sb-brand, body.sb-collapsed .sidebar .sb-brand { padding: 0 0 0 18px; gap: 8px; }
+.sb-brand .brand-text { transition: opacity 0.2s ease; }
+@media (min-width: 1025px) {
+  body.sb-collapsed .sb-brand .brand-text { opacity: 0; pointer-events: none; }
+}
+
+/* Form Login/Register: logo di atas kartu, tengah */
+.auth-brand { justify-content: center; margin-bottom: 1.2rem; text-decoration: none; }
+.auth-card > .auth-brand { margin-bottom: 1rem; }
+
+/* Responsif */
+@media (max-width: 720px) {
+  .lp-brand .brand-icon, .auth-brand .brand-icon { height: 22px; }
+  .lp-brand .brand-text, .auth-brand .brand-text { height: 15px; }
+}
+
+/* ==========================================================================
+   SIDEBAR MENU — ikon & teks sejajar tengah (flexbox), collapsed = ikon di tengah
+   ========================================================================== */
+.sidebar .nav-link { display: flex; align-items: center; gap: 10px; padding: 0 2px 0 1px; }
+.sidebar .nav-link .nav-ico { display: flex; align-items: center; justify-content: center; flex: 0 0 40px; width: 40px; height: 40px; line-height: 0; }
+.sidebar .nav-link .nav-ico svg { display: block; margin: 0; }
+.sidebar .nav-link .nav-label { display: block; align-self: center; }
+body.sb-collapsed .sidebar .nav-link { justify-content: center; align-items: center; padding: 0; gap: 0; }
+@media (max-width: 1024px) {
+  body.sb-collapsed .sidebar .nav-link { justify-content: flex-start; gap: 10px; padding: 0 2px 0 1px; }
+}
+
+/* Welcome badge: ikon logo menggantikan ikon petir */
+.wp-logo { width: auto; height: auto; padding: 0; background: none !important; border-radius: 0; box-shadow: none; animation: none; color: inherit; filter: drop-shadow(0 8px 22px rgba(13, 148, 136, 0.28)); }
+.wp-logo img { display: block; height: 52px; width: auto; }
+
+/* ==========================================================================
+   33. LIGHT GLASSY THEME — Soft Slate-Teal & Mint Cyan  (final override layer)
+   ----------------------------------------------------------------------
+   33.1 Tokens            33.5 Accent: buttons, badges, chips
+   33.2 Canvas + mesh     33.6 Text legibility (slate gelap)
+   33.3 Glass surfaces    33.7 UMKM vector watermark (keranjang/paket/grafik)
+   33.4 Sidebar frosted   33.8 Sidebar stability guard (zero layout shift)
+   Hanya warna / latar / border / bayangan yang diubah. Tidak ada properti
+   ukuran, posisi, padding, atau transisi layout sidebar yang disentuh.
+   ========================================================================== */
+
+/* 33.1 Tokens --------------------------------------------------------------- */
+:root {
+  --mint-50:  #f0fdf4;
+  --slate-50: #f8fafc;
+  --teal-600: #0d9488;
+  --teal-500: #14b8a6;
+  --mint-500: #10b981;
+  --cyan-soft: #38bdf8;
+
+  --bg-primary: #f4fbf8;
+  --text-main:  #0f172a;
+  --text-muted: #334155;
+  --text-subtle: #475569;
+  --accent: #0d9488;
+  --accent-hover: #0f766e;
+  --accent-text: #0d9488;
+  --accent-soft: rgba(16, 185, 129, 0.12);
+  --accent-ring: rgba(16, 185, 129, 0.28);
+  --border-color: rgba(13, 148, 136, 0.14);
+  --border-subtle: rgba(13, 148, 136, 0.08);
+  --border-hover: rgba(13, 148, 136, 0.32);
+
+  --glass-bg: rgba(255, 255, 255, 0.58);
+  --glass-bg-strong: rgba(255, 255, 255, 0.74);
+  --glass-border: rgba(255, 255, 255, 0.78);
+  --glass-outline: rgba(13, 148, 136, 0.13);
+  --glass-blur: blur(16px) saturate(1.35);
+  --glass-shadow: 0 12px 32px -14px rgba(13, 148, 136, 0.26), 0 2px 6px -2px rgba(15, 23, 42, 0.05);
+  --glass-shadow-hover: 0 18px 40px -14px rgba(13, 148, 136, 0.36), 0 4px 10px -4px rgba(15, 23, 42, 0.07);
+
+  --fx-glass: var(--glass-bg);
+  --fx-blur: var(--glass-blur);
+  --fx-glass-edge: rgba(255, 255, 255, 0.92);
+  --shadow-card: var(--glass-shadow);
+  --shadow-card-hover: var(--glass-shadow-hover);
+  --fx-mesh: 0.05;
+}
+
+/* 33.2 Canvas: Soft Mint-Cyan tint + pastel mesh ---------------------------- */
+html {
+  background:
+    radial-gradient(880px 600px at 4% 2%,    rgba(125, 211, 252, 0.20), transparent 64%),
+    radial-gradient(820px 560px at 98% 8%,   rgba(110, 231, 183, 0.22), transparent 62%),
+    radial-gradient(900px 620px at 92% 100%, rgba(153, 246, 228, 0.20), transparent 62%),
+    radial-gradient(760px 520px at 0% 96%,   rgba(186, 230, 253, 0.18), transparent 62%),
+    linear-gradient(160deg, #f0fdf4 0%, #f4fbf9 52%, #f8fafc 100%);
+  background-attachment: fixed;
+}
+.wp-bg {
+  background:
+    radial-gradient(ellipse 80% 55% at 50% -5%, rgba(186, 230, 253, 0.26) 0%, transparent 62%),
+    radial-gradient(ellipse 55% 45% at 10% 95%, rgba(167, 243, 208, 0.24) 0%, transparent 60%),
+    radial-gradient(ellipse 45% 35% at 88% 90%, rgba(153, 246, 228, 0.20) 0%, transparent 55%),
+    linear-gradient(160deg, #f0fdf4 0%, #f8fafc 100%);
+}
+
+/* 33.3 Glass surfaces: header, cards, chart containers, panels --------------- */
+.topbar {
+  background: rgba(255, 255, 255, 0.55);
+  -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
+  border-bottom: 1px solid var(--glass-border);
+  box-shadow: 0 8px 24px -16px rgba(13, 148, 136, 0.28), inset 0 -1px 0 var(--glass-outline);
+}
+
+.data-card, .chart-card, .smart-alert-card, .ai-hero-card,
+.pos-cart-panel, .settings-section, .store-catalog-section, .store-hero,
+.ai-chat-container, .ai-preview-box, .ai-stat-box, .ai-table-wrap {
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), 0 0 0 1px var(--glass-outline), var(--glass-shadow);
+}
+.chart-card:hover, .data-card:hover {
+  border-color: rgba(255, 255, 255, 0.95);
+  box-shadow: inset 0 1px 0 #fff, 0 0 0 1px rgba(13, 148, 136, 0.22), var(--glass-shadow-hover);
+}
+.ai-stat-box { border-radius: 14px; background: var(--glass-bg-strong); }
+.ai-chat-container .ai-chat-header, .ai-chat-container .ai-chat-input-bar { background: rgba(255, 255, 255, 0.5); border-color: var(--border-subtle); }
+.ai-table-wrap { overflow: hidden; }
+
+/* KPI cards: translucent tinted glass (Mint / Sky / Teal / Amber) */
+.kpi-card {
+  -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), 0 0 0 1px var(--glass-outline), var(--glass-shadow);
+}
+.kpi-card:hover { box-shadow: inset 0 1px 0 #fff, 0 0 0 1px rgba(13, 148, 136, 0.24), var(--glass-shadow-hover); }
+.kpi-revenue { background: linear-gradient(135deg, rgba(224, 242, 254, 0.78) 0%, rgba(255, 255, 255, 0.46) 100%); }
+.kpi-profit  { background: linear-gradient(135deg, rgba(209, 250, 229, 0.80) 0%, rgba(255, 255, 255, 0.46) 100%); }
+.kpi-trx     { background: linear-gradient(135deg, rgba(204, 251, 241, 0.80) 0%, rgba(255, 255, 255, 0.46) 100%); }
+.kpi-stock   { background: linear-gradient(135deg, rgba(254, 243, 199, 0.78) 0%, rgba(255, 255, 255, 0.46) 100%); }
+.kpi-revenue .kpi-icon-wrap { --ia: #38bdf8; --ib: #0ea5e9; }
+.kpi-profit  .kpi-icon-wrap { --ia: #34d399; --ib: #10b981; }
+.kpi-trx     .kpi-icon-wrap { --ia: #2dd4bf; --ib: #0d9488; }
+
+/* Stat chips & CRM summary: same glass language */
+.inv-stat-chip, .crm-card {
+  -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), 0 0 0 1px var(--glass-outline), var(--glass-shadow);
+}
+.inv-stat-chip[data-filter="all"], .crm-card:nth-child(2) { background: linear-gradient(135deg, rgba(204, 251, 241, 0.80), rgba(255, 255, 255, 0.46)); }
+.inv-stat-chip[data-filter="safe"], .crm-card:nth-child(3) { background: linear-gradient(135deg, rgba(209, 250, 229, 0.80), rgba(255, 255, 255, 0.46)); }
+.inv-stat-chip[data-filter="warning"] { background: linear-gradient(135deg, rgba(254, 243, 199, 0.78), rgba(255, 255, 255, 0.46)); }
+.inv-stat-chip[data-filter="out"]     { background: linear-gradient(135deg, rgba(255, 228, 230, 0.78), rgba(255, 255, 255, 0.46)); }
+.crm-card:nth-child(1) { background: linear-gradient(135deg, rgba(224, 242, 254, 0.78), rgba(255, 255, 255, 0.46)); }
+
+/* POS tiles, tables, modals, auth */
+.product-pos-card {
+  background: var(--glass-bg-strong);
+  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  box-shadow: inset 0 1px 0 #fff, 0 0 0 1px var(--glass-outline), var(--glass-shadow);
+}
+.product-pos-card:not(.out-of-stock):hover { border-color: rgba(16, 185, 129, 0.5); box-shadow: inset 0 1px 0 #fff, 0 0 0 1px rgba(16, 185, 129, 0.3), var(--glass-shadow-hover); }
+.app-table thead th, .ai-table thead th { background: rgba(240, 253, 244, 0.85); color: #0f766e; }
+.app-table tbody tr:hover, .ai-table tbody tr:hover, .ai-table tbody tr:hover td { background: rgba(236, 253, 245, 0.7); }
+.modal-box {
+  background: rgba(255, 255, 255, 0.84);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4); backdrop-filter: blur(20px) saturate(1.4);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  box-shadow: 0 0 0 1px var(--glass-outline), var(--shadow-lg);
+}
+.modal-header { background: linear-gradient(135deg, rgba(204, 251, 241, 0.7), rgba(224, 242, 254, 0.6)); border-bottom-color: var(--glass-outline); }
+.auth-card {
+  background: rgba(255, 255, 255, 0.66);
+  -webkit-backdrop-filter: blur(18px) saturate(1.4); backdrop-filter: blur(18px) saturate(1.4);
+  border: 1px solid var(--glass-border);
+  border-radius: 24px;
+  box-shadow: inset 0 1px 0 #fff, 0 0 0 1px var(--glass-outline), 0 28px 60px -26px rgba(13, 148, 136, 0.40);
+}
+.demo-row { background: rgba(204, 251, 241, 0.55); border-color: rgba(13, 148, 136, 0.28); }
+
+/* 33.4 Sidebar: frosted glass Teal -> Cyan Soft ------------------------------ */
+.sidebar, body.sb-collapsed .sidebar {
+  background:
+    radial-gradient(120% 30% at 50% 0%, rgba(255, 255, 255, 0.62) 0%, rgba(255, 255, 255, 0) 70%),
+    linear-gradient(165deg, rgba(13, 148, 136, 0.36) 0%, rgba(20, 184, 166, 0.30) 46%, rgba(56, 189, 248, 0.36) 100%),
+    rgba(255, 255, 255, 0.40) !important;
+  border: 1px solid rgba(255, 255, 255, 0.72) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(1.55); backdrop-filter: blur(20px) saturate(1.55);
+  box-shadow:
+    0 0 0 1px rgba(20, 184, 166, 0.30),
+    0 0 30px -4px rgba(45, 212, 191, 0.42),
+    0 20px 46px -18px rgba(13, 148, 136, 0.48),
+    inset 0 1px 0 rgba(255, 255, 255, 0.88),
+    inset 0 0 28px rgba(255, 255, 255, 0.26);
+}
+.sidebar::before { background: linear-gradient(180deg, rgba(255, 255, 255, 0.42) 0%, rgba(255, 255, 255, 0) 26%); }
+.sidebar .brand-name { color: #0f172a; }
+.sidebar .brand-name span { color: #0f766e; }
+.sidebar .sb-group-label { color: #115e59; }
+.sidebar .nav-link { color: #1e293b; }
+.sidebar .nav-link:hover { background: rgba(255, 255, 255, 0.55); color: #0f172a; }
+.sidebar .nav-link.active {
+  background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%); color: #fff;
+  box-shadow: 0 10px 22px -8px rgba(13, 148, 136, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.35) inset;
+}
+.sidebar .nav-link.active svg, .sidebar .nav-link.active .nav-ico { color: #fff; }   /* ikon putih di atas pill teal (menimpa aturan lama #0d9488) */
+.sidebar .nav-link .nav-badge { box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.9); }
+.sidebar .nav-link.active .nav-badge { background: #fff; color: #0f766e; box-shadow: none; }
+.sidebar .sb-profile {
+  background: rgba(255, 255, 255, 0.62); border: 1px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 4px 14px -6px rgba(13, 148, 136, 0.30), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+.sidebar .sb-avatar { background: linear-gradient(135deg, #0d9488, #10b981); color: #fff; box-shadow: 0 0 0 2px #fff, 0 3px 10px rgba(13, 148, 136, 0.35); }
+.sidebar .sb-profile-text strong { color: #0f172a; }
+.sidebar .sb-profile-text span { color: #334155; }
+@media (min-width: 1025px) {
+  body.sb-collapsed .sidebar .sb-profile { background: transparent; border-color: transparent; box-shadow: none; }
+}
+
+/* 33.5 Accent: Slate-Teal / Mint (selaras panah logo Usahaku) ----------------- */
+.btn-primary, .auth-card button[type="submit"].btn-primary {
+  background: linear-gradient(135deg, #0d9488 0%, #059669 100%);
+  border-color: transparent; color: #fff;
+  box-shadow: 0 10px 22px -10px rgba(16, 185, 129, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.28);
+}
+.btn-primary:hover, .btn-primary:focus-visible {
+  background: linear-gradient(135deg, #0f766e 0%, #047857 100%);
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.20), 0 14px 28px -10px rgba(16, 185, 129, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+.chip.active, .ai-tab-btn.active, #posCategoryChips .chip.active {
+  background: linear-gradient(135deg, #0d9488, #059669); border-color: transparent; color: #fff;
+  box-shadow: 0 8px 18px -8px rgba(16, 185, 129, 0.75);
+}
+.chip:hover, .ai-tab-btn:hover, .chip-prompt:hover { border-color: rgba(16, 185, 129, 0.5); color: #0f766e; background: rgba(209, 250, 229, 0.6); }
+.chip, .ai-tab-btn { background: rgba(255, 255, 255, 0.7); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+.status-badge.success { background: rgba(16, 185, 129, 0.14); color: #047857; border-color: rgba(16, 185, 129, 0.30); }
+.status-badge.cyan, .badge-role { background: rgba(13, 148, 136, 0.12); color: #0f766e; border-color: rgba(13, 148, 136, 0.28); }
+.store-badge-live { background: linear-gradient(135deg, #10b981, #0d9488); color: #fff; }
+.kpi-trend.positive { background: linear-gradient(135deg, #10b981, #0d9488); color: #fff; }
+.prod-price, .settings-section-title { color: #0d9488; }
+.search-input-wrap:focus-within, input:focus, select:focus, textarea:focus { border-color: #10b981; box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.20); }
+.sb-store-dot { background: #10b981; box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.22), 0 0 10px rgba(16, 185, 129, 0.55); }
+
+/* 33.6 Text legibility: Slate gelap ----------------------------------------- */
+body { color: #0f172a; }
+.pane-header h2, .auth-card h1, .kpi-value, .crm-card-val, .inv-stat-chip .isc-num, .card-title { color: #0f172a; }
+.ai-hero-card h2, .ai-hero-compact h2 { color: #0f172a; -webkit-text-fill-color: #0f172a; }
+.inv-stat-chip[data-filter="all"] .isc-num { color: #0f766e; }
+.inv-stat-chip[data-filter="safe"] .isc-num { color: #047857; }
+.inv-stat-chip[data-filter="warning"] .isc-num { color: #b45309; }
+.inv-stat-chip[data-filter="out"] .isc-num { color: #be123c; }
+.pane-sub, .kpi-compare, .kpi-subtext, .crm-card-note, .inv-stat-chip .isc-lbl, .ai-table tbody td { color: #334155; }
+.ai-table td strong, .app-table td strong { color: #0f172a; }
+.kpi-label { opacity: 1; }
+.kpi-revenue { --lbl: #0369a1; }  .kpi-profit { --lbl: #047857; }  .kpi-trx { --lbl: #0f766e; }  .kpi-stock { --lbl: #b45309; }
+
+/* 33.7 Watermark vektor UMKM: keranjang · paket stok · grafik (teal, opasitas 6%) */
+.nusa-deco { display: block !important; }          /* bagian 27 menyembunyikannya; dipakai ulang untuk pola ubin */
+.nusa-deco > svg { display: none !important; }
+.nusa-deco::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%22360%22%20height=%22360%22%20viewBox=%220%200%20360%20360%22%20fill=%22none%22%20stroke=%22%230d9488%22%20stroke-width=%221.15%22%20stroke-linecap=%22round%22%20stroke-linejoin=%22round%22%3E%3Cg%20transform=%22translate(22%2026)%20rotate(-8%2031.200000000000003%2031.200000000000003)%20scale(2.6)%22%3E%3Cpath%20d=%22M3%209h18l-1.6%209.2a2%202%200%200%201-2%201.8H6.6a2%202%200%200%201-2-1.8L3%209z%22/%3E%3Cpath%20d=%22M8%209l3-5M16%209l-3-5%22/%3E%3Cpath%20d=%22M9%2013v4M12%2013v4M15%2013v4%22/%3E%3C/g%3E%3Cg%20transform=%22translate(214%2014)%20rotate(10%2028.799999999999997%2028.799999999999997)%20scale(2.4)%22%3E%3Cpath%20d=%22M12%202.5l8.5%204.5v10L12%2021.5%203.5%2017V7L12%202.5z%22/%3E%3Cpath%20d=%22M3.5%207L12%2011.5%2020.5%207M12%2011.5v10M7.8%204.8l8.5%204.6%22/%3E%3C/g%3E%3Cg%20transform=%22translate(118%20150)%20rotate(-4%2030.0%2030.0)%20scale(2.5)%22%3E%3Cpath%20d=%22M4%203v17h17%22/%3E%3Cpath%20d=%22M8%2016v-4M12%2016V9M16%2016v-6%22/%3E%3Cpath%20d=%22M7%208l4-3%203%202%205-4%22/%3E%3C/g%3E%3Cg%20transform=%22translate(272%20168)%20rotate(6%2020.4%2020.4)%20scale(1.7)%22%3E%3Cpath%20d=%22M4%2017l5-5%204%204%207-8%22/%3E%3Cpath%20d=%22M15%208h5v5%22/%3E%3C/g%3E%3Cg%20transform=%22translate(18%20214)%20rotate(-12%2020.4%2020.4)%20scale(1.7)%22%3E%3Cpath%20d=%22M12%202.5l8.5%204.5v10L12%2021.5%203.5%2017V7L12%202.5z%22/%3E%3Cpath%20d=%22M3.5%207L12%2011.5%2020.5%207M12%2011.5v10M7.8%204.8l8.5%204.6%22/%3E%3C/g%3E%3Cg%20transform=%22translate(236%20262)%20rotate(8%2021.6%2021.6)%20scale(1.8)%22%3E%3Cpath%20d=%22M3%209h18l-1.6%209.2a2%202%200%200%201-2%201.8H6.6a2%202%200%200%201-2-1.8L3%209z%22/%3E%3Cpath%20d=%22M8%209l3-5M16%209l-3-5%22/%3E%3Cpath%20d=%22M9%2013v4M12%2013v4M15%2013v4%22/%3E%3C/g%3E%3Cg%20transform=%22translate(96%20288)%20rotate(4%2018.0%2018.0)%20scale(1.5)%22%3E%3Cpath%20d=%22M4%203v17h17%22/%3E%3Cpath%20d=%22M8%2016v-4M12%2016V9M16%2016v-6%22/%3E%3Cpath%20d=%22M7%208l4-3%203%202%205-4%22/%3E%3C/g%3E%3Ccircle%20cx=%22150%22%20cy=%2240%22%20r=%222.2%22%20fill=%22%230d9488%22%20stroke=%22none%22/%3E%3Ccircle%20cx=%22330%22%20cy=%22110%22%20r=%222.2%22%20fill=%22%230d9488%22%20stroke=%22none%22/%3E%3Ccircle%20cx=%2270%22%20cy=%22150%22%20r=%222.2%22%20fill=%22%230d9488%22%20stroke=%22none%22/%3E%3Ccircle%20cx=%22200%22%20cy=%22230%22%20r=%222.2%22%20fill=%22%230d9488%22%20stroke=%22none%22/%3E%3Ccircle%20cx=%22330%22%20cy=%22300%22%20r=%222.2%22%20fill=%22%230d9488%22%20stroke=%22none%22/%3E%3Ccircle%20cx=%2230%22%20cy=%22340%22%20r=%222.2%22%20fill=%22%230d9488%22%20stroke=%22none%22/%3E%3Ccircle%20cx=%22160%22%20cy=%22350%22%20r=%222.2%22%20fill=%22%230d9488%22%20stroke=%22none%22/%3E%3C/svg%3E");
+  background-size: 360px 360px; background-repeat: repeat;
+  opacity: 0.06;
+  /* pudar di pojok kanan-atas & kanan-bawah (sudah ada seni garis body::before/::after) -> opasitas tidak menumpuk */
+  -webkit-mask-image: radial-gradient(ellipse 380px 260px at 100% 0%, transparent 0, transparent 45%, #000 100%), radial-gradient(ellipse 420px 320px at 100% 100%, transparent 0, transparent 45%, #000 100%);
+  -webkit-mask-composite: source-in;
+          mask-image: radial-gradient(ellipse 380px 260px at 100% 0%, transparent 0, transparent 45%, #000 100%), radial-gradient(ellipse 420px 320px at 100% 100%, transparent 0, transparent 45%, #000 100%);
+          mask-composite: intersect;
+}
+.nusa-deco::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(ellipse 70% 60% at 50% 40%, rgba(240, 253, 244, 0.55) 0%, rgba(240, 253, 244, 0) 100%);
+  opacity: 0.5;
+}
+
+/* 33.8 Sidebar stability guard ------------------------------------------------
+   Selama animasi expand/collapse blur dimatikan (performa); latar & border
+   dipertahankan identik sehingga tidak ada lompatan visual maupun layout shift.
+   Teks/ikon/avatar tetap memakai aturan posisi absolut + fade-out (bagian 15–23). */
+
+/* ==========================================================================
+   34. HYBRID LIGHT MODE — SOLID SIDEBAR + GLASSY MAIN CONTENT  (final layer)
+   ----------------------------------------------------------------------
+   34.1 Sidebar solid / flat (tanpa blur, tanpa transparansi)
+   34.2 Glass cards: metric, grafik, rekomendasi AI, panel tabel
+   34.3 Kontras teks slate gelap
+   Hanya warna / latar / border / bayangan. Tidak ada properti ukuran, posisi,
+   padding, atau transisi layout sidebar yang disentuh -> Zero Layout Shift tetap
+   dijaga oleh bagian 15-23 (teks absolut + fade opacity, ikon & avatar terkunci).
+   ========================================================================== */
+
+/* 34.1 Sidebar: Solid Light Mint-Teal (flat clean) ---------------------------
+   Logo "Usahaku" memakai teks & ikon gelap, jadi latar mint solid terang
+   dipilih agar logo tetap terbaca tanpa mengubah aset. */
+:root {
+  --sb-solid:        #d3f3e8;                 /* solid mint-teal, 100% opak */
+  --sb-solid-edge:   #a9e3d0;
+  --sb-ink:          #0f172a;
+  --sb-ink-soft:     #1e293b;
+  --sb-ink-mute:     #3b5b57;
+}
+.sidebar, body.sb-collapsed .sidebar {
+  background: var(--sb-solid) !important;
+  border: 1px solid var(--sb-solid-edge) !important;
+  border-radius: 28px !important;
+  -webkit-backdrop-filter: none !important; backdrop-filter: none !important;
+  box-shadow: 0 14px 32px -18px rgba(15, 79, 72, 0.38), 0 2px 6px -2px rgba(15, 23, 42, 0.08) !important;
+}
+.sidebar::before, .sidebar::after { display: none !important; }       /* hapus kilau/gradien kaca */
+
+.sidebar .brand-name { color: var(--sb-ink); }
+.sidebar .brand-name span { color: #0f766e; }
+.sidebar .sb-group-label { color: #0f5f57; font-weight: 700; }
+.sidebar .nav-link { color: var(--sb-ink-soft); }
+.sidebar .nav-link svg, .sidebar .nav-link .nav-ico { color: #0f766e; }
+.sidebar .nav-link:hover { background: #bfebdc; color: var(--sb-ink); }
+.sidebar .nav-link.active {
+  background: #0d9488; color: #fff;
+  box-shadow: 0 8px 16px -8px rgba(13, 148, 136, 0.75);
+}
+.sidebar .nav-link.active svg, .sidebar .nav-link.active .nav-ico { color: #fff; }
+.sidebar .nav-link .nav-badge { background: #0f766e; color: #fff; box-shadow: 0 0 0 2px var(--sb-solid); }
+.sidebar .nav-link.active .nav-badge { background: #fff; color: #0f766e; box-shadow: none; }
+
+.sidebar .sb-footer { border-top: 0; }
+.sidebar .sb-profile {
+  background: #ffffff; border: 1px solid var(--sb-solid-edge);
+  box-shadow: 0 3px 8px -4px rgba(15, 79, 72, 0.25);
+}
+.sidebar .sb-avatar { background: #0d9488; color: #fff; box-shadow: 0 0 0 2px #fff; }
+.sidebar .sb-profile-text strong { color: var(--sb-ink); }
+.sidebar .sb-profile-text span { color: var(--sb-ink-mute); }
+.sidebar .sb-profile-text small { color: var(--sb-ink-mute); }
+@media (min-width: 1025px) {
+  /* collapsed: avatar tetap di titik yang sama, hanya pil putih yang memudar */
+  body.sb-collapsed .sidebar .sb-profile { background: transparent; border-color: transparent; box-shadow: none; }
+}
+
+/* 34.2 Glass cards di konten utama ------------------------------------------ */
+:root {
+  --glass-bg:        rgba(255, 255, 255, 0.60);
+  --glass-bg-strong: rgba(255, 255, 255, 0.76);
+  --glass-blur:      blur(16px) saturate(1.35);
+  --glass-edge:      rgba(255, 255, 255, 0.85);
+  --glass-teal-line: rgba(13, 148, 136, 0.16);
+  --glass-shadow:    0 12px 32px -14px rgba(13, 148, 136, 0.26), 0 2px 6px -2px rgba(15, 23, 42, 0.05);
+}
+.app-main .kpi-card, .app-main .chart-card, .app-main .data-card, .app-main .smart-alert-card,
+.app-main .card, .app-main .promo-card, .app-main .crm-card, .app-main .inv-stat-chip,
+.app-main .ai-table-wrap, .app-main .pos-cart-panel, .app-main .settings-section,
+.app-main .store-catalog-section, .app-main .store-hero {
+  -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-edge);
+  border-radius: 16px;                                   /* rounded-2xl */
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), 0 0 0 1px var(--glass-teal-line), var(--glass-shadow);
+}
+/* panel generik & hasil AI: kaca putih-mint */
+.app-main .card, .app-main .promo-card, .app-main .ai-table-wrap {
+  background: var(--glass-bg);
+}
+/* kartu rekomendasi AI (Smart Insight): kaca putih dengan semburat mint */
+.app-main .smart-alert-card {
+  background:
+    radial-gradient(420px 160px at 0% 0%, rgba(110, 231, 183, 0.28), transparent 70%),
+    var(--glass-bg);
+  border-color: var(--glass-edge);
+}
+/* panel tabel: pembungkus & isi ikut transparan agar kaca terlihat */
+.app-main .data-card .table-responsive, .app-main .chart-card .table-responsive, .app-main .card .table-responsive { background: transparent; border-radius: 12px; }
+.app-main .app-table, .app-main .ai-table { background: transparent; }
+.app-main .app-table thead th, .app-main .ai-table thead th { background: rgba(236, 253, 245, 0.80); color: #0f766e; }
+.app-main .app-table tbody tr:hover, .app-main .ai-table tbody tr:hover td { background: rgba(209, 250, 229, 0.55); }
+.app-main .app-table td, .app-main .ai-table td { border-color: rgba(13, 148, 136, 0.10); }
+
+
+/* 34.3 Kontras teks: Slate gelap -------------------------------------------- */
+.app-main .card-head h3, .app-main .card-title, .app-main .smart-alert-content h4,
+.app-main .kpi-value, .app-main .pane-header h2, .app-main .app-table td strong { color: #0f172a; }
+.app-main .smart-alert-content p, .app-main .card-sub, .app-main .app-table td { color: #1e293b; }
+
+/* ==========================================================================
+   35. CARD STYLE ONLY — Light Glassmorphism di SEMUA halaman  (final layer)
+   ----------------------------------------------------------------------
+   Hanya properti visual kartu: background, backdrop-filter, border, radius,
+   box-shadow. Tidak ada perubahan display/grid/flex/ukuran/posisi/padding,
+   sehingga layout & sidebar solid tetap identik.
+   Dashboard · Kasir/POS · Inventori · Pelanggan · Katalog · Asisten AI · Pengaturan
+   ========================================================================== */
+:root {
+  --cg-bg:        rgba(255, 255, 255, 0.58);          /* kaca putih-mint */
+  --cg-bg-inner:  rgba(255, 255, 255, 0.66);          /* kartu di dalam kartu */
+  --cg-blur:      blur(16px) saturate(1.35);
+  --cg-edge:      rgba(255, 255, 255, 0.85);          /* stroke luar putih */
+  --cg-ring:      rgba(13, 148, 136, 0.15);           /* inner glow teal tipis */
+  --cg-radius:    16px;                               /* rounded-2xl */
+  --cg-shadow:    0 12px 32px -14px rgba(13, 148, 136, 0.26), 0 2px 6px -2px rgba(15, 23, 42, 0.05);
+  --cg-shadow-hv: 0 18px 40px -14px rgba(13, 148, 136, 0.36), 0 4px 10px -4px rgba(15, 23, 42, 0.07);
+}
+
+/* 35.1 Satu resep kaca untuk seluruh kartu konten ---------------------------- */
+.app-main .kpi-card, .app-main .chart-card, .app-main .data-card, .app-main .smart-alert-card,
+.app-main .card, .app-main .promo-card, .app-main .crm-card, .app-main .inv-stat-chip,
+.app-main .ai-hero-card, .app-main .ai-table-wrap, .app-main .ai-stat-box, .app-main .ai-preview-box,
+.app-main .ai-chat-container, .app-main .pos-cart-panel, .app-main .product-pos-card,
+.app-main .settings-section, .app-main .public-store-wrapper, .app-main .method-card,
+.app-main .qris-card, .app-main .ai-copy-result-card, .app-main .ai-summary-footer {
+  -webkit-backdrop-filter: var(--cg-blur); backdrop-filter: var(--cg-blur);
+  border: 1px solid var(--cg-edge);
+  border-radius: var(--cg-radius);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), 0 0 0 1px var(--cg-ring), var(--cg-shadow);
+}
+/* kartu berlapis (di dalam panel) sedikit lebih pekat agar tetap terbaca */
+.app-main .product-pos-card, .app-main .ai-stat-box, .app-main .ai-preview-box,
+.app-main .method-card, .app-main .qris-card, .app-main .ai-copy-result-card { background: var(--cg-bg-inner); }
+.app-main .data-card, .app-main .chart-card, .app-main .card, .app-main .pos-cart-panel,
+.app-main .settings-section, .app-main .ai-chat-container, .app-main .ai-table-wrap { background: var(--cg-bg); }
+
+/* hover: bayangan mengangkat kartu (tanpa transform -> tidak menggeser layout) */
+.app-main .data-card:hover, .app-main .chart-card:hover, .app-main .kpi-card:hover,
+.app-main .product-pos-card:not(.out-of-stock):hover, .app-main .public-product-card:hover {
+  box-shadow: inset 0 1px 0 #fff, 0 0 0 1px rgba(13, 148, 136, 0.24), var(--cg-shadow-hv);
+}
+
+/* 35.2 Katalog Digital: shell kaca tunggal, isi di dalamnya datar ------------- */
+.app-main .public-store-wrapper { background: var(--cg-bg); }
+.app-main .public-store-wrapper .store-hero,
+.app-main .public-store-wrapper .store-catalog-section {
+  background: transparent; border: 1px solid transparent; border-radius: 0; box-shadow: none;
+  -webkit-backdrop-filter: none; backdrop-filter: none;
+}
+.app-main .public-store-wrapper .store-catalog-section { border-top-color: rgba(13, 148, 136, 0.12); }
+.app-main .public-product-card {
+  background: var(--cg-bg-inner);
+  -webkit-backdrop-filter: var(--cg-blur); backdrop-filter: var(--cg-blur);
+  border: 1px solid var(--cg-edge);
+  border-radius: var(--cg-radius);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), 0 0 0 1px var(--cg-ring), 0 8px 22px -14px rgba(13, 148, 136, 0.28);
+}
+
+/* 35.3 Panel ringkasan AI: kaca mint, garis putus teal dipertahankan ---------- */
+.app-main .ai-summary-footer {
+  background: linear-gradient(135deg, rgba(204, 251, 241, 0.55), rgba(255, 255, 255, 0.50));
+  border: 1px dashed rgba(13, 148, 136, 0.35);
+  border-radius: 14px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 6px 16px -12px rgba(13, 148, 136, 0.30);
+}
+
+/* 35.4 Tabel di dalam kartu: transparan agar kaca tetap terlihat ------------- */
+.app-main .table-responsive, .app-main .app-table, .app-main .ai-table, .app-main .data-table { background: transparent; }
+.app-main .app-table tbody td, .app-main .ai-table tbody td { background: transparent; }
+
+
+/* ==========================================================================
+   36. LIGHT GLASSY CARDS — semua kartu, semua halaman  (final layer)
+   Kaca terang: putih-mint transparan, blur 18px, stroke putih + ring teal,
+   kilau tepi atas, bayangan lembut. Hanya visual; layout tidak disentuh.
+   (Menggantikan percobaan kartu gelap.)
+   ========================================================================== */
+:root {
+  --cg-bg:       rgba(255, 255, 255, 0.52);
+  --cg-bg-inner: rgba(255, 255, 255, 0.60);
+  --cg-blur:     blur(18px) saturate(1.5);
+  --cg-edge:     rgba(255, 255, 255, 0.92);
+  --cg-ring:     rgba(13, 148, 136, 0.16);
+  --cg-shadow:   0 14px 34px -14px rgba(13, 148, 136, 0.30), 0 3px 8px -3px rgba(15, 23, 42, 0.07);
+  --cg-shadow-hv: 0 20px 42px -14px rgba(13, 148, 136, 0.40), 0 5px 12px -4px rgba(15, 23, 42, 0.09);
+}
+.app-main :is(.kpi-card, .chart-card, .data-card, .smart-alert-card, .card, .promo-card, .crm-card,
+              .inv-stat-chip, .ai-hero-card, .ai-chat-container, .pos-cart-panel, .product-pos-card,
+              .settings-section, .public-store-wrapper) {
+  --cv-grid: rgba(13, 148, 136, 0.14); --cv-label-y: #475569; --cv-label-x: #334155;
+  --cv-line-a: #0d9488; --cv-line-b: #10b981; --cv-dot-fill: #ffffff;
+  --cv-area-a: rgba(16, 185, 129, 0.28); --cv-area-b: rgba(13, 148, 136, 0);
+  -webkit-backdrop-filter: var(--cg-blur); backdrop-filter: var(--cg-blur);
+  border: 1px solid var(--cg-edge);
+  border-radius: 16px;
+  box-shadow: inset 0 1px 0 #fff, inset 0 -14px 24px -20px rgba(13, 148, 136, 0.22), 0 0 0 1px var(--cg-ring), var(--cg-shadow);
+}
+.app-main :is(.kpi-card, .chart-card, .data-card, .crm-card, .inv-stat-chip, .ai-hero-card):hover,
+.app-main .product-pos-card:not(.out-of-stock):hover {
+  box-shadow: inset 0 1px 0 #fff, 0 0 0 1px rgba(13, 148, 136, 0.26), var(--cg-shadow-hv);
+}
+.app-main .chart-tag { background: rgba(16, 185, 129, 0.12); color: #0f766e; border: 1px solid rgba(13, 148, 136, 0.35); }
+
+/* 36.1 Kontras aksen di kaca terang ---------------------------------------------- */
+.app-main :is(.data-card, .card, .ai-table-wrap, .kpi-card, .chart-card, .crm-card) { --emerald-primary: #047857; --cyan-primary: #0f766e; }
+.app-main .ai-table td strong[style*="#34d399"] { color: #047857 !important; }
+.app-main .ai-table td strong[style*="#fbbf24"] { color: #b45309 !important; }
+.app-main .ai-table td strong[style*="#f87171"] { color: #be123c !important; }
+.app-main .runout-badge.runout-safe { color: #047857; }
+.app-main .runout-badge.runout-warning { color: #b45309; }
+.app-main .runout-badge.runout-danger { color: #be123c; }
+.app-main .ai-sub, .app-main .ai-table td small { color: #475569; }
+.app-main .ai-status-online { color: #047857; }
+.app-main .disc-amount { color: #c2410c; }
+.app-main .crm-card ~ .data-card .status-badge.cyan, .app-main .data-card .status-badge.cyan, .app-main .status-badge.vip { color: #0e7490; }
+.app-main .store-tab.active { color: #065f46; background: rgba(167, 243, 208, 0.75); border-color: rgba(16, 185, 129, 0.5); }
+.app-main .status-badge[style*="#67e8f9"] { color: #0e7490 !important; background: rgba(34, 211, 238, 0.18) !important; }
+.app-main .prod-badge-stock.low { color: #9a3412; background: rgba(249, 115, 22, 0.18); }
+.app-main .prod-badge-stock.out { color: #9f1239; background: rgba(244, 63, 94, 0.14); }
+
+/* ==========================================================================
+   37. GLASS COVERAGE — sisa kartu/panel yang masih solid (final layer)
+   Modal, dropdown, kartu auth, kartu hasil AI, ringkasan checkout, dsb.
+   Hanya visual (background, blur, border, shadow). Canvas mint, layout,
+   sidebar solid & teks Slate #0F172A tidak diubah.
+   ========================================================================== */
+:root {
+  --gl-bg:      rgba(255, 255, 255, 0.50);
+  --gl-bg-in:   rgba(240, 253, 244, 0.42);
+  --gl-modal:   rgba(255, 255, 255, 0.72);   /* modal/dropdown: sedikit lebih pekat, melayang di atas overlay */
+  --gl-blur:    blur(16px) saturate(1.4);
+  --gl-edge:    rgba(255, 255, 255, 0.60);
+  --gl-ring:    rgba(13, 148, 136, 0.14);
+  --gl-shadow:  0 12px 32px -14px rgba(13, 148, 136, 0.28), 0 2px 6px -2px rgba(15, 23, 42, 0.06);
+}
+
+/* 37.1 Kartu konten tambahan (dashboard, AI, kasir) */
+.app-main :is(.ai-result-card, .ai-stock-card, .checkout-summary-box, .tf-bank-box,
+              .cart-item-row, .store-card, .prod-card, .stat-card) {
+  background: var(--gl-bg-in);
+  -webkit-backdrop-filter: var(--gl-blur); backdrop-filter: var(--gl-blur);
+  border: 1px solid var(--gl-edge);
+  border-radius: 14px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 0 0 1px var(--gl-ring), 0 8px 22px -14px rgba(13, 148, 136, 0.28);
+}
+
+/* 37.2 Dropdown (profil, notifikasi, pencarian) — melayang di atas topbar */
+.dropdown {
+  background: var(--gl-modal);
+  -webkit-backdrop-filter: var(--gl-blur); backdrop-filter: var(--gl-blur);
+  border: 1px solid var(--gl-edge);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 0 0 1px var(--gl-ring), 0 18px 40px -12px rgba(13, 148, 136, 0.30);
+}
+
+/* 37.3 Modal (kasir, struk, pembayaran, dev) */
+.modal-box, .receipt-modal-box, .dev-modal-box, .dev-prompt-card {
+  background: var(--gl-modal);
+  -webkit-backdrop-filter: blur(20px) saturate(1.5); backdrop-filter: blur(20px) saturate(1.5);
+  border: 1px solid var(--gl-edge);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), 0 0 0 1px var(--gl-ring), 0 24px 60px -18px rgba(15, 23, 42, 0.28);
+}
+.modal-box :is(.method-card, .qris-card, .checkout-summary-box, .tf-bank-box) { background: var(--gl-bg-in); }
+
+/* 37.4 Halaman login / daftar */
+.auth-card {
+  background: var(--gl-modal);
+  -webkit-backdrop-filter: var(--gl-blur); backdrop-filter: var(--gl-blur);
+  border: 1px solid var(--gl-edge);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), 0 0 0 1px var(--gl-ring), 0 24px 56px -20px rgba(13, 148, 136, 0.32);
+}
+.auth-card .a-input { background: rgba(255, 255, 255, 0.70); }
+.auth-card .demo-pill { background: rgba(255, 255, 255, 0.60); }
+
+/* 37.5 Landing page: kartu fitur / harga */
+:is(.lp-card, .lp-card-featured) {
+  background: var(--gl-bg);
+  -webkit-backdrop-filter: var(--gl-blur); backdrop-filter: var(--gl-blur);
+  border: 1px solid var(--gl-edge);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 0 0 1px var(--gl-ring), var(--gl-shadow);
+}
+
+/* 37.6 Footer, kolom kasir & toast ikut kaca; sidebar tetap solid */
+.app-footer { background: var(--gl-bg); -webkit-backdrop-filter: var(--gl-blur); backdrop-filter: var(--gl-blur); border-top: 1px solid var(--gl-edge); }
+.app-main .ai-chat-input-bar, .ai-chat-container .ai-chat-input-bar { background: rgba(255, 255, 255, 0.55); border-top: 1px solid rgba(13, 148, 136, 0.10); }
+.toast { background: var(--gl-modal); -webkit-backdrop-filter: var(--gl-blur); backdrop-filter: var(--gl-blur); border: 1px solid var(--gl-edge); }
+body.auth-page .toast { background: var(--gl-modal); }
+
+/* 37.7 Fallback bila browser tak mendukung backdrop-filter: tetap terbaca */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  :root { --gl-bg: rgba(255, 255, 255, 0.88); --gl-bg-in: rgba(255, 255, 255, 0.92); --gl-modal: rgba(255, 255, 255, 0.96); }
+  .app-main :is(.kpi-card, .chart-card, .data-card, .card, .crm-card, .smart-alert-card) { background: rgba(255, 255, 255, 0.90); }
+}
+
+
+/* ==========================================================================
+   38. CRYSTAL LIGHT GLASS — high-specificity override (final layer)
+   - Kanvas: mesh orbs sky/teal + gradasi mint->putih, dilukis di <body> (html dibuat
+     transparan supaya background body merambat ke canvas dan watermark z-index:-1
+     tetap tampak DI ATAS gradasi, tepat di belakang kartu yang diburamkan).
+   - Kartu: putih transparan 20%, blur 20px saturate 180%, tepi putih 1.5px.
+   - Sidebar solid tidak disentuh.
+   ========================================================================== */
+
+/* 38.1 Kanvas ------------------------------------------------------------------ */
+html { background: none !important; }
+
+body,
+.app-canvas {
+  background:
+    radial-gradient(circle at 15% 15%, rgba(56, 189, 248, 0.20), transparent 45%),
+    radial-gradient(circle at 85% 75%, rgba(20, 184, 166, 0.20), transparent 45%),
+    linear-gradient(135deg, #F0FDF4 0%, #F8FAFC 60%, #FFFFFF 100%) !important;
+  background-attachment: fixed !important;
+}
+/* .main-content sengaja transparan: gradasi buram di sini akan menutupi watermark
+   (z-index:-1) dan orbs, sehingga kaca tidak punya apa-apa untuk dibiaskan. */
+.main-content, .app-shell, .app-main, .tab-pane { background: transparent !important; }
+
+/* 38.2 Watermark UMKM 8% ------------------------------------------------------- */
+.nusa-deco::before { opacity: 0.08 !important; }
+.nusa-deco::after  { opacity: 0.15 !important; }
+
+/* 38.3 Kartu dashboard (selector spesifik: body .app-main ...) ----------------- */
+body .app-main .card,
+body .app-main .stat-card,
+body .app-main .metric-card,
+body .app-main .chart-card,
+body .app-main .insight-card,
+body .app-main .kpi-card,
+body .app-main .data-card,
+body .app-main .crm-card,
+body .app-main .smart-alert-card,
+body .app-main .ai-hero-card,
+body .app-main .promo-card,
+body .app-main .method-card,
+body .app-main .qris-card,
+body .app-main .product-pos-card,
+body .app-main .public-product-card,
+body .app-main div[class*="card"]:not([class*="card-"]):not([class*="cards"]) {
+  background: rgba(255, 255, 255, 0.20) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+          backdrop-filter: blur(20px) saturate(180%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.85) !important;
+  box-shadow:
+    0 10px 30px -5px rgba(15, 23, 42, 0.06),
+    0 4px 12px -2px rgba(13, 148, 136, 0.05),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.9) !important;
+  border-radius: 1rem !important;
+  transition: transform 0.25s ease, box-shadow 0.25s ease !important;
+}
+body .app-main .card:hover,
+body .app-main .stat-card:hover,
+body .app-main .metric-card:hover,
+body .app-main .chart-card:hover,
+body .app-main .insight-card:hover,
+body .app-main .kpi-card:hover,
+body .app-main .data-card:hover,
+body .app-main .crm-card:hover,
+body .app-main .ai-hero-card:hover,
+body .app-main div[class*="card"]:not([class*="card-"]):not([class*="cards"]):hover {
+  transform: translateY(-2px) !important;
+  box-shadow:
+    0 16px 36px -4px rgba(15, 23, 42, 0.08),
+    0 6px 16px -2px rgba(13, 148, 136, 0.08),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.95) !important;
+}
+
+/* 38.4 Panel/box non-"card" yang sama-sama kaca (radius & hover asli dipertahankan) */
+body .app-main :is(.inv-stat-chip, .ai-table-wrap, .ai-stat-box, .ai-preview-box, .ai-chat-container,
+                   .pos-cart-panel, .settings-section, .public-store-wrapper, .cart-item-row,
+                   .ai-summary-footer, .tf-bank-box, .checkout-summary-box),
+body .auth-card,
+body :is(.lp-card, .lp-card-featured) {
+  background: rgba(255, 255, 255, 0.20) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+          backdrop-filter: blur(20px) saturate(180%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.85) !important;
+  box-shadow:
+    0 10px 30px -5px rgba(15, 23, 42, 0.06),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.9) !important;
+}
+/* Katalog Digital: isi di dalam shell kaca tetap datar */
+body .app-main .public-store-wrapper :is(.store-hero, .store-catalog-section) {
+  background: transparent !important; box-shadow: none !important; border-color: transparent !important;
+  -webkit-backdrop-filter: none !important; backdrop-filter: none !important;
+}
+
+/* 38.5 Jangan biarkan overflow/isolasi di container induk membatasi kaca -------- */
+body .app-shell, body .app-main, body .main-content, body .tab-pane { overflow: visible !important; }
+
+/* 38.6 Fallback tanpa dukungan backdrop-filter --------------------------------- */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  body .app-main :is(.card, .stat-card, .metric-card, .chart-card, .kpi-card, .data-card, .crm-card, .ai-hero-card,
+                     .pos-cart-panel, .settings-section, .ai-chat-container), body .auth-card, body :is(.lp-card, .lp-card-featured) {
+    background: rgba(255, 255, 255, 0.82) !important;
+  }
+}
+
+/* ==========================================================================
+   39. FROSTED GLASS — kartu, panel, sidebar & topbar  (final layer)
+   ----------------------------------------------------------------------
+   - Kartu/panel: putih 55%, blur 16px + saturate 180%, tepi kaca 1px
+     (atas/kiri terang, bawah/kanan redup), bayangan lembut melayang.
+   - Sidebar & topbar memakai resep kaca yang sama (radius, ukuran, posisi,
+     padding tidak disentuh -> tidak ada layout shift).
+   - Kanvas: orbs warna lebih tegas agar blur terlihat tembus ke belakang.
+   - Hanya warna/latar/border/bayangan. Selector disalin dari bagian 38 agar
+     specificity sama; karena posisinya paling akhir, bagian ini yang menang,
+     sedangkan aturan :hover bagian 38 tetap menang atas aturan dasar ini.
+   Ubah tampilan lewat variabel di :root di bawah.
+   ========================================================================== */
+:root {
+  --gl39-bg:        rgba(255, 255, 255, 0.55);
+  --gl39-blur:      blur(16px) saturate(180%);
+  --gl39-edge:      rgba(255, 255, 255, 0.60);   /* atas & kiri */
+  --gl39-edge-dim:  rgba(255, 255, 255, 0.25);   /* bawah & kanan */
+  --gl39-shadow:    0 8px 32px 0 rgba(31, 38, 135, 0.06);
+  --gl39-shine:     inset 0 1px 0 0 rgba(255, 255, 255, 0.70);
+}
+
+/* 39.1 Kanvas: orbs lebih tegas supaya kaca punya sesuatu untuk dibiaskan ------ */
+body,
+.app-canvas {
+  background:
+    radial-gradient(circle at 12% 12%, rgba(56, 189, 248, 0.26), transparent 42%),
+    radial-gradient(circle at 88% 18%, rgba(167, 139, 250, 0.16), transparent 40%),
+    radial-gradient(circle at 82% 82%, rgba(20, 184, 166, 0.23), transparent 44%),
+    radial-gradient(circle at 10% 88%, rgba(110, 231, 183, 0.24), transparent 42%),
+    linear-gradient(135deg, #F2FDF8 0%, #F5FAFF 55%, #FAFCFD 100%) !important;
+  background-attachment: fixed !important;
+}
+
+/* 39.2 Kartu dashboard --------------------------------------------------------- */
+body .app-main .card,
+body .app-main .stat-card,
+body .app-main .metric-card,
+body .app-main .chart-card,
+body .app-main .insight-card,
+body .app-main .kpi-card,
+body .app-main .data-card,
+body .app-main .crm-card,
+body .app-main .smart-alert-card,
+body .app-main .ai-hero-card,
+body .app-main .promo-card,
+body .app-main .method-card,
+body .app-main .qris-card,
+body .app-main .product-pos-card,
+body .app-main .public-product-card,
+body .app-main div[class*="card"]:not([class*="card-"]):not([class*="cards"]) {
+  background: var(--gl39-bg) !important;
+  -webkit-backdrop-filter: var(--gl39-blur) !important;
+          backdrop-filter: var(--gl39-blur) !important;
+  border: 1px solid var(--gl39-edge) !important;
+  border-bottom: 1px solid var(--gl39-edge-dim) !important;
+  border-right: 1px solid var(--gl39-edge-dim) !important;
+  box-shadow: var(--gl39-shine), var(--gl39-shadow) !important;
+}
+
+/* 39.3 Panel / container non-"card" -------------------------------------------- */
+body .app-main :is(.inv-stat-chip, .ai-table-wrap, .ai-stat-box, .ai-preview-box, .ai-chat-container,
+                   .pos-cart-panel, .settings-section, .public-store-wrapper, .cart-item-row,
+                   .ai-summary-footer, .tf-bank-box, .checkout-summary-box) {
+  background: var(--gl39-bg) !important;
+  -webkit-backdrop-filter: var(--gl39-blur) !important;
+          backdrop-filter: var(--gl39-blur) !important;
+  border: 1px solid var(--gl39-edge) !important;
+  border-bottom: 1px solid var(--gl39-edge-dim) !important;
+  border-right: 1px solid var(--gl39-edge-dim) !important;
+  box-shadow: var(--gl39-shine), var(--gl39-shadow) !important;
+}
+
+/* 39.4 Sidebar: dari mint solid menjadi kaca (radius 28px/32px tetap) ---------- */
+.sidebar,
+body.sb-collapsed .sidebar {
+  background:
+    linear-gradient(165deg, rgba(211, 243, 232, 0.35) 0%, rgba(255, 255, 255, 0) 60%),
+    var(--gl39-bg) !important;
+  -webkit-backdrop-filter: var(--gl39-blur) !important;
+          backdrop-filter: var(--gl39-blur) !important;
+  border: 1px solid var(--gl39-edge) !important;
+  border-bottom: 1px solid var(--gl39-edge-dim) !important;
+  border-right: 1px solid var(--gl39-edge-dim) !important;
+  box-shadow: var(--gl39-shine), var(--gl39-shadow) !important;
+}
+
+/* 39.5 Topbar (pil melayang, radius 20px tetap) --------------------------------- */
+.topbar {
+  background: var(--gl39-bg) !important;
+  -webkit-backdrop-filter: var(--gl39-blur);
+          backdrop-filter: var(--gl39-blur);
+  border: 1px solid var(--gl39-edge) !important;
+  border-bottom: 1px solid var(--gl39-edge-dim) !important;
+  border-right: 1px solid var(--gl39-edge-dim) !important;
+  box-shadow: var(--gl39-shine), var(--gl39-shadow);
+}
+
+/* 39.6 Fallback tanpa backdrop-filter: tetap terbaca ----------------------------- */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  :root { --gl39-bg: rgba(255, 255, 255, 0.88); }
+}
+
+
+/* ==========================================================================
+   40. SIDEBAR — SMOOTH EXPAND / COLLAPSE (final layer)
+   Lebar sidebar & margin-left .app-main: 0.3s cubic-bezier(0.4, 0, 0.2, 1).
+   Label menu: fade + translateX (keluar sebelum sidebar menyempit penuh).
+   ========================================================================== */
+:root {
+  --sb-dur: 0.3s;
+  --sb-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --sb-fade-out: 0.2s;                 /* collapse: teks hilang lebih dulu */
+  --sb-fade-in: 0.22s;                   /* expand: teks muncul setelah sidebar melebar */
+  --sb-fade-in-delay: 0.1s;
+  --sb-label-shift: -8px;               /* jarak geser teks saat collapsed */
+}
+
+/* 1 + 2 + 4: nowrap, transisi lebar, akselerasi GPU */
+.sidebar {
+  white-space: nowrap;
+  overflow: hidden;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  will-change: width, transform;
+  backface-visibility: hidden;
+}
+.sidebar .nav-link, .sidebar .nav-label, .sidebar .sb-group-label,
+.sidebar .sb-brand, .sidebar .brand-name, .sidebar .sb-profile-text { white-space: nowrap; }
+.sidebar .sb-scroll, .sidebar .sb-footer, .sidebar .sb-brand, .sidebar .nav-link,
+.sidebar .sb-group-label, .sidebar .sb-profile { overflow: hidden; }
+
+/* 4: ikon = kolom tetap 40px, terpusat; padding link identik di expanded & collapsed
+   (ikon 40px + padding kiri 1px -> pusat ikon = pusat sidebar 64px) */
+.sidebar .nav-link,
+body.sb-collapsed .sidebar .nav-link { padding: 0 2px 0 1px; justify-content: flex-start; gap: 10px; }
+.sidebar .nav-link .nav-ico {
+  flex: 0 0 40px; width: 40px; min-width: 40px; height: 40px;
+  display: flex; align-items: center; justify-content: center; margin: 0;
+}
+
+@media (min-width: 1025px) {
+  /* 2: konten utama mengikuti lebar sidebar */
+  .app-main,
+  body.sb-collapsed .app-main {
+    transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    will-change: margin-left;
+  }
+
+  /* 3: label = opacity + translateX (translateY(-50%) bawaan dipertahankan untuk pusat vertikal) */
+  .nav-label, .brand-name, .sb-profile-text {
+    transform: translate(0, -50%);
+    transition: opacity var(--sb-fade-in) ease-out var(--sb-fade-in-delay),
+                transform var(--sb-fade-in) ease-out var(--sb-fade-in-delay),
+                visibility 0s linear 0s;
+    will-change: opacity, transform;
+  }
+  body.sb-collapsed .nav-label, body.sb-collapsed .brand-name, body.sb-collapsed .sb-profile-text {
+    transform: translate(var(--sb-label-shift), -50%);
+    transition: opacity var(--sb-fade-out) ease-in 0s,
+                transform var(--sb-fade-out) ease-in 0s,
+                visibility 0s linear var(--sb-fade-out);
+  }
+
+  /* Label grup & logo teks: fade + geser tanpa mengganggu posisi */
+  .sb-group-label, .sb-brand .brand-text {
+    transform: translateX(0);
+    transition: opacity var(--sb-fade-in) ease-out var(--sb-fade-in-delay),
+                transform var(--sb-fade-in) ease-out var(--sb-fade-in-delay),
+                visibility 0s linear 0s;
+  }
+  body.sb-collapsed .sb-group-label, body.sb-collapsed .sb-brand .brand-text {
+    transform: translateX(var(--sb-label-shift));
+    transition: opacity var(--sb-fade-out) ease-in 0s,
+                transform var(--sb-fade-out) ease-in 0s,
+                visibility 0s linear var(--sb-fade-out);
+  }
+
+  .sidebar .sb-profile {
+    transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+}
+
+.nav-link .nav-badge,
+body.sb-collapsed .nav-link .nav-badge { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important; }
+
+/* Hover / active tetap responsif */
+.sidebar .nav-link { transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --sb-dur: 0.01s; --sb-fade-out: 0.01s; --sb-fade-in: 0.01s; --sb-fade-in-delay: 0s; }
+  .sidebar, .app-main, .nav-label, .brand-name, .sb-profile-text, .sb-group-label, .sb-brand .brand-text { transition-duration: 0.01s !important; transition-delay: 0s !important; }
 }
