@@ -311,7 +311,7 @@ app.put('/api/products/:id', asyncHandler((req, res) => {
     cost_price ?? old.cost_price, sell_price ?? old.sell_price,
     stock ?? old.stock, min_stock_threshold ?? old.min_stock_threshold,
     supplier_id ?? old.supplier_id, icon_emoji ?? old.icon_emoji,
-    is_active !== undefined ? is_active : old.is_active,
+    is_active !== undefined ? (is_active ? 1 : 0) : old.is_active,
     req.params.id
   );
 
