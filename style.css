@@ -6259,3 +6259,100 @@ body .auth-card {
 @media (prefers-reduced-motion: reduce) {
   .legend-item.legend-enter, .chart-bar { animation: none; }
 }
+
+/* ==========================================================================
+   Animasi masuk kartu: slide up + fade in (saat halaman / tab dimuat)
+   - opacity 0 sebagai kondisi awal agar tidak flicker sebelum animasi mulai
+   - delay bertahap per anak grid: step 0.09s
+   - Hanya kontainer statis; grid dinamis (POS, katalog) sengaja dikecualikan
+     agar tidak beranimasi ulang setiap kali daftar dirender ulang.
+   ========================================================================== */
+@keyframes slideUpFadeIn {
+  from { opacity: 0; transform: translateY(32px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.smart-alert-card,
+.ai-hero-card,
+.data-card,
+.kpi-grid > *,
+.charts-row > *,
+.inv-stats-row > *,
+.crm-summary-cards > * {
+  --card-base: 0s;
+  --card-i: 0;
+  opacity: 0;
+  animation: slideUpFadeIn 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: calc(var(--card-base) + 0.08s + var(--card-i) * 0.09s);
+}
+
+/* Urutan antar-blok: banner dulu, lalu KPI, lalu grafik / tabel */
+.smart-alert-card,
+.ai-hero-card { --card-base: 0s; }
+.charts-row > *,
+.data-card    { --card-base: 0.45s; }
+
+/* Delay bertahap untuk anak grid: naik 0.09s per kartu */
+.kpi-grid > :nth-child(1), .charts-row > :nth-child(1), .inv-stats-row > :nth-child(1), .crm-summary-cards > :nth-child(1) { --card-i: 0; }
+.kpi-grid > :nth-child(2), .charts-row > :nth-child(2), .inv-stats-row > :nth-child(2), .crm-summary-cards > :nth-child(2) { --card-i: 1; }
+.kpi-grid > :nth-child(3), .charts-row > :nth-child(3), .inv-stats-row > :nth-child(3), .crm-summary-cards > :nth-child(3) { --card-i: 2; }
+.kpi-grid > :nth-child(4), .charts-row > :nth-child(4), .inv-stats-row > :nth-child(4), .crm-summary-cards > :nth-child(4) { --card-i: 3; }
+.kpi-grid > :nth-child(5), .inv-stats-row > :nth-child(5), .crm-summary-cards > :nth-child(5) { --card-i: 4; }
+.kpi-grid > :nth-child(6), .inv-stats-row > :nth-child(6), .crm-summary-cards > :nth-child(6) { --card-i: 5; }
+.kpi-grid > :nth-child(n+7), .inv-stats-row > :nth-child(n+7), .crm-summary-cards > :nth-child(n+7) { --card-i: 6; }
+
+/* Kartu KPI berada setelah banner; geser sedikit supaya urutannya mengalir */
+.kpi-grid > * { --card-base: 0.1s; }
+
+/* Hormati preferensi "kurangi gerakan": tampil langsung, tanpa delay */
+@media (prefers-reduced-motion: reduce) {
+  .smart-alert-card, .ai-hero-card, .data-card,
+  .kpi-grid > *, .charts-row > *, .inv-stats-row > *, .crm-summary-cards > * {
+    opacity: 1;
+    animation: none;
+  }
+}
+
+/* ==========================================================================
+   Animasi saat FILTER / pencarian: item hasil render ulang ikut slide up + fade in
+   - POS (chip kategori + cari), Inventori (chip status + cari), CRM (cari),
+     Katalog toko (tab kategori). JS mengosongkan lalu membuat ulang item, jadi
+     animasi otomatis diputar ulang setiap kali hasil filter berubah.
+   - Keyframe hanya punya "from": nilai akhir diambil dari style asli elemen,
+     sehingga kartu stok habis tetap redup (opacity 0.55) dan hover tidak terkunci.
+   - Fill-mode "backwards" menyembunyikan item selama delay (tanpa flicker).
+   - Stagger lebih rapat (0.04s) dan dibatasi 10 item agar daftar panjang tetap cepat.
+   ========================================================================== */
+@keyframes slideUpFadeInItem {
+  from { opacity: 0; transform: translateY(var(--slide-y, 32px)); }
+}
+
+#posProductsGrid > .product-pos-card,
+#pubProductsGrid > .public-product-card,
+#inventoryTableBody > tr,
+#crmTableBody > tr {
+  --item-i: 0;
+  --slide-y: 24px;
+  animation: slideUpFadeInItem 0.45s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  animation-delay: calc(0.02s + var(--item-i) * 0.04s);
+}
+#inventoryTableBody > tr,
+#crmTableBody > tr { --slide-y: 12px; }
+
+#posProductsGrid > .product-pos-card:nth-child(1), #pubProductsGrid > .public-product-card:nth-child(1), #inventoryTableBody > tr:nth-child(1), #crmTableBody > tr:nth-child(1) { --item-i: 0; }
+#posProductsGrid > .product-pos-card:nth-child(2), #pubProductsGrid > .public-product-card:nth-child(2), #inventoryTableBody > tr:nth-child(2), #crmTableBody > tr:nth-child(2) { --item-i: 1; }
+#posProductsGrid > .product-pos-card:nth-child(3), #pubProductsGrid > .public-product-card:nth-child(3), #inventoryTableBody > tr:nth-child(3), #crmTableBody > tr:nth-child(3) { --item-i: 2; }
+#posProductsGrid > .product-pos-card:nth-child(4), #pubProductsGrid > .public-product-card:nth-child(4), #inventoryTableBody > tr:nth-child(4), #crmTableBody > tr:nth-child(4) { --item-i: 3; }
+#posProductsGrid > .product-pos-card:nth-child(5), #pubProductsGrid > .public-product-card:nth-child(5), #inventoryTableBody > tr:nth-child(5), #crmTableBody > tr:nth-child(5) { --item-i: 4; }
+#posProductsGrid > .product-pos-card:nth-child(6), #pubProductsGrid > .public-product-card:nth-child(6), #inventoryTableBody > tr:nth-child(6), #crmTableBody > tr:nth-child(6) { --item-i: 5; }
+#posProductsGrid > .product-pos-card:nth-child(7), #pubProductsGrid > .public-product-card:nth-child(7), #inventoryTableBody > tr:nth-child(7), #crmTableBody > tr:nth-child(7) { --item-i: 6; }
+#posProductsGrid > .product-pos-card:nth-child(8), #pubProductsGrid > .public-product-card:nth-child(8), #inventoryTableBody > tr:nth-child(8), #crmTableBody > tr:nth-child(8) { --item-i: 7; }
+#posProductsGrid > .product-pos-card:nth-child(9), #pubProductsGrid > .public-product-card:nth-child(9), #inventoryTableBody > tr:nth-child(9), #crmTableBody > tr:nth-child(9) { --item-i: 8; }
+#posProductsGrid > .product-pos-card:nth-child(n+10), #pubProductsGrid > .public-product-card:nth-child(n+10), #inventoryTableBody > tr:nth-child(n+10), #crmTableBody > tr:nth-child(n+10) { --item-i: 9; }
+
+@media (prefers-reduced-motion: reduce) {
+  #posProductsGrid > .product-pos-card,
+  #pubProductsGrid > .public-product-card,
+  #inventoryTableBody > tr,
+  #crmTableBody > tr { animation: none; }
+}
