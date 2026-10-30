@@ -257,7 +257,7 @@ if (typeof window !== 'undefined') {
         <div class="lp-container">
           <div class="lp-about-grid">
             <div class="lp-about-copy">
-              <h2 class="lp-h2 lp-reveal" id="aboutTitle" style="--lp-d:60ms">Tulang punggung ekonomi Indonesia, <span class="lp-hl">siap melangkah ke era digital</span></h2>
+              <h2 class="lp-h2 lp-reveal" id="aboutTitle" style="--lp-d:60ms">Tulang punggung ekonomi Indonesia, <span class="text-highlight-mint">siap melangkah ke era digital</span></h2>
               <p class="lp-lead lp-reveal" style="--lp-d:120ms">UMKM menggerakkan ekonomi di setiap daerah. Yang go digital lebih siap naik kelas.</p>
               <div class="lp-actions lp-reveal" style="--lp-d:180ms">
                 <a href="#solusi" class="lp-btn lp-btn-primary" data-lp-scroll>
@@ -996,7 +996,7 @@ if (typeof window !== 'undefined') {
 
       <div class="data-card">
         <div class="card-head">
-          <div class="search-input-wrap">
+          <div class="search-input-wrap inv-search-wrap">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/><line x1="21" y1="21" x2="16.65" y2="16.65" stroke="currentColor" stroke-width="2"/></svg>
             <input type="text" id="invSearchInput" placeholder="Cari nama, SKU, atau supplier..." />
           </div>
@@ -1067,7 +1067,7 @@ if (typeof window !== 'undefined') {
       <div class="data-card">
         <div class="card-head">
           <h3>Direktori Pelanggan UMKM</h3>
-          <div class="search-input-wrap">
+          <div class="search-input-wrap inv-search-wrap">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/><line x1="21" y1="21" x2="16.65" y2="16.65" stroke="currentColor" stroke-width="2"/></svg>
             <input type="text" id="crmSearchInput" placeholder="Cari nama atau nomor WhatsApp..." />
           </div>
@@ -1813,24 +1813,29 @@ if (typeof window !== 'undefined') {
 
   <!-- MODAL: KONFIRMASI KELUAR (LOGOUT) & NAVIGASI KE LOGIN / BUAT AKUN -->
   <div class="modal-overlay" id="logoutModal">
-    <div class="modal-box modal-sm" style="text-align: center; padding: 2.25rem 1.75rem;">
-      <div style="width: 58px; height: 58px; margin: 0 auto 1.25rem auto; border-radius: 50%; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); display: flex; align-items: center; justify-content: center; font-size: 1.8rem;">
-        🚪
+    <div class="modal-box modal-sm lo-card">
+      <div class="lo-hero">
+        <button type="button" class="lo-x" onclick="closeModal('logoutModal')" aria-label="Tutup">&times;</button>
+        <div class="lo-icon" aria-hidden="true">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+        </div>
+        <h3 class="lo-title">Keluar dari Akun UMKM</h3>
+        <p class="lo-sub">Sesi usaha Anda akan ditutup. Pilih halaman tujuan berikutnya:</p>
       </div>
-      <h3 style="font-size: 1.3rem; font-weight: 800; margin-bottom: 0.4rem; color: var(--text-main);">Keluar dari Akun UMKM</h3>
-      <p style="color: var(--text-muted); font-size: 0.88rem; line-height: 1.5; margin-bottom: 1.5rem;">
-        Sesi usaha Anda akan ditutup. Silakan pilih halaman terpisah yang ingin Anda tuju:
-      </p>
-      <div style="display: flex; flex-direction: column; gap: 0.85rem;">
-        <button type="button" class="btn btn-primary btn-block btn-lg" onclick="proceedLogout('login')" id="btnGoToLogin" style="justify-content: center;">
+      <div class="lo-body">
+        <div class="lo-note">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+          <span>Data produk &amp; transaksi Anda tetap tersimpan aman.</span>
+        </div>
+        <button type="button" class="btn btn-primary btn-block btn-lg lo-btn" onclick="proceedLogout('login')" id="btnGoToLogin">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="11" width="18" height="11" rx="2" stroke="currentColor" stroke-width="2"/><path d="M7 11V7a5 5 0 0110 0v4" stroke="currentColor" stroke-width="2"/></svg>
-          <span>🔑 Menuju Halaman Masuk (Login)</span>
+          <span>Masuk ke Akun (Login)</span>
         </button>
-        <button type="button" class="btn btn-smart btn-block btn-lg" onclick="proceedLogout('register')" id="btnGoToRegister" style="justify-content: center;">
+        <button type="button" class="btn btn-smart btn-block btn-lg lo-btn" onclick="proceedLogout('register')" id="btnGoToRegister">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke="currentColor" stroke-width="2"/><circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="2"/><line x1="19" y1="8" x2="19" y2="14" stroke="currentColor" stroke-width="2"/><line x1="22" y1="11" x2="16" y2="11" stroke="currentColor" stroke-width="2"/></svg>
-          <span>📝 Menuju Halaman Buat Akun (Register)</span>
+          <span>Buat Akun Baru (Register)</span>
         </button>
-        <button type="button" class="btn btn-ghost btn-block" onclick="closeModal('logoutModal')" style="margin-top: 0.25rem;">
+        <button type="button" class="btn btn-ghost btn-block lo-stay" onclick="closeModal('logoutModal')">
           <span>Batal &amp; Tetap di Dashboard</span>
         </button>
       </div>
@@ -2333,6 +2338,7 @@ function switchTab(tabId) {
   window.scrollTo(0, 0);
 
   if (tabId === 'dashboard') {
+    chartEntrancePending = true;
     renderDashboard();
   } else if (tabId === 'pos') {
     renderPosCatalog();
@@ -2474,9 +2480,15 @@ function renderDashboard() {
   // Render Smart AI Insight
   renderSmartInsight(lowStockProds);
 
-  // Render Charts
-  renderSalesTrendChart();
-  renderCategoryDonutChart();
+  // Render Charts (animasi masuk hanya saat dashboard baru dibuka, bukan tiap data berubah)
+  const trendCv = document.getElementById('salesTrendChart');
+  if (chartEntrancePending && trendCv && trendCv.offsetWidth > 0) {
+    chartEntrancePending = false;
+    playChartEntrance();
+  } else {
+    renderSalesTrendChart();
+    renderCategoryDonutChart();
+  }
 
   // Render Recent Transactions
   renderRecentTransactionsTable();
@@ -2541,9 +2553,44 @@ function renderRecentTransactionsTable() {
 // ========================================================
 // 2. CANVAS CHARTS (NO EXTERNAL LIBS - FAST & RESILIENT)
 // ========================================================
-function renderSalesTrendChart() {
+// Animasi masuk (entrance). Chart digambar di <canvas>, jadi @keyframes CSS tidak bisa
+// menggerakkannya; setara `stroke-dashoffset` dipakai setLineDash + lineDashOffset.
+// Konfigurasi sama dengan opsi Chart.js: animation: { duration: 1600, easing: 'easeOutQuart' }.
+const CHART_ANIM = { duration: 2600, easing: 'easeOutQuart' };
+const CHART_EASING = {
+  easeOutQuart: t => 1 - Math.pow(1 - t, 4),
+  easeOutBack: t => { const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2); }
+};
+const chartRaf = {};
+var chartEntrancePending = true; // true = animasi diputar pada render dashboard berikutnya
+
+function stopChartAnim(id) {
+  if (chartRaf[id]) { cancelAnimationFrame(chartRaf[id]); chartRaf[id] = 0; }
+}
+
+// drawFn(elapsedMs) dipanggil tiap frame; frame terakhir memanggil drawFn(Infinity) = keadaan akhir.
+function runChartAnim(id, drawFn, total) {
+  stopChartAnim(id);
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) { drawFn(Infinity); return; }
+  const t0 = performance.now();
+  (function frame(now) {
+    const el = now - t0;
+    if (el >= total) { chartRaf[id] = 0; drawFn(Infinity); return; }
+    drawFn(el);
+    chartRaf[id] = requestAnimationFrame(frame);
+  })(t0);
+}
+
+function playChartEntrance() {
+  runChartAnim('salesTrendChart', renderSalesTrendChart, CHART_ANIM.duration);
+  runChartAnim('categoryDonutChart', renderCategoryDonutChart, CHART_ANIM.duration);
+}
+
+// elapsed: undefined = gambar statis (resize, data berubah) dan hentikan animasi yang berjalan.
+function renderSalesTrendChart(elapsed) {
   const canvas = document.getElementById('salesTrendChart');
   if (!canvas) return;
+  if (elapsed === undefined) { stopChartAnim('salesTrendChart'); elapsed = Infinity; }
   const ctx = canvas.getContext('2d');
   const dpr = window.devicePixelRatio || 1;
   const rect = canvas.getBoundingClientRect();
@@ -2616,14 +2663,51 @@ function renderSalesTrendChart() {
   });
 
   // Kurva halus (monotone: tidak melampaui nilai antar titik, segmen datar tetap datar)
-  function smoothPath(pts) {
-    ctx.moveTo(pts[0].x, pts[0].y);
-    for (let i = 0; i < pts.length - 1; i++) {
-      const p0 = pts[i - 1] || pts[i], p1 = pts[i], p2 = pts[i + 1], p3 = pts[i + 2] || p2;
-      const lo = Math.min(p1.y, p2.y), hi = Math.max(p1.y, p2.y);
-      const c1y = Math.min(hi, Math.max(lo, p1.y + (p2.y - p0.y) / 6));
-      const c2y = Math.min(hi, Math.max(lo, p2.y - (p3.y - p1.y) / 6));
-      ctx.bezierCurveTo(p1.x + (p2.x - p0.x) / 6, c1y, p2.x - (p3.x - p1.x) / 6, c2y, p2.x, p2.y);
+  const segs = [];
+  for (let i = 0; i < points.length - 1; i++) {
+    const p0 = points[i - 1] || points[i], p1 = points[i], p2 = points[i + 1], p3 = points[i + 2] || p2;
+    const lo = Math.min(p1.y, p2.y), hi = Math.max(p1.y, p2.y);
+    segs.push({
+      a: p1, b: p2,
+      c1x: p1.x + (p2.x - p0.x) / 6, c1y: Math.min(hi, Math.max(lo, p1.y + (p2.y - p0.y) / 6)),
+      c2x: p2.x - (p3.x - p1.x) / 6, c2y: Math.min(hi, Math.max(lo, p2.y - (p3.y - p1.y) / 6))
+    });
+  }
+  function smoothPath() {
+    ctx.moveTo(points[0].x, points[0].y);
+    segs.forEach(s => ctx.bezierCurveTo(s.c1x, s.c1y, s.c2x, s.c2y, s.b.x, s.b.y));
+  }
+
+  // Panjang kurva (sampling bezier) -> dasar efek "garis menggambar" ala stroke-dashoffset
+  const samples = [{ x: points[0].x, y: points[0].y, len: 0 }];
+  const ptLen = [0];
+  segs.forEach(s => {
+    for (let k = 1; k <= 16; k++) {
+      const t = k / 16, u = 1 - t;
+      const x = u*u*u*s.a.x + 3*u*u*t*s.c1x + 3*u*t*t*s.c2x + t*t*t*s.b.x;
+      const y = u*u*u*s.a.y + 3*u*u*t*s.c1y + 3*u*t*t*s.c2y + t*t*t*s.b.y;
+      const prev = samples[samples.length - 1];
+      samples.push({ x, y, len: prev.len + Math.hypot(x - prev.x, y - prev.y) });
+    }
+    ptLen.push(samples[samples.length - 1].len);
+  });
+  const pathLen = samples[samples.length - 1].len || 1;
+
+  // Fase 1: garis menggambar kiri->kanan (2300ms); Fase 2: titik pop bertahap (300ms tiap titik)
+  const LINE_DUR = CHART_ANIM.duration - 300;
+  const ease = CHART_EASING[CHART_ANIM.easing];
+  const lineProg = elapsed === Infinity ? 1 : ease(Math.min(Math.max(elapsed / LINE_DUR, 0), 1));
+  const drawLen = pathLen * lineProg;
+
+  // Posisi x ujung garis (untuk memotong area fill agar ikut tersapu)
+  let headX = points[points.length - 1].x;
+  if (lineProg < 1) {
+    for (let i = 1; i < samples.length; i++) {
+      if (samples[i].len >= drawLen) {
+        const a = samples[i - 1], b = samples[i];
+        headX = a.x + (b.x - a.x) * ((drawLen - a.len) / ((b.len - a.len) || 1));
+        break;
+      }
     }
   }
 
@@ -2632,34 +2716,52 @@ function renderSalesTrendChart() {
   grad.addColorStop(0, cvAreaA);
   grad.addColorStop(1, cvAreaB);
 
+  ctx.save();
+  if (lineProg < 1) { ctx.beginPath(); ctx.rect(0, 0, headX, h); ctx.clip(); }
   ctx.beginPath();
-  smoothPath(points);
+  smoothPath();
   ctx.lineTo(points[points.length - 1].x, h - padBottom);
   ctx.lineTo(points[0].x, h - padBottom);
   ctx.closePath();
   ctx.fillStyle = grad;
   ctx.fill();
+  ctx.restore();
 
   // Stroke Line (gradien horizontal)
   const lineGrad = ctx.createLinearGradient(padLeft, 0, w - padRight, 0);
   lineGrad.addColorStop(0, cvLineA);
   lineGrad.addColorStop(1, cvLineB);
-  ctx.beginPath();
-  smoothPath(points);
-  ctx.strokeStyle = lineGrad;
-  ctx.lineWidth = 3;
-  ctx.lineCap = 'round';
-  ctx.stroke();
+  if (drawLen > 0.5) {
+    ctx.beginPath();
+    smoothPath();
+    ctx.strokeStyle = lineGrad;
+    ctx.lineWidth = 3;
+    ctx.lineCap = 'round';
+    if (lineProg < 1) { ctx.setLineDash([pathLen, pathLen]); ctx.lineDashOffset = pathLen - drawLen; }
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.lineDashOffset = 0;
+  }
 
   // Dots & Labels
   points.forEach((p, idx) => {
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
-    ctx.fillStyle = cvDot;
-    ctx.fill();
-    ctx.strokeStyle = idx / (points.length - 1) < 0.5 ? cvLineA : cvLineB;
-    ctx.lineWidth = 2;
-    ctx.stroke();
+    let scale = 1;
+    if (elapsed !== Infinity) {
+      // titik muncul saat ujung garis mencapainya (invers easeOutQuart), lalu pop dengan overshoot
+      const f = ptLen[idx] / pathLen;
+      const reachAt = LINE_DUR * (1 - Math.pow(1 - f, 1 / 4));
+      const t = Math.min(Math.max((elapsed - reachAt) / 300, 0), 1);
+      scale = t <= 0 ? 0 : CHART_EASING.easeOutBack(t);
+    }
+    if (scale > 0) {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 4 * scale, 0, Math.PI * 2);
+      ctx.fillStyle = cvDot;
+      ctx.fill();
+      ctx.strokeStyle = idx / (points.length - 1) < 0.5 ? cvLineA : cvLineB;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
 
     ctx.fillStyle = cvLabX;
     ctx.font = '11px "Inter"';
@@ -2668,9 +2770,10 @@ function renderSalesTrendChart() {
   });
 }
 
-function renderCategoryDonutChart() {
+function renderCategoryDonutChart(elapsed) {
   const canvas = document.getElementById('categoryDonutChart');
   if (!canvas) return;
+  if (elapsed === undefined) { stopChartAnim('categoryDonutChart'); elapsed = Infinity; }
   const ctx = canvas.getContext('2d');
   const dpr = window.devicePixelRatio || 1;
 
@@ -2701,36 +2804,49 @@ function renderCategoryDonutChart() {
   let totalVal = Object.values(catSums).reduce((a, b) => a + b, 0);
   if (totalVal === 0) totalVal = 1; // avoid division by zero
 
+  // Sapuan searah jarum jam dari jam 12 (easeOutQuart, 2600ms)
+  const prog = elapsed === Infinity ? 1 : CHART_EASING[CHART_ANIM.easing](Math.min(elapsed / CHART_ANIM.duration, 1));
+  const sweepEnd = -Math.PI / 2 + prog * Math.PI * 2;
+
   let startAngle = -Math.PI / 2;
   const legendEl = document.getElementById('categoryLegend');
-  legendEl.innerHTML = '';
+  // Legenda dibangun di frame pertama & akhir saja (tidak tiap frame animasi)
+  const buildLegend = elapsed === Infinity || elapsed < 20;
+  if (buildLegend) legendEl.innerHTML = '';
 
   categories.forEach((cat, idx) => {
     const val = catSums[cat];
     const sliceAngle = (val / totalVal) * (Math.PI * 2);
     const color = colors[idx % colors.length];
 
-    ctx.beginPath();
-    ctx.arc(cx, cy, r, startAngle, startAngle + sliceAngle);
-    ctx.arc(cx, cy, innerR, startAngle + sliceAngle, startAngle, true);
-    ctx.closePath();
-    ctx.fillStyle = color;
-    ctx.fill();
+    const segEnd = startAngle + sliceAngle;
+    const drawEnd = prog >= 1 ? segEnd : Math.min(segEnd, sweepEnd);
+    if (drawEnd > startAngle + 1e-6) {
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, startAngle, drawEnd);
+      ctx.arc(cx, cy, innerR, drawEnd, startAngle, true);
+      ctx.closePath();
+      ctx.fillStyle = color;
+      ctx.fill();
+    }
 
     startAngle += sliceAngle;
 
     // Legend
-    const pct = ((val / totalVal) * 100).toFixed(0);
-    const item = document.createElement('div');
-    item.className = 'legend-item';
-    item.innerHTML = `
+    if (buildLegend) {
+      const pct = ((val / totalVal) * 100).toFixed(0);
+      const item = document.createElement('div');
+      item.className = 'legend-item' + (elapsed !== Infinity ? ' legend-enter' : '');
+      if (elapsed !== Infinity) item.style.animationDelay = (idx * 90) + 'ms';
+      item.innerHTML = `
       <div class="legend-left">
         <span class="legend-color-dot" style="background:${color}"></span>
         <span>${cat}</span>
       </div>
       <span class="legend-val">${pct}%</span>
     `;
-    legendEl.appendChild(item);
+      legendEl.appendChild(item);
+    }
   });
 }
 
@@ -4030,7 +4146,7 @@ function updateAiHeaderStats() {
   });
 
   const bsEl = document.getElementById('aiStatBestSeller');
-  if (bsEl) bsEl.textContent = bestSellerName.length > 18 ? bestSellerName.slice(0, 16) + '...' : bestSellerName;
+  if (bsEl) bsEl.textContent = bestSellerName;
 }
 
 // 1. SARAN STOK CERDAS BERBASIS DATA PENJUALAN RIIL
