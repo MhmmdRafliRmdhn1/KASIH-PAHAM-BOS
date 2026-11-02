@@ -69,6 +69,17 @@
   // ========================================================
   var nav = document.getElementById('lpNav');
   if (!nav) return;
+  // ---------- Hamburger navbar (mobile) ----------
+  var navToggle = document.getElementById('lpNavToggle');
+  if (navToggle) {
+    var setNavOpen = function (o) { nav.classList.toggle('is-open', o); navToggle.setAttribute('aria-expanded', String(o)); navToggle.setAttribute('aria-label', o ? 'Tutup menu' : 'Buka menu'); };
+    navToggle.addEventListener('click', function (e) { e.stopPropagation(); setNavOpen(!nav.classList.contains('is-open')); });
+    nav.addEventListener('click', function (e) { if (e.target.closest && e.target.closest('.lp-link')) setNavOpen(false); });
+    document.addEventListener('click', function (e) { if (!nav.contains(e.target)) setNavOpen(false); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setNavOpen(false); });
+    window.addEventListener('resize', function () { if (window.innerWidth > 768) setNavOpen(false); });
+  }
+
 
   // Sinkronkan mode "langsung ke form" (skrip pra-render di <head> sudah
   // melakukannya; ini hanya jaring pengaman).

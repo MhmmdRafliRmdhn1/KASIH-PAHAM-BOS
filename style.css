@@ -6356,3 +6356,641 @@ body .auth-card {
   #inventoryTableBody > tr,
   #crmTableBody > tr { animation: none; }
 }
+
+/* ==========================================================================
+   RESPONSIVE — MOBILE (<= 768px) & TABLET (769px – 1024px)
+   Taruh di BAGIAN PALING BAWAH style.css agar menang atas aturan sebelumnya.
+   Breakpoint:
+     Mobile : @media (max-width: 768px)
+     Tablet : @media (min-width: 769px) and (max-width: 1024px)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   0. Dasar — cegah scroll horizontal liar & teks ter-zoom otomatis di iOS
+   -------------------------------------------------------------------------- */
+.lp-nav-toggle { display: none; }          /* tombol hamburger landing: hanya tampil di mobile */
+
+@media (max-width: 1024px) {
+  .app-main { max-width: 100vw; overflow-x: clip; }
+  .chart-card, .data-card, .kpi-card, .charts-row > * { min-width: 0; }
+  body.sb-open { overflow: hidden; }       /* kunci scroll halaman saat drawer terbuka */
+}
+
+/* ==========================================================================
+   A. MOBILE  (<= 768px)
+   ========================================================================== */
+@media (max-width: 768px) {
+
+  /* ---- 2a. Landing navbar: kapsul ringkas + dropdown hamburger ---------- */
+  .lp-nav {
+    top: 8px;
+    width: calc(100% - 20px);
+    border-radius: 28px;
+    transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+                border-radius 0.3s ease;
+  }
+  .lp-nav-inner {
+    height: 56px;
+    padding: 0 6px 0 14px;
+    gap: 6px;
+    justify-content: flex-start;
+  }
+  .lp-brand { margin-right: auto; min-width: 0; }
+  .lp-brand .brand-text { width: auto; height: 14px; }
+
+  /* CTA jadi pil kecil */
+  .lp-nav .lp-cta {
+    min-height: 40px;
+    padding: 0 0.85rem;
+    font-size: 0.8rem;
+    white-space: nowrap;
+  }
+
+  /* Tombol hamburger (44px) — garis berubah jadi "X" saat terbuka */
+  .lp-nav-toggle {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    flex: 0 0 44px;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(49, 151, 149, 0.1);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: background-color 0.2s ease;
+  }
+  .lp-nav-toggle:hover { background: rgba(49, 151, 149, 0.18); }
+  .lp-nav-toggle:focus-visible { outline: 2px solid #319795; outline-offset: 2px; }
+  .lp-nav-toggle span {
+    display: block;
+    width: 18px;
+    height: 2px;
+    border-radius: 2px;
+    background: #2c7a7b;
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease;
+  }
+  .lp-nav-toggle[aria-expanded="true"] span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .lp-nav-toggle[aria-expanded="true"] span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  .lp-nav-toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  /* Menu tautan -> panel dropdown di bawah kapsul */
+  .lp-links {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    gap: 2px;
+    padding: 8px;
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.97);
+    -webkit-backdrop-filter: blur(20px) saturate(1.4);
+            backdrop-filter: blur(20px) saturate(1.4);
+    border: 1px solid rgba(49, 151, 149, 0.16);
+    box-shadow: 0 18px 40px -12px rgba(49, 151, 149, 0.28);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(-8px) scale(0.98);
+    transform-origin: top center;
+    transition: opacity 0.22s ease, transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.22s;
+  }
+  .lp-nav.is-open .lp-links {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: none;
+  }
+  .lp-links .lp-link {
+    display: flex;
+    align-items: center;
+    min-height: 48px;
+    padding: 0 1rem;
+    font-size: 0.95rem;
+    border-radius: 16px;
+  }
+
+  /* Layout landing: satu kolom */
+  .lp-features,
+  .lp-about-grid { grid-template-columns: 1fr; }
+  .lp-features { max-width: none; }
+
+  /* ---- 2b. Sidebar drawer (mobile): ramping, compact, slide-in ----------
+     Gaya visual (warna, radius 28px, bayangan) tetap dari aturan bawaan.     */
+  .sidebar,
+  body.sb-collapsed .sidebar {
+    width: 64vw;
+    min-width: 216px;
+    max-width: 240px;
+    z-index: 210;
+    top: max(10px, env(safe-area-inset-top));
+    bottom: max(10px, env(safe-area-inset-bottom));
+    overscroll-behavior: contain;
+    visibility: hidden;                         /* menu tertutup tidak bisa di-Tab / dibaca screen reader */
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                visibility 0s linear 0.3s !important;
+  }
+  body.sb-open .sidebar {
+    visibility: visible;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                visibility 0s linear 0s !important;
+  }
+  .sb-backdrop {
+    z-index: 200;
+    -webkit-backdrop-filter: blur(2px);
+            backdrop-filter: blur(2px);
+  }
+
+  /* Header drawer lebih pendek */
+  .sidebar .sb-brand,
+  body.sb-collapsed .sidebar .sb-brand { height: 56px; padding: 0 0 0 16px; }
+
+  /* Daftar menu: padding rapat + bisa di-scroll (aturan lama mengunci overflow: hidden) */
+  .sidebar .sb-scroll {
+    padding: 0 8px 4px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .sidebar .sb-scroll::-webkit-scrollbar { display: none; }
+
+  .sidebar .sb-group-label { height: 26px; padding: 0.5rem 0.6rem 0.15rem; font-size: 0.62rem; }
+  .sidebar .sb-group-label:first-child { padding-top: 0.3rem; }
+
+  /* Item menu: tinggi 44px (target sentuh) + jarak vertikal 2px */
+  .sidebar .nav-link,
+  body.sb-collapsed .sidebar .nav-link {
+    height: 44px;
+    min-height: 44px;
+    margin-bottom: 2px;
+    font-size: 0.86rem;
+  }
+
+  /* Label menyusut dengan elipsis; badge tidak pernah terpotong */
+  .sidebar .nav-link .nav-label { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+  .sidebar .nav-link .nav-badge { flex: 0 0 auto; margin-right: 8px; }
+
+  /* Kartu profil: radius konsentris dengan lengkung sidebar (28px - inset 12px = 16px) */
+  .sidebar .sb-footer { padding: 6px 12px 12px; }
+  .sidebar .sb-profile,
+  body.sb-collapsed .sidebar .sb-profile {
+    height: 52px;
+    padding: 8px 10px;
+    gap: 10px;
+    border-radius: 16px;
+  }
+  .sidebar .sb-avatar { width: 36px; height: 36px; }
+
+  /* ---- 2c. Topbar & search bar ------------------------------------------ */
+  .topbar { height: 56px; margin: 8px 8px 0; padding: 0 0.5rem; gap: 0.35rem; }
+  .topbar-title, .user-info-text, .caret-down, .search-kbd { display: none; }
+  .search-box { flex: 1 1 auto; min-width: 0; margin-left: 0; transition: flex-basis 0.25s ease; }
+
+  /* Saat difokuskan: search memenuhi seluruh topbar (width: 100%) */
+  .search-box:focus-within { flex: 1 1 100%; width: 100%; }
+  .topbar:has(.search-box:focus-within) > :not(.search-box) { display: none; }
+  .search-results { max-height: 60vh; overscroll-behavior: contain; }
+
+  .dropdown { max-width: calc(100vw - 16px); }
+  .user-dropdown-menu { right: 0; }
+  .notif-dropdown { left: 8px; right: 8px; width: auto; }
+
+  /* ---- 3. Grid & kartu: 1 kolom ----------------------------------------- */
+  .cards-grid,
+  .potensi-cards-grid,
+  .dashboard-grid,
+  .kpi-grid,
+  .inv-stats-row,
+  .a-grid { grid-template-columns: 1fr; gap: 12px; }
+
+  .charts-row { flex-direction: column; gap: 12px; }
+  .charts-row > .chart-card { width: 100%; flex: none; }
+
+  /* Katalog produk (kasir & toko publik) tetap 2 kolom agar tidak terlalu panjang */
+  .store-cards-grid,
+  #posProductsGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+
+  /* Padding kartu: 28/32px -> 16/20px */
+  .kpi-card,
+  .chart-card,
+  .data-card,
+  .smart-alert-card,
+  .ai-hero-card,
+  .lp-card,
+  .lp-stat,
+  .pos-cart-panel,
+  .auth-card { padding: 16px 20px; }
+  .main-content { padding: 12px 12px 28px; }
+  .card-head { flex-wrap: wrap; gap: 8px; }
+
+  /* ---- 4. Modal & form --------------------------------------------------- */
+  .modal-overlay { padding: 8px; align-items: center; }
+  .modal-overlay .modal-box,
+  #productModal .modal-box,
+  #customerModal .modal-box {
+    width: 92% !important;
+    max-width: 92% !important;
+    max-height: 85vh !important;
+    max-height: 85dvh !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    border-radius: 20px;
+  }
+  .modal-overlay .modal-body { overflow: visible; padding: 16px 20px; }
+  .modal-header { padding: 14px 20px; }
+  .modal-footer { padding: 12px 20px; flex-wrap: wrap; }
+  .modal-footer .btn { flex: 1 1 140px; }
+  .form-grid { grid-template-columns: 1fr; }
+  .form-group.full { grid-column: auto; }
+
+  /* Touch target minimal 44px.  font-size 16px mencegah iOS meng-zoom saat fokus */
+  .btn,
+  .btn-sm,
+  .btn-xs,
+  .btn-ghost,
+  .btn-chip,
+  .tb-btn,
+  .close-btn,
+  .lp-cta,
+  .lp-btn,
+  .sr-item,
+  .qty-btn,
+  select.form-input {
+    min-height: 44px !important;
+  }
+  .tb-btn, .close-btn, .qty-btn { min-width: 44px; }
+  .form-input,
+  .search-input,
+  select,
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]) {
+    min-height: 44px;
+    font-size: 16px;
+  }
+  textarea.form-input { min-height: 88px; font-size: 16px; }
+
+  /* ---- 5. Tabel & chart -------------------------------------------------- */
+  .table-responsive,
+  .table-wrap,
+  .table-scroll {
+    display: block;
+    width: 100%;
+    margin: 0;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+  }
+  .table-responsive .app-table { min-width: 640px; }
+  .app-table th,
+  .app-table td { white-space: nowrap; padding: 12px 14px; }
+
+  /* Grafik tren: kontainer 250px. Canvas digambar 220px oleh JS -> jangan diregangkan */
+  .chart-card .chart-body:not(.donut-chart-body) {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 250px;
+  }
+  #salesTrendChart { display: block; width: 100% !important; height: 220px !important; }
+  .donut-chart-body { height: auto; }
+  #categoryDonutChart { max-width: 100%; height: auto; }
+}
+
+/* Layar sangat kecil */
+@media (max-width: 400px) {
+  .lp-nav .lp-cta span { display: none; }     /* CTA jadi ikon saja */
+  .lp-nav .lp-cta { width: 40px; padding: 0; }
+  .store-cards-grid,
+  #posProductsGrid { grid-template-columns: 1fr; }
+}
+
+/* ==========================================================================
+   B. TABLET  (769px – 1024px)
+   ========================================================================== */
+@media (min-width: 769px) and (max-width: 1024px) {
+
+  /* Landing navbar: tautan tetap sejajar, kapsul sedikit lebih sempit */
+  .lp-nav { width: calc(100% - 32px); }
+  .lp-features { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: none; }
+  .lp-features > :last-child:nth-child(odd) { grid-column: 1 / -1; }
+
+  /* Sidebar = drawer geser dari kiri */
+  :root { --sb-w: 280px; }
+  .sidebar { z-index: 210; width: var(--sb-w); overscroll-behavior: contain; }
+  .sb-backdrop { z-index: 200; }
+  .nav-link { min-height: 46px; }
+
+  /* Topbar */
+  .topbar { padding: 0 0.85rem; }
+  .search-box { flex: 1 1 320px; max-width: 480px; }
+
+  /* Grid: 2 kolom */
+  .cards-grid,
+  .potensi-cards-grid,
+  .dashboard-grid,
+  .kpi-grid,
+  .inv-stats-row,
+  .store-cards-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  .charts-row { flex-direction: column; gap: 16px; }
+  .charts-row > .chart-card { width: 100%; flex: none; }
+  .main-content { padding: 20px 20px 32px; }
+
+  .kpi-card, .chart-card, .data-card { padding: 20px 24px; }
+
+  /* Modal */
+  .modal-overlay .modal-box { max-height: 85vh; max-height: 85dvh; overflow-y: auto; }
+  .modal-overlay .modal-body { overflow: visible; }
+
+  /* Touch target 44px (tablet = layar sentuh) */
+  .btn, .btn-sm, .tb-btn, .close-btn, .btn-chip, select.form-input { min-height: 44px; }
+  .form-input, .search-input { min-height: 44px; }
+
+  /* Tabel & chart */
+  .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .table-responsive .app-table { min-width: 720px; }
+  .chart-card .chart-body:not(.donut-chart-body) { display: flex; align-items: center; height: 280px; }
+  #salesTrendChart { width: 100% !important; height: 220px !important; }
+}
+
+/* Hormati preferensi kurangi gerak */
+@media (prefers-reduced-motion: reduce) {
+  .lp-links, .lp-nav-toggle span, .search-box { transition: none !important; }
+}
+
+/* ==========================================================================
+   Dropdown notifikasi / profil / pencarian: SOLID (tidak transparan)
+   Berlaku di semua ukuran layar (desktop, tablet, mobile).
+   ========================================================================== */
+.dropdown,
+.notif-dropdown,
+.user-dropdown-menu,
+#notifDropdown,
+#searchResults {
+  background: #ffffff !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  opacity: 0;
+}
+.dropdown.show,
+.notif-dropdown.show,
+#notifDropdown.show { opacity: 1 !important; }
+.notif-dropdown .notif-list,
+.notif-dropdown .notif-item { background-color: transparent; }
+.notif-dropdown .notif-item:hover { background-color: var(--bg-hover, rgba(13, 148, 136, 0.06)); }
+
+/* ==========================================================================
+   MOBILE: 4 kartu KPI dashboard jadi grid 2x2 (hemat tempat)
+   ========================================================================== */
+@media (max-width: 640px) {
+  .kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 10px !important; }
+  .kpi-card { padding: 12px !important; min-height: 0 !important; border-radius: 14px; }
+
+  /* ilustrasi latar dikecilkan agar tidak menutupi teks */
+  .kpi-card > .kpi-art,
+  .kpi-card > .kpi-art-boxes { width: 48% !important; height: 55% !important; opacity: 0.55; }
+
+  .kpi-top { gap: 6px; margin-bottom: 0.4rem; align-items: flex-start; }
+  .kpi-label { font-size: 0.6rem; letter-spacing: 0.03em; line-height: 1.25; }
+  .kpi-icon-wrap { width: 28px !important; height: 28px !important; }
+  .kpi-icon-wrap svg { width: 15px; height: 15px; }
+
+  .kpi-value { font-size: 1.05rem !important; margin-bottom: 0.4rem; overflow-wrap: anywhere; }
+
+  .kpi-footer { padding-top: 0.4rem; gap: 0.25rem; font-size: 0.62rem; }
+  .kpi-trend, .kpi-badge { font-size: 0.6rem; padding: 2px 6px; }
+  .kpi-compare, .kpi-subtext { font-size: 0.62rem; line-height: 1.3; }
+}
+
+/* ==========================================================================
+   MOBILE FIX (<= 768px) — hanya mobile; desktop & tablet tidak diubah
+   ========================================================================== */
+@media (max-width: 768px) {
+  /* konten tidak lagi terdorong margin sidebar (sidebar = drawer di mobile) */
+  .app-main,
+  body.sb-collapsed .app-main { margin-left: 0 !important; width: 100%; max-width: 100vw; }
+  .topbar { margin: 8px 8px 0 !important; }
+}
+
+@media (max-width: 768px) {
+  /* Smart Insight: ikon + teks di atas, tombol selebar kartu di bawah */
+  .smart-alert-card { flex-wrap: wrap !important; align-items: flex-start; gap: 10px !important; padding: 14px !important; }
+  .smart-alert-card .smart-alert-icon { flex: 0 0 auto; }
+  .smart-alert-card .smart-alert-content { flex: 1 1 0; min-width: 0; }
+  .smart-alert-card .smart-alert-content h4 { font-size: 0.85rem; }
+  .smart-alert-card .smart-alert-content p { font-size: 0.78rem; line-height: 1.45; }
+  .smart-alert-card .btn-smart { flex: 1 1 100%; width: 100%; justify-content: center; }
+
+  /* Ilustrasi KPI lebih pudar supaya teks footer tetap terbaca */
+  .kpi-card > .kpi-art, .kpi-card > .kpi-art-boxes { opacity: 0.32; height: 48% !important; }
+
+  /* Ringkasan inventori & CRM: kartu kompak, 2 kolom */
+  .inv-stats-row, .crm-summary-cards { display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 10px !important; }
+  .inv-stats-row > *, .crm-summary-cards > * { padding: 12px !important; min-height: 0 !important; }
+  .inv-stats-row > :last-child:nth-child(odd),
+  .crm-summary-cards > :last-child:nth-child(odd) { grid-column: 1 / -1; }
+
+  /* Pencarian topbar: placeholder terpotong rapi */
+  .search-box input { text-overflow: ellipsis; min-width: 0; }
+
+  /* Grid produk kasir: 2 kolom kompak */
+  #posProductsGrid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 10px !important; }
+  #posProductsGrid > .product-pos-card { padding: 10px !important; min-width: 0; }
+  #posProductsGrid > .product-pos-card * { overflow-wrap: anywhere; }
+
+  /* Tabel lebar: bisa digeser horizontal, bukan terpotong */
+  .table-wrap, .app-table-wrap, .ai-table-wrap, .data-card .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+}
+
+@media (max-width: 768px) {
+  .table-responsive { overflow-x: auto !important; -webkit-overflow-scrolling: touch; max-width: 100%; }
+  .table-responsive > .app-table { min-width: 520px; }
+}
+
+/* ==========================================================================
+   MOBILE (<= 768px) — Asisten AI: Generator Deskripsi & Caption Promosi
+   ========================================================================== */
+@media (max-width: 768px) {
+  /* sub-navigasi: satu baris, bisa digeser, tab aktif tidak terpotong */
+  .ai-subnav { display: flex; flex-wrap: nowrap; gap: 8px; overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; scroll-snap-type: x proximity; scrollbar-width: none; padding: 2px 2px 8px; margin: 0 -2px; }
+  .ai-subnav::-webkit-scrollbar { display: none; }
+  .ai-subnav .ai-tab-btn { flex: 0 0 auto; white-space: nowrap; scroll-snap-align: start; padding: 9px 14px; font-size: 0.8rem; }
+
+  /* grid form + hasil: 1 kolom, tidak boleh melebar karena isi <select> */
+  .ai-generator-grid { grid-template-columns: minmax(0, 1fr) !important; gap: 14px !important; }
+  .ai-generator-grid > *, .ai-generator-grid .card, .ai-generator-grid .form-group,
+  .ai-generator-grid .form-grid > * { min-width: 0; max-width: 100%; }
+  .ai-generator-grid .card { padding: 16px !important; }
+  .ai-generator-grid .card-header { margin-bottom: 14px; }
+  .ai-generator-grid .card-header h3 { font-size: 1rem; line-height: 1.3; }
+  .ai-generator-grid .card-sub { font-size: 0.78rem; line-height: 1.45; margin-top: 4px; }
+
+  /* field form */
+  .ai-generator-grid .form-grid { display: grid; grid-template-columns: minmax(0, 1fr) !important; gap: 0; }
+  .ai-generator-grid .form-group { margin-bottom: 14px; }
+  .ai-generator-grid .form-label { display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 6px; line-height: 1.35; }
+  .ai-generator-grid .form-input,
+  .ai-generator-grid select.form-input,
+  .ai-generator-grid textarea.form-input {
+    width: 100%; max-width: 100%; box-sizing: border-box; min-height: 44px;
+    font-size: 16px;                       /* cegah auto-zoom iOS */
+    padding: 10px 12px;
+  }
+  .ai-generator-grid select.form-input { text-overflow: ellipsis; white-space: nowrap; overflow: hidden; padding-right: 32px; }
+  .ai-generator-grid textarea.form-input { min-height: 96px; line-height: 1.45; resize: vertical; }
+
+  /* chip platform: susun rapi, tiap chip selebar baris */
+  .ai-platform-chips { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; }
+  .platform-chip, .platform-chip .chip-inner { display: block; width: 100%; box-sizing: border-box; }
+  .platform-chip .chip-inner { padding: 11px 14px; font-size: 0.84rem; white-space: normal; }
+
+  /* tombol aksi */
+  .ai-generator-grid .btn-smart.btn-block,
+  .ai-generator-grid form > .btn { width: 100%; justify-content: center; white-space: normal; text-align: center; min-height: 46px; }
+
+  /* kartu hasil */
+  .ai-result-card .card-header.flex-between { flex-wrap: wrap; gap: 8px; }
+  .ai-result-card .card-header h3 { font-size: 1rem; }
+  .ai-result-card [class*="empty"], .ai-result-card .ai-empty-state { padding: 24px 12px; }
+  .ai-copy-result-card { max-width: 100%; overflow-wrap: anywhere; }
+}
+
+@media (max-width: 768px) {
+  /* area hasil AI kosong: lebih pendek di mobile */
+  .ai-result-card > div:last-child { min-height: 0 !important; }
+  .ai-result-card .ai-copy-result-card, .ai-result-card [id*="Result"], .ai-result-card [id*="result"] { min-height: 0; }
+}
+
+/* Mobile: dropdown kustom (.cs-list) tidak boleh tertutup kartu di bawahnya */
+@media (max-width: 768px) {
+  .ai-generator-grid .card:has(.cs-wrap.open) { position: relative; z-index: 40; overflow: visible !important; }
+  .ai-generator-grid .card:has(.cs-wrap.open) .cs-wrap.open { z-index: 41; }
+  .cs-list { z-index: 100; max-height: min(15rem, 45vh); overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+  .cs-option { padding: 0.65rem 0.75rem; font-size: 0.9rem; }
+}
+
+/* ==========================================================================
+   MOBILE (<= 768px): search bar lebih kecil (selain search di navbar) +
+   dropdown kustom di modal / keranjang
+   ========================================================================== */
+@media (max-width: 768px) {
+  .pos-search-bar .search-input-wrap,
+  .inv-search-wrap { min-height: 0 !important; height: 38px; padding: 0 12px !important; border-radius: 12px !important; }
+  .pos-search-bar .search-input-wrap input,
+  .inv-search-wrap input { height: 100%; padding: 0 0 0 8px !important; font-size: 0.82rem !important; }
+  .pos-search-bar .search-input-wrap svg,
+  .inv-search-wrap svg { width: 15px; height: 15px; flex-shrink: 0; }
+  .pos-search-bar { margin-bottom: 10px; }
+
+  /* dropdown kustom di dalam modal: tampil di atas isi modal */
+  .modal-box .cs-wrap.open { z-index: 30; }
+  .modal-box .cs-list { z-index: 200; }
+}
+/* tombol dropdown kustom meniru tampilan field form */
+.modal-box .cs-btn, #pos-cart-panel .cs-btn, .pos-cart-panel .cs-btn { min-height: 42px; }
+
+/* ==========================================================================
+   TABLET (<= 1024px): sidebar = drawer, konten tidak boleh terdorong margin
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .app-main,
+  body.sb-collapsed .app-main { margin-left: 0 !important; width: 100%; max-width: 100vw; }
+  .topbar { margin: 8px 12px 0 !important; }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  /* tabel lebar tidak terpotong: bisa digeser horizontal */
+  .table-responsive, .ai-table-wrap { overflow-x: auto !important; -webkit-overflow-scrolling: touch; max-width: 100%; }
+  /* sub-navigasi Asisten AI: satu baris, bisa digeser */
+  .ai-subnav { display: flex; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; gap: 8px; }
+  .ai-subnav::-webkit-scrollbar { display: none; }
+  .ai-subnav .ai-tab-btn { flex: 0 0 auto; white-space: nowrap; }
+}
+
+/* ==========================================================================
+   TABLET (769–1024px) — Asisten AI: Generator Deskripsi & Caption Promosi
+   ========================================================================== */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .ai-generator-grid { gap: 18px !important; align-items: start; }
+  .ai-generator-grid > *, .ai-generator-grid .card, .ai-generator-grid .form-group,
+  .ai-generator-grid .form-grid > * { min-width: 0; max-width: 100%; }
+
+  .ai-generator-grid .card { padding: 20px 22px !important; }
+  .ai-generator-grid .card-header { margin-bottom: 16px; }
+  .ai-generator-grid .card-header h3 { font-size: 1.05rem; line-height: 1.3; }
+  .ai-generator-grid .card-sub { font-size: 0.8rem; line-height: 1.5; margin-top: 4px; }
+
+  .ai-generator-grid .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 16px; }
+  .ai-generator-grid .form-group { margin-bottom: 16px; }
+  .ai-generator-grid .form-label { display: block; font-size: 0.82rem; font-weight: 600; margin-bottom: 6px; line-height: 1.35; }
+  .ai-generator-grid .form-input,
+  .ai-generator-grid textarea.form-input {
+    width: 100%; max-width: 100%; box-sizing: border-box; min-height: 44px; font-size: 0.9rem; padding: 10px 14px;
+  }
+  .ai-generator-grid textarea.form-input { min-height: 96px; line-height: 1.5; resize: vertical; }
+
+  .ai-platform-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .platform-chip .chip-inner { padding: 10px 14px; font-size: 0.84rem; white-space: nowrap; }
+
+  .ai-generator-grid .btn-smart { min-height: 44px; padding: 0 22px; }
+  .ai-generator-grid .btn-smart.btn-block { width: 100%; justify-content: center; }
+  .ai-generator-grid .card:has(.cs-wrap.open) { position: relative; z-index: 40; overflow: visible !important; }
+}
+/* tablet sempit: form di atas, hasil di bawah (satu kolom) */
+@media (min-width: 769px) and (max-width: 940px) {
+  .ai-generator-grid { grid-template-columns: minmax(0, 1fr) !important; }
+}
+/* tablet lebar: dua kolom seimbang, field form ditumpuk agar tidak sempit */
+@media (min-width: 941px) and (max-width: 1024px) {
+  .ai-generator-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  .ai-generator-grid .form-grid { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ==========================================================================
+   MOBILE (<= 768px) — Kasir (POS): katalog produk maks. 3 baris x 2 kolom,
+   produk selebihnya di-scroll di dalam area katalog
+   ========================================================================== */
+@media (max-width: 768px) {
+  #posProductsGrid {
+    --pos-row-h: 150px; --pos-gap: 10px;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    grid-auto-rows: var(--pos-row-h);
+    gap: var(--pos-gap) !important;
+    max-height: calc(var(--pos-row-h) * 3 + var(--pos-gap) * 2 + 4px);  /* 3 baris */
+    overflow-y: auto; overflow-x: hidden;
+    padding: 2px;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin; scrollbar-color: rgba(13, 148, 136, 0.45) transparent;
+  }
+  #posProductsGrid::-webkit-scrollbar { width: 4px; }
+  #posProductsGrid::-webkit-scrollbar-thumb { background: rgba(13, 148, 136, 0.45); border-radius: 4px; }
+  #posProductsGrid > .product-pos-card { height: var(--pos-row-h); min-height: 0; overflow: hidden; }
+}
+
+/* ==========================================================================
+   Tombol "Kembali ke atas" (desktop, tablet, mobile)
+   ========================================================================== */
+.back-to-top {
+  position: fixed; right: 20px; bottom: 20px; z-index: 900;
+  width: 44px; height: 44px; padding: 0; border: 0; border-radius: 50%;
+  display: grid; place-items: center; cursor: pointer;
+  color: #fff; background: linear-gradient(135deg, #14b8a6, #0d9488);
+  box-shadow: 0 10px 24px -8px rgba(13, 148, 136, 0.6), 0 2px 6px rgba(15, 23, 42, 0.15);
+  opacity: 0; visibility: hidden; transform: translateY(12px) scale(0.9);
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s, box-shadow 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.back-to-top.show { opacity: 1; visibility: visible; transform: none; }
+.back-to-top:hover { box-shadow: 0 14px 28px -8px rgba(13, 148, 136, 0.7), 0 3px 8px rgba(15, 23, 42, 0.18); transform: translateY(-2px); }
+.back-to-top:active { transform: scale(0.94); }
+.back-to-top:focus-visible { outline: 3px solid rgba(20, 184, 166, 0.45); outline-offset: 2px; }
+@media (max-width: 768px) { .back-to-top { right: 14px; bottom: 16px; width: 42px; height: 42px; } }
+body.sb-open .back-to-top { opacity: 0; visibility: hidden; }   /* sembunyi saat drawer sidebar terbuka */
+@media (prefers-reduced-motion: reduce) { .back-to-top { transition: none; } }

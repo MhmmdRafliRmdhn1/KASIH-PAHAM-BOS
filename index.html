@@ -237,7 +237,7 @@ if (typeof window !== 'undefined') {
           <img class="brand-icon" src="assets/logo.svg" alt="" width="26" height="24" decoding="async"><img class="brand-text" src="assets/teks-logo.svg" alt="TransformaUMKM" width="83" height="16" decoding="async">
         </a>
 
-        <nav class="lp-links" aria-label="Navigasi halaman">
+        <nav class="lp-links" id="lpLinks" aria-label="Navigasi halaman">
           <a href="#tentang" class="lp-link" data-lp-scroll data-lp-link="tentang">Potensi UMKM</a>
           <a href="#solusi" class="lp-link" data-lp-scroll data-lp-link="solusi">Fitur &amp; Solusi</a>
         </nav>
@@ -246,6 +246,7 @@ if (typeof window !== 'undefined') {
           <span>Langsung Login</span>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg>
         </a>
+        <button type="button" class="lp-nav-toggle" id="lpNavToggle" aria-label="Buka menu" aria-expanded="false" aria-controls="lpLinks"><span></span><span></span><span></span></button>
       </div>
     </header>
 
@@ -4930,7 +4931,87 @@ function resetAiChatHistory() {
   window.addEventListener('resize', () => closeAll());
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeAll(); });
 
-  document.querySelectorAll('#aiTab-product-copywriter select, #aiTab-social-caption select').forEach(enhance);
+  document.querySelectorAll('#aiTab-product-copywriter select, #aiTab-social-caption select, #prodCategory, #cartCustomerSelect').forEach(enhance);
+})();
+
+// ========================================================
+// INPUT RUPIAH OTOMATIS — harga modal, harga jual, uang diterima.
+// Tampilan: "Rp 1.500.000". Nilai (.value) tetap angka murni ("1500000"),
+// sehingga seluruh logika lama (Number(el.value), pengisian otomatis, validasi) tidak berubah.
+// ========================================================
+(function initRupiahInputs() {
+  const IDS = ['prodCostPrice', 'prodSellPrice', 'cashReceivedInput'];
+  const proto = HTMLInputElement.prototype;
+  const desc = Object.getOwnPropertyDescriptor(proto, 'value');
+
+  function digits(s) { return String(s == null ? '' : s).replace(/\D/g, '').replace(/^0+(?=\d)/, ''); }
+  function fmt(d) { return d ? 'Rp ' + d.replace(/\B(?=(\d{3})+(?!\d))/g, '.') : ''; }
+
+  function enhance(el) {
+    if (!el || el.dataset.rpReady) return;
+    el.dataset.rpReady = '1';
+    el.type = 'text';
+    el.inputMode = 'numeric';
+    el.autocomplete = 'off';
+    el.removeAttribute('min');
+    if (!el.placeholder || el.placeholder === '0') el.placeholder = 'Rp 0';
+
+    // .value => angka murni; set .value => tampil terformat
+    Object.defineProperty(el, 'value', {
+      configurable: true,
+      get() { return digits(desc.get.call(el)); },
+      set(v) { desc.set.call(el, fmt(digits(v))); }
+    });
+
+    el.addEventListener('input', () => {
+      const raw = desc.get.call(el);
+      const caret = el.selectionStart;
+      const digitsBefore = digits(raw.slice(0, caret)).length;
+      const d = digits(raw);
+      const out = fmt(d);
+      if (out !== raw) {
+        desc.set.call(el, out);
+        // pertahankan posisi kursor berdasarkan jumlah digit di kirinya
+        let pos = 0, seen = 0;
+        while (pos < out.length && seen < digitsBefore) { if (/\d/.test(out[pos])) seen++; pos++; }
+        try { el.setSelectionRange(pos, pos); } catch (e) {}
+      }
+    });
+    // form.reset() mengembalikan nilai awal; segarkan format
+    if (el.form) el.form.addEventListener('reset', () => setTimeout(() => { desc.set.call(el, fmt(digits(desc.get.call(el)))); }, 0));
+    desc.set.call(el, fmt(digits(desc.get.call(el))));
+  }
+
+  IDS.forEach(id => enhance(document.getElementById(id)));
+})();
+
+// ========================================================
+// TOMBOL KEMBALI KE ATAS — muncul saat halaman di-scroll jauh (semua ukuran layar)
+// ========================================================
+(function initBackToTop() {
+  if (document.getElementById('backToTop')) return;
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.id = 'backToTop';
+  btn.className = 'back-to-top';
+  btn.setAttribute('aria-label', 'Kembali ke atas');
+  btn.title = 'Kembali ke atas';
+  btn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 15-6-6-6 6"/></svg>';
+  document.body.appendChild(btn);
+
+  const THRESHOLD = 200;
+  let ticking = false;
+  function update() {
+    ticking = false;
+    const y = window.pageYOffset || document.documentElement.scrollTop || 0;
+    btn.classList.toggle('show', y > THRESHOLD);
+  }
+  window.addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+  btn.addEventListener('click', () => {
+    const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+  });
+  update();
 })();
 </script>
 <script type="text/plain" id="src-welcome">
@@ -5005,6 +5086,17 @@ function resetAiChatHistory() {
   // ========================================================
   var nav = document.getElementById('lpNav');
   if (!nav) return;
+  // ---------- Hamburger navbar (mobile) ----------
+  var navToggle = document.getElementById('lpNavToggle');
+  if (navToggle) {
+    var setNavOpen = function (o) { nav.classList.toggle('is-open', o); navToggle.setAttribute('aria-expanded', String(o)); navToggle.setAttribute('aria-label', o ? 'Tutup menu' : 'Buka menu'); };
+    navToggle.addEventListener('click', function (e) { e.stopPropagation(); setNavOpen(!nav.classList.contains('is-open')); });
+    nav.addEventListener('click', function (e) { if (e.target.closest && e.target.closest('.lp-link')) setNavOpen(false); });
+    document.addEventListener('click', function (e) { if (!nav.contains(e.target)) setNavOpen(false); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setNavOpen(false); });
+    window.addEventListener('resize', function () { if (window.innerWidth > 768) setNavOpen(false); });
+  }
+
 
   // Sinkronkan mode "langsung ke form" (skrip pra-render di <head> sudah
   // melakukannya; ini hanya jaring pengaman).
