@@ -1,0 +1,1 @@
+Ikon di folder ini berasal dari Lucide (https://lucide.dev), lisensi ISC. Dipakai sebagai salinan lokal/referensi; aplikasi memuatnya dari CDN jsDelivr (lucide-static@1.70.0).

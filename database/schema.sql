@@ -31,7 +31,7 @@ CREATE TABLE products (
     stock INT NOT NULL DEFAULT 0,
     min_stock_threshold INT NOT NULL DEFAULT 5,
     supplier_id VARCHAR(36) REFERENCES suppliers(id) ON DELETE SET NULL,
-    icon_emoji VARCHAR(20) DEFAULT '📦',
+    icon_emoji VARCHAR(20) DEFAULT 'auto',
     is_active BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP

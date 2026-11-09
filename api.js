@@ -122,10 +122,10 @@ const API = (() => {
   // Cek koneksi saat pertama kali dimuat
   checkConnectivity().then((online) => {
     if (online) {
-      console.log('%c[API] ✅ Backend terhubung — http://localhost:3001', 'color: #22c55e; font-weight: bold');
+      console.log('%c[API] OK - Backend terhubung — http://localhost:3001', 'color: #22c55e; font-weight: bold');
       _onlineCallbacks.forEach(cb => cb());
     } else {
-      console.warn('%c[API] ⚠️  Backend tidak aktif — jalankan: pnpm server', 'color: #f59e0b; font-weight: bold');
+      console.warn('%c[API] PERINGATAN - Backend tidak aktif — jalankan: pnpm server', 'color: #f59e0b; font-weight: bold');
     }
   });
 

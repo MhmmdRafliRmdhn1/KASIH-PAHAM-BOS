@@ -55,7 +55,7 @@ db.exec(`
     stock INTEGER NOT NULL DEFAULT 0,
     min_stock_threshold INTEGER NOT NULL DEFAULT 5,
     supplier_id TEXT REFERENCES suppliers(id) ON DELETE SET NULL,
-    icon_emoji TEXT DEFAULT '📦',
+    icon_emoji TEXT DEFAULT 'auto',
     is_active INTEGER DEFAULT 1,
     created_at TEXT DEFAULT (datetime('now','localtime')),
     updated_at TEXT DEFAULT (datetime('now','localtime'))
@@ -114,7 +114,7 @@ db.exec(`
   CREATE INDEX IF NOT EXISTS idx_customers_phone ON customers(phone_whatsapp);
 `);
 
-console.log(`✅ Database siap: ${DB_PATH}`);
+console.log(`[OK] Database siap: ${DB_PATH}`);
 
 // ─── Helper ───────────────────────────────────────────────────────────────────
 function uuid() {
@@ -279,7 +279,7 @@ app.post('/api/products', asyncHandler((req, res) => {
   db.prepare(`
     INSERT INTO products (id, sku, name, category_id, cost_price, sell_price, stock, min_stock_threshold, supplier_id, icon_emoji)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `).run(id, sku, name, category_id || null, cost_price || 0, sell_price || 0, stock || 0, min_stock_threshold || 5, supplier_id || null, icon_emoji || '📦');
+  `).run(id, sku, name, category_id || null, cost_price || 0, sell_price || 0, stock || 0, min_stock_threshold || 5, supplier_id || null, icon_emoji || 'auto');
 
   // Catat mutasi stok awal jika ada
   if (stock && stock > 0) {
@@ -655,10 +655,10 @@ app.get('/{*path}', (req, res) => {
 
 // ─── Start Server ─────────────────────────────────────────────────────────────
 app.listen(PORT, () => {
-  console.log(`\n🚀 TransformaUMKM API Server berjalan di:`);
-  console.log(`   ➜  http://localhost:${PORT}`);
-  console.log(`   ➜  Health: http://localhost:${PORT}/api/health`);
-  console.log(`   ➜  DB: ${DB_PATH}\n`);
+  console.log(`\nTransformaUMKM API Server berjalan di:`);
+  console.log(`   >  http://localhost:${PORT}`);
+  console.log(`   >  Health: http://localhost:${PORT}/api/health`);
+  console.log(`   >  DB: ${DB_PATH}\n`);
 });
 
 module.exports = app;

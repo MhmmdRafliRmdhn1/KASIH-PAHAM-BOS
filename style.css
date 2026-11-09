@@ -5585,23 +5585,16 @@ body.sb-collapsed .nav-link .nav-badge { transition: transform 0.3s cubic-bezier
 }
 
 /* ==========================================================================
-   40. LIQUID GLASS 2.0 — modal "Tambah Produk Baru" (#productModal)
-   Mint Teal + Soft Ice Blue. Hanya visual;/* 40.1 Overlay: wash mint tipis + blur lembut lewat pseudo-element.
+   40. LIQUID GLASS 2.0 — modal "Tambah Produk Baru" (#productModal) & #customerModal
+   Mint Teal + Soft Ice Blue. Hanya visual; struktur & fungsi modal tidak diubah.
+   Memakai #productModal / #customerModal agar menang atas aturan .modal-box / .btn / .form-input
+   di layer sebelumnya tanpa !important.
+   ========================================================================== */
+
+/* 40.1 Overlay: wash mint tipis + blur lembut lewat pseudo-element.
    (backdrop-filter dipindah dari overlay ke ::before supaya overlay tidak menjadi
    "backdrop root" yang membuat blur modal hanya menangkap warna latarnya sendiri.) */
-struktur & fungsi modal tidak diubah.
-   Memakai #productModal agar menang atas aturan .modal-box / .btn / .form-input
-   di layer sebelumnya tanpa !important.
-   ========================================================================== */
-
-
 #productModal.modal-overlay,
-struktur & fungsi modal tidak diubah.
-   Memakai #customerModal agar menang atas aturan .modal-box / .btn / .form-input
-   di layer sebelumnya tanpa !important.
-   ========================================================================== */
-
-
 #customerModal.modal-overlay {
   background: rgba(13, 148, 136, 0.18);
   -webkit-backdrop-filter: none; backdrop-filter: none;
@@ -5726,7 +5719,7 @@ struktur & fungsi modal tidak diubah.
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(236, 253, 245, 0.75));
   transform: translateY(-1px);
   box-shadow: inset 0 1px 0 #fff, 0 0 0 3px rgba(45, 212, 191, 0.16), 0 10px 20px -10px rgba(13, 148, 136, 0.45);
-}/* 40.5 Badge "✨ Buat Deskripsi AI" — oranye berkilau */
+}/* 40.5 Badge "Buat Deskripsi AI" — oranye berkilau */
 #productModal .btn-smart {
   position: relative; isolation: isolate; overflow: hidden;
   border-radius: 999px; padding: 0.3rem 0.85rem;
@@ -6994,3 +6987,475 @@ body .auth-card {
 @media (max-width: 768px) { .back-to-top { right: 14px; bottom: 16px; width: 42px; height: 42px; } }
 body.sb-open .back-to-top { opacity: 0; visibility: hidden; }   /* sembunyi saat drawer sidebar terbuka */
 @media (prefers-reduced-motion: reduce) { .back-to-top { transition: none; } }
+
+/* ============================================================
+   Product Icon System — Lucide Icons (CDN) | thick line art, stroke-based, BERWARNA per kategori
+   viewBox 24 | stroke 2.5 | warna garis (--ic-ink) + latar badge (--ic-bg) mengikuti data-cat
+   coffee = cokelat · drink = emas · food = oranye/merah · staple = hijau · craft = biru · neutral = abu
+   Markup: <span class="pi-badge" data-cat="coffee"><svg viewBox="0 0 24 24" data-pi="coffee">…</svg></span>
+   Isi <svg> diisi script.js dari CDN (lucide-static); gaya garis & warna ada di sini.
+   ============================================================ */
+.pi-badge{--ic-ink:#475569;--ic-bg:#eceff4;--ic-ring:rgba(71,85,105,.16);display:inline-grid;place-items:center;flex:none;border-radius:50%;background:var(--ic-bg);box-shadow:inset 0 0 0 1px var(--ic-ring);color:var(--ic-ink);line-height:0}
+.pi-badge[data-cat="coffee"]{--ic-ink:#6b3f1d;--ic-bg:#f4e7da;--ic-ring:rgba(107,63,29,.20)}
+.pi-badge[data-cat="drink"]{--ic-ink:#a15c07;--ic-bg:#fdf0c9;--ic-ring:rgba(161,92,7,.20)}
+.pi-badge[data-cat="food"]{--ic-ink:#d1410c;--ic-bg:#ffe5da;--ic-ring:rgba(209,65,12,.20)}
+.pi-badge[data-cat="staple"]{--ic-ink:#2b7a3d;--ic-bg:#e1f3e1;--ic-ring:rgba(43,122,61,.20)}
+.pi-badge[data-cat="craft"]{--ic-ink:#1d56d8;--ic-bg:#e0ebfd;--ic-ring:rgba(29,86,216,.20)}
+.pi-badge[data-cat="neutral"]{--ic-ink:#475569;--ic-bg:#eceff4;--ic-ring:rgba(71,85,105,.16)}
+.pi-badge svg{width:56%;height:56%;display:block;overflow:visible;fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.pi-badge svg:empty{opacity:0}                      /* menunggu ikon dari CDN */
+.pi-badge svg:not(:empty){opacity:1;transition:opacity .18s ease}
+.pi-badge.prod-icon-large{width:44px;height:44px;margin-bottom:.5rem;font-size:0}
+.pi-badge.pi-sm{width:34px;height:34px}
+.pi-badge.pub-prod-icon{display:grid;width:64px;height:64px;margin:0 auto .75rem;font-size:0}
+/* ==========================================================================
+   FIX: modal dengan <form> tidak bisa di-scroll + picker ikon scroll-down
+   Penyebab: <form> berada di antara .modal-box (flex, overflow hidden) dan
+   .modal-body (overflow-y: auto). Form bukan flex item yang bisa menyusut,
+   sehingga tingginya melebihi layar lalu terpotong, dan .modal-body tidak
+   pernah dibatasi tingginya -> tidak ada scrollbar.
+   ========================================================================== */
+.modal-box { max-height: 90vh; max-height: 90dvh; }
+.modal-box > form {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;          /* kunci: izinkan form menyusut mengikuti .modal-box */
+  overflow: hidden;
+}
+.modal-box > form > .modal-body,
+.modal-box > .modal-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+.modal-box > form > .modal-footer { flex: none; }
+
+@media (max-width: 768px) {
+  /* di mobile, scroll ditangani body modal saja (bukan box) agar header/footer tetap terlihat */
+  .modal-overlay .modal-box { overflow: hidden !important; }
+  .modal-overlay .modal-box > form > .modal-body,
+  .modal-overlay .modal-box > .modal-body { overflow-y: auto; }
+}
+
+/* ==========================================================================
+   Kode SKU otomatis — petunjuk di bawah kolom SKU & gaya kolom saat terisi otomatis
+   ========================================================================== */
+#prodSku { font-family: var(--font-mono, ui-monospace, monospace); letter-spacing: .02em; text-transform: uppercase; }
+#prodSku::placeholder { text-transform: none; letter-spacing: 0; font-family: var(--font-sans, Inter, sans-serif); }
+.sku-hint { display: block; margin-top: .4rem; min-height: 1em; font-size: .74rem; color: var(--text-subtle, #64748b); }
+.sku-hint.is-auto { color: var(--accent-hover, #0f766e); }
+.sku-hint.is-auto::before { content: ""; display: inline-block; width: .45em; height: .45em; margin-right: .45em; border-radius: 50%; background: currentColor; vertical-align: .08em; }
+
+/* ==========================================================================
+   UI Icon System — Lucide (CDN) | pengganti SELURUH emoji di antarmuka
+   Markup : <i data-ic="sparkles"></i>  ·  <i data-ic="zap" data-badge></i>  (diisi SVG otomatis oleh icons.js)
+   Gaya   : garis tebal 2.5 + warna ikon & latar badge PASTEL per fungsi (data-tone)
+            rose · peach · amber · lime · mint · teal · sky · indigo · lavender · pink · slate
+   Fallback: ikon tak dikenal / CDN gagal → ikon paket (package) bawaan.
+   ========================================================================== */
+.ui-ic {
+  --ic-ink: #475569; --ic-bg: #eceff4; --ic-ring: rgba(71, 85, 105, .18);
+  --ic-size: 1.1em; --ic-stroke: 2.5;
+  display: inline-flex; align-items: center; justify-content: center; flex: none;
+  width: var(--ic-size); height: var(--ic-size);
+  color: var(--ic-ink); line-height: 1; vertical-align: -0.2em; margin-right: .15em;
+}
+.ui-ic > svg {
+  width: 100%; height: 100%; display: block; overflow: visible;
+  fill: none; stroke: currentColor; stroke-width: var(--ic-stroke); stroke-linecap: round; stroke-linejoin: round;
+}
+.ui-ic > svg:empty { opacity: 0; }                       /* menunggu ikon dari CDN (ukuran kotak sudah tetap) */
+.ui-ic > svg:not(:empty) { opacity: 1; transition: opacity .18s ease; }
+
+.ui-ic[data-tone="rose"]     { --ic-ink: #be3455; --ic-bg: #ffe3ea; --ic-ring: rgba(190, 52, 85, .20); }
+.ui-ic[data-tone="peach"]    { --ic-ink: #c2570c; --ic-bg: #ffe8d6; --ic-ring: rgba(194, 87, 12, .20); }
+.ui-ic[data-tone="amber"]    { --ic-ink: #a16207; --ic-bg: #fff1c2; --ic-ring: rgba(161, 98, 7, .22); }
+.ui-ic[data-tone="lime"]     { --ic-ink: #4d7c0f; --ic-bg: #e6f5c8; --ic-ring: rgba(77, 124, 15, .20); }
+.ui-ic[data-tone="mint"]     { --ic-ink: #0f7a55; --ic-bg: #d9f5e8; --ic-ring: rgba(15, 122, 85, .20); }
+.ui-ic[data-tone="teal"]     { --ic-ink: #0f766e; --ic-bg: #d5f3ef; --ic-ring: rgba(15, 118, 110, .20); }
+.ui-ic[data-tone="sky"]      { --ic-ink: #0369a1; --ic-bg: #dbeefd; --ic-ring: rgba(3, 105, 161, .20); }
+.ui-ic[data-tone="indigo"]   { --ic-ink: #4338ca; --ic-bg: #e4e5ff; --ic-ring: rgba(67, 56, 202, .20); }
+.ui-ic[data-tone="lavender"] { --ic-ink: #7e3fc4; --ic-bg: #efe4fd; --ic-ring: rgba(126, 63, 196, .20); }
+.ui-ic[data-tone="pink"]     { --ic-ink: #be185d; --ic-bg: #fde2ef; --ic-ring: rgba(190, 24, 93, .20); }
+.ui-ic[data-tone="slate"]    { --ic-ink: #475569; --ic-bg: #eceff4; --ic-ring: rgba(71, 85, 105, .18); }
+
+.ui-ic--sm { --ic-size: .95em; }
+.ui-ic--lg { --ic-size: 1.4em; }
+
+/* Badge: ikon di atas kotak pastel membulat */
+.ui-ic--badge {
+  box-sizing: border-box; width: calc(var(--ic-size) * 1.85); height: calc(var(--ic-size) * 1.85);
+  border-radius: 32%; background: var(--ic-bg); box-shadow: inset 0 0 0 1.5px var(--ic-ring);
+  margin-right: .4em; vertical-align: -0.45em;
+}
+.ui-ic--badge > svg { width: var(--ic-size); height: var(--ic-size); }
+
+/* Ikon fallback (paket) — sedikit lebih tenang agar jelas bahwa ini bawaan */
+.ui-ic[data-ic-fallback] { opacity: .85; }
+
+/* Titik status (pengganti bullet ●) */
+.ui-ic.ic-dot { --ic-size: .62em; margin-right: .35em; vertical-align: .04em; }
+.ui-ic.ic-dot > svg { fill: currentColor; stroke: none; }
+.store-badge-live .ui-ic.ic-dot, .ai-status-online .ui-ic.ic-dot { color: currentColor; }
+
+/* ---- Konteks ---- */
+/* tombol / chip / badge status: warna ikut teks, bukan tone, agar kontras tetap baik */
+.btn .ui-ic:not(.ui-ic--badge), button .ui-ic:not(.ui-ic--badge):not([data-tone="pastel"]),
+.runout-badge .ui-ic, .status-badge .ui-ic, .store-badge-live .ui-ic, .toast-close .ui-ic { color: currentColor; }
+.ai-quick-prompts .ui-ic:not(.ui-ic--badge) { color: var(--ic-ink); }
+.ui-ic + .ui-ic { margin-left: .2em; }
+
+/* heading kartu */
+h2 > .ui-ic--badge, h3 > .ui-ic--badge, h4 > .ui-ic--badge { --ic-size: 1.05em; margin-right: .5em; vertical-align: -0.5em; }
+.ai-hero-card h2 > .ui-ic--badge { --ic-size: 1.1em; }
+
+/* kontainer ikon khusus */
+.ai-btn-icon { display: inline-flex; align-items: center; justify-content: center; }
+.ai-btn-icon .ui-ic--badge { --ic-size: 1.15rem; margin: 0; vertical-align: middle; }
+.placeholder-icon { display: inline-flex; opacity: 1 !important; }
+.placeholder-icon .ui-ic--badge { --ic-size: 1.7rem; margin: 0; vertical-align: middle; }
+.method-icon { display: inline-flex; }
+.method-icon .ui-ic--badge { --ic-size: 1.15rem; margin: 0; vertical-align: middle; }
+.ai-chat-avatar .ui-ic { --ic-size: 1.35rem; --ic-ink: #fff; margin: 0; vertical-align: middle; }
+.notif-ico .ui-ic { --ic-size: 1rem; margin: 0; vertical-align: middle; }
+.notif-ico.warn .ui-ic { --ic-ink: #a16207; }
+.notif-ico.ok .ui-ic { --ic-ink: #0f7a55; }
+.notif-ico.info .ui-ic { --ic-ink: #0369a1; }
+.caret-down .ui-ic { --ic-size: .95em; margin: 0; vertical-align: middle; }
+.platform-chip .chip-inner .ui-ic { --ic-size: 1.1em; vertical-align: -0.22em; }
+.platform-chip input:checked + .chip-inner .ui-ic { color: currentColor; }
+.lp-back .ui-ic, .auth-foot .ui-ic { --ic-size: .95em; margin: 0 0 0 .15em; vertical-align: -0.15em; }
+.smart-alert-card .ui-ic--badge, #smartInsightText .ui-ic--badge { --ic-size: 1em; margin-right: .5em; vertical-align: -0.45em; }
+#smartInsightAction .ui-ic { color: currentColor; margin: 0 0 0 .2em; }
+
+/* toast (notifikasi) */
+.toast > .ui-ic--badge { --ic-size: 1.1rem; margin: 0; flex: none; vertical-align: middle; }
+.toast.toast-success { border-left-color: #34d399; }
+.toast.toast-error, .toast.toast-danger { border-left-color: #fb7185; }
+.toast.toast-warning, .toast.toast-warn { border-left-color: #fbbf24; }
+
+/* Kartu hasil copywriting: spasi mengikuti elemen HTML (bukan indentasi template) */
+.ai-copy-result-card { white-space: normal; }
+
+/* ==========================================================================
+   ASISTEN AI — Tab 2 (Deskripsi Produk) & Tab 3 (Caption Promosi)
+   Grid 2 kolom simetris: kiri = Form Parameter, kanan = Box Hasil / Empty State
+   ========================================================================== */
+
+/* --- Grid utama: 2 kolom sama lebar, kartu sejajar tinggi ----------------- */
+@media (min-width: 941px) {
+  .ai-generator-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 24px !important;
+    align-items: stretch;
+  }
+}
+
+/* --- Kartu kiri & kanan: kolom fleksibel, tinggi seragam ------------------ */
+.ai-generator-grid > .card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 24px !important;
+}
+.ai-generator-grid > .card > .card-header { margin-bottom: 20px; }
+.ai-generator-grid > .card > .card-header h3 { line-height: 1.3; }
+.ai-generator-grid > .card > .card-header .card-sub { margin-top: 4px; line-height: 1.5; }
+
+/* --- Kiri: form dengan jarak antar-input yang konsisten ------------------- */
+.ai-generator-grid > .card > form {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  gap: 16px;
+}
+.ai-generator-grid > .card > form .form-group { margin-bottom: 0; gap: 6px; }
+.ai-generator-grid > .card > form .form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 0;
+}
+.ai-generator-grid > .card > form .form-grid > .form-group { min-width: 0; }
+.ai-generator-grid > .card > form .form-input { width: 100%; box-sizing: border-box; }
+.ai-generator-grid > .card > form textarea.form-input { min-height: 96px; resize: vertical; }
+.ai-generator-grid .ai-platform-chips { gap: 10px; margin-top: 0; }
+/* tombol submit selalu menempel di dasar kartu agar kedua kartu seimbang */
+.ai-generator-grid > .card > form > .btn { margin-top: auto !important; }
+.ai-generator-grid > .card > form > .btn:not(:first-child) { align-self: stretch; }
+
+/* --- Kanan: area hasil memenuhi sisa tinggi kartu ------------------------- */
+.ai-generator-grid > .ai-result-card > .card-header { align-items: flex-start; gap: 12px; }
+.ai-generator-grid > .ai-result-card .ai-preview-box {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  box-sizing: border-box;
+  min-height: 380px;
+  padding: 20px;
+  white-space: normal;
+}
+
+/* --- Empty state: di tengah, dashed border, padding pas ------------------- */
+body .app-main .ai-generator-grid .ai-preview-box:has(> .ai-empty-placeholder) {
+  justify-content: center;
+  align-items: center;
+  padding: 32px 24px;
+  background: rgba(240, 253, 250, 0.55) !important;
+  border: 2px dashed rgba(13, 148, 136, 0.45) !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+          backdrop-filter: none !important;
+}
+.ai-generator-grid .ai-empty-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  height: auto;
+  margin: auto;
+  padding: 0;
+  text-align: center;
+}
+.ai-generator-grid .ai-empty-placeholder .placeholder-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  margin: 0 0 6px;
+  border-radius: 50%;
+  background: rgba(13, 148, 136, 0.12);
+  opacity: 1;
+}
+.ai-generator-grid .ai-empty-placeholder strong { margin: 0; font-size: 0.98rem; line-height: 1.35; }
+.ai-generator-grid .ai-empty-placeholder p {
+  margin: 0;
+  max-width: 320px;
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+
+/* --- Saat hasil sudah tampil: konten mengisi lebar, rata atas ------------- */
+.ai-generator-grid .ai-preview-box > .ai-copy-result-card,
+.ai-generator-grid .ai-preview-box > div:not(.ai-empty-placeholder) {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* --- Tombol aksi di bawah hasil ------------------------------------------- */
+.ai-generator-grid .ai-actions-row { gap: 12px; margin-top: 16px; }
+.ai-generator-grid .ai-actions-row .btn { flex: 1 1 180px; justify-content: center; }
+
+/* --- Mobile / tablet sempit: tetap satu kolom, tinggi menyesuaikan -------- */
+@media (max-width: 940px) {
+  .ai-generator-grid > .card { padding: 18px !important; }
+  .ai-generator-grid > .ai-result-card .ai-preview-box { min-height: 380px; padding: 16px; }
+  .ai-generator-grid > .card > form .form-grid { grid-template-columns: 1fr; gap: 16px; }
+}
+
+/* --- Penyempurnaan: header kartu hasil & tinggi input seragam -------------- */
+.ai-generator-grid > .ai-result-card > .card-header.flex-between {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+.ai-generator-grid > .ai-result-card > .card-header.flex-between > div { min-width: 0; flex: 1 1 auto; }
+.ai-generator-grid > .ai-result-card > .card-header .badge-ai-model { flex: 0 0 auto; white-space: nowrap; }
+.ai-generator-grid > .card > form input.form-input,
+.ai-generator-grid > .card > form select.form-input { min-height: 40px; box-sizing: border-box; }
+
+
+/* ==========================================================================
+   PENYERAGAMAN UI — tab navigasi, grid kartu produk, kolom SKU otomatis
+   ========================================================================== */
+
+/* --- 1. Tab navigasi Asisten AI: 4 tombol berukuran sama ------------------- */
+@media (min-width: 769px) {
+  .ai-subnav {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    overflow: visible;
+    padding: 0;
+    margin-bottom: 20px;
+  }
+  .ai-subnav .ai-tab-btn {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+    width: 100%;
+    min-width: 0;
+    height: 56px;
+    padding: 0 16px;
+    box-sizing: border-box;
+    font-size: 0.84rem;
+    line-height: 1.25;
+    text-align: left;
+    white-space: normal;
+  }
+  .ai-subnav .ai-tab-btn .ai-btn-icon { flex: 0 0 auto; }
+  .ai-subnav .ai-tab-btn > span:last-child { min-width: 0; }
+}
+@media (max-width: 768px) {
+  .ai-subnav .ai-tab-btn {
+    flex: 0 0 216px;
+    width: 216px;
+    height: 52px;
+    padding: 0 14px;
+    box-sizing: border-box;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    line-height: 1.25;
+    text-align: left;
+    white-space: normal;
+  }
+}
+
+/* --- 2. Tab kategori (Kasir & Katalog): tinggi seragam ---------------------- */
+.store-tab,
+#posCategoryChips .chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 38px;
+  padding: 0 16px;
+  box-sizing: border-box;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* --- 3. Grid kartu produk: responsif, semua kartu sama tinggi --------------- */
+@media (min-width: 769px) {
+  #posProductsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    grid-auto-rows: 1fr;
+    align-items: stretch;
+    gap: 16px;
+  }
+  #posProductsGrid > .product-pos-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 10px;
+    height: 100%;
+    min-height: 176px;
+    min-width: 0;
+    box-sizing: border-box;
+    padding: 16px;
+  }
+  #posProductsGrid > .product-pos-card > div:not(.prod-price) { flex: 1 1 auto; min-width: 0; }
+  #posProductsGrid .pi-badge.prod-icon-large { margin-bottom: 0; }
+  #posProductsGrid .prod-price { margin-top: auto; }
+
+  #pubProductsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    grid-auto-rows: 1fr;
+    align-items: stretch;
+    gap: 20px;
+  }
+  #pubProductsGrid > .public-product-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+}
+.product-pos-card .prod-name,
+.public-product-card .pub-prod-name {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  min-height: 2.6em;
+  line-height: 1.3;
+}
+.public-product-card .pub-prod-bottom { margin-top: auto; gap: 8px; }
+
+/* --- 4. Kolom SKU otomatis (baca-saja) ------------------------------------- */
+.form-input.sku-auto-field[readonly] {
+  background: rgba(13, 148, 136, 0.06);
+  border-style: dashed;
+  color: var(--text-muted, #475569);
+  font-family: var(--font-mono, ui-monospace, monospace);
+  letter-spacing: 0.02em;
+  cursor: not-allowed;
+}
+.form-input.sku-auto-field[readonly]:focus { box-shadow: none; border-color: var(--border-color); }
+
+/* --- 5. Field modal: tinggi input & select seragam -------------------------- */
+.modal-box .form-grid input.form-input,
+.modal-box .form-grid select.form-input { height: 42px; box-sizing: border-box; }
+.modal-box .form-grid { align-items: start; }
+
+/* ==========================================================================
+   Smart Insight banner — tata letak: tombol di kanan + alignment vertikal rapi
+   (ditaruh paling akhir agar menang atas aturan-aturan sebelumnya)
+   ========================================================================== */
+.smart-alert-card {
+  display: flex;
+  align-items: center;                 /* ikon utama, blok teks & tombol: sejajar tengah */
+  justify-content: space-between;      /* konten kiri, tombol mentok kanan */
+  gap: 1rem;
+}
+.smart-alert-card .smart-alert-content {
+  flex: 1 1 auto;                      /* isi mengambil sisa ruang -> tombol terdorong ke kanan */
+  min-width: 0;
+}
+.smart-alert-card .btn-smart {
+  margin-left: auto;                   /* jaminan tambahan: tombol selalu di sisi paling kanan */
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .35em;
+  white-space: nowrap;
+}
+
+/* Baris keterangan: ikon (!) + label tebal + teks dalam satu baris, rata tengah vertikal */
+.smart-alert-content p#smartInsightText {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  margin-top: 4px;
+  line-height: 1.45;
+}
+.smart-alert-content p#smartInsightText > .ui-ic--badge {
+  flex: 0 0 auto;
+  margin: 0;                           /* hapus margin-right & vertical-align lama */
+  vertical-align: middle;
+}
+.smart-alert-content p#smartInsightText > .smart-insight-msg {
+  flex: 1 1 auto;
+  min-width: 0;
+  line-height: 1.45;
+}
+.smart-alert-content p#smartInsightText > .smart-insight-msg strong { font-weight: 700; }
+.smart-alert-content h4 { line-height: 1.35; margin: 0; }
+
+@media (max-width: 768px) {
+  .smart-alert-card { align-items: flex-start; justify-content: flex-start; }
+  .smart-alert-card .btn-smart { margin-left: 0; flex: 1 1 100%; width: 100%; }
+  /* di layar sempit teks bisa multi-baris: ikon sejajar dengan baris pertama */
+  .smart-alert-content p#smartInsightText { align-items: flex-start; }
+}
