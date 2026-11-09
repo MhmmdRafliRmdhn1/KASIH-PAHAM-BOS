@@ -1,10 +1,5 @@
-# Abaikan backend script agar Vercel mendeteksi sebagai Static Site murni
-server.js
-api.js
-database/
-*.db
-*.db-shm
-*.db-wal
-temp_docx/
+# Abaikan folder backend agar Vercel mendeteksi sebagai Pure Static Site
+backend/
 Proposal_*.docx
 Proposal_*.doc
+temp_docx/
