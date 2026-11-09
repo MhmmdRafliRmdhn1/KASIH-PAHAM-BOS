@@ -1,0 +1,10 @@
+# Abaikan backend script agar Vercel mendeteksi sebagai Static Site murni
+server.js
+api.js
+database/
+*.db
+*.db-shm
+*.db-wal
+temp_docx/
+Proposal_*.docx
+Proposal_*.doc
