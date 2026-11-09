@@ -276,7 +276,7 @@
 
             <p class="auth-switch">Belum punya akun?<a href="register.html">Daftar gratis</a></p>
           </div>
-          <p class="auth-foot">&copy; TransformaUMKM<span class="lp-back"> · <a href="#tentang" data-lp-scroll>Pelajari selengkapnya ↑</a></span></p>
+          <p class="auth-foot">&copy; TransformaUMKM<span class="lp-back"> · <a href="#tentang" data-lp-scroll>Pelajari selengkapnya <i data-ic="arrow-up"></i></a></span></p>
         </div>
       </div>
     </section>
@@ -292,7 +292,8 @@
       const container = document.getElementById('toastContainer');
       const toast = document.createElement('div');
       toast.className = 'toast';
-      toast.innerHTML = `<span>⚡</span><span>${msg}</span>`;
+      const ok = /berhasil|terisi/i.test(msg);
+      toast.innerHTML = (window.UIIcon ? UIIcon.html(ok ? 'circle-check' : 'triangle-alert', { badge: true, size: 'sm', tone: ok ? 'mint' : 'amber' }) : '') + `<span>${msg}</span>`;
       container.appendChild(toast);
       setTimeout(() => {
         toast.style.opacity = '0';
@@ -342,6 +343,7 @@
       setTimeout(() => { window.location.href = 'index.html'; }, 500);
     }
   </script>
+  <script src="icons.js"></script>
   <script src="auth-security.js"></script>
   <script src="welcome.js"></script>
   <script src="dev-inspector.js"></script>

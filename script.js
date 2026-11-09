@@ -9,6 +9,292 @@ const STORAGE_KEY_TRX = 'transforma_umkm_transactions';
 const STORAGE_KEY_CUSTOMERS = 'transforma_umkm_customers';
 const STORAGE_KEY_AUTH = 'transforma_umkm_session';
 
+// ========================================================
+// Product Icon System — Lucide Icons via CDN, 100% OTOMATIS (tanpa pilihan manual di form)
+// Ikon diambil dinamis per nama dari CDN jsDelivr (paket lucide-static), lalu di-cache (memori + localStorage).
+// Alur auto-mapping (tiap kali badge produk dirender):
+//   1. Kata kunci nama produk (Indonesia + Inggris) → ikon.
+//   2. Indeks ikon Lucide dari API jsDelivr: kata di nama produk yang sama dengan nama ikon Lucide
+//      (mis. "Pizza" → pizza, "Popcorn" → popcorn) — otomatis mengikuti seluruh katalog Lucide.
+//   3. Tidak ada yang cocok / ikon gagal dimuat → ikon paket Lucide ('package'), tertanam offline.
+// Warna & latar badge pastel mengikuti KATEGORI produk (Kopi & Minuman, Makanan & Snack, Bahan Pokok, Kerajinan & Fashion).
+// Field p.icon tidak lagi dipakai untuk memilih ikon (disimpan 'auto' demi kompatibilitas data lama).
+// Tambah ikon/kata kunci sendiri: registerProductIcon(...) / registerProductIconRule(...)
+// ========================================================
+const PRODUCT_ICON_FALLBACK = 'box';
+const PRODUCT_ICON_LUCIDE_VERSION = '1.70.0';
+const PRODUCT_ICON_CDN = 'https://cdn.jsdelivr.net/npm/lucide-static@' + PRODUCT_ICON_LUCIDE_VERSION + '/icons/';
+const PRODUCT_ICON_STROKE = 2.5; // ketebalan garis (lihat juga .pi-badge svg di style.css)
+// ID ikon → nama ikon Lucide (https://lucide.dev/icons)
+const PRODUCT_ICON_SYMBOLS = {"cup": "coffee", "bean": "bean", "soda": "cup-soda", "tea": "leaf", "honey": "droplet", "oil": "droplets", "chips": "cookie", "steak": "beef", "chicken": "drumstick", "fish": "fish", "egg": "egg", "milk": "milk", "bread": "croissant", "cake": "cake-slice", "bottle": "flame", "rice": "wheat", "sack": "cooking-pot", "basket": "shopping-basket", "veg": "carrot", "fruit": "apple", "batik": "shirt", "bag": "shopping-bag", "gem": "gem", "box": "package", "donut": "donut", "icecream": "ice-cream-cone", "burger": "hamburger", "pizza": "pizza", "soup": "soup", "salad": "salad", "popcorn": "popcorn", "candy": "candy", "sandwich": "sandwich", "grape": "grape", "banana": "banana", "watch": "watch", "glasses": "glasses", "gift": "gift", "book": "book-open", "plant": "sprout", "flower": "flower", "soap": "bubbles"};
+const PRODUCT_ICON_META = {"cup": {"name": "Kopi / Minuman", "cat": "coffee"}, "bean": {"name": "Biji Kopi", "cat": "coffee"}, "soda": {"name": "Minuman Dingin / Jus", "cat": "drink"}, "tea": {"name": "Teh / Herbal", "cat": "staple"}, "honey": {"name": "Madu", "cat": "drink"}, "oil": {"name": "Minyak", "cat": "drink"}, "chips": {"name": "Keripik / Camilan", "cat": "food"}, "steak": {"name": "Daging / Rendang", "cat": "food"}, "chicken": {"name": "Ayam / Bebek", "cat": "food"}, "fish": {"name": "Ikan / Seafood", "cat": "food"}, "egg": {"name": "Telur", "cat": "food"}, "milk": {"name": "Susu / Olahan Susu", "cat": "food"}, "bread": {"name": "Roti", "cat": "food"}, "cake": {"name": "Kue / Jajanan", "cat": "food"}, "bottle": {"name": "Saus / Sambal", "cat": "food"}, "rice": {"name": "Beras / Padi", "cat": "staple"}, "sack": {"name": "Bumbu / Tepung / Gula", "cat": "staple"}, "basket": {"name": "Sembako / Bahan Pokok", "cat": "staple"}, "veg": {"name": "Sayur", "cat": "staple"}, "fruit": {"name": "Buah", "cat": "staple"}, "batik": {"name": "Batik / Kain / Pakaian", "cat": "craft"}, "bag": {"name": "Tas / Dompet", "cat": "craft"}, "gem": {"name": "Aksesoris / Perhiasan", "cat": "craft"}, "box": {"name": "Paket / Lainnya", "cat": "neutral"}, "donut": {"name": "Donat", "cat": "food"}, "icecream": {"name": "Es Krim", "cat": "food"}, "burger": {"name": "Burger", "cat": "food"}, "pizza": {"name": "Pizza", "cat": "food"}, "soup": {"name": "Sup / Soto / Bakso", "cat": "food"}, "salad": {"name": "Salad", "cat": "staple"}, "popcorn": {"name": "Popcorn", "cat": "food"}, "candy": {"name": "Permen", "cat": "food"}, "sandwich": {"name": "Sandwich", "cat": "food"}, "grape": {"name": "Anggur", "cat": "staple"}, "banana": {"name": "Pisang", "cat": "staple"}, "watch": {"name": "Jam Tangan", "cat": "craft"}, "glasses": {"name": "Kacamata", "cat": "craft"}, "gift": {"name": "Hampers / Kado", "cat": "craft"}, "book": {"name": "Buku / Alat Tulis", "cat": "craft"}, "plant": {"name": "Tanaman / Bibit", "cat": "staple"}, "flower": {"name": "Bunga", "cat": "craft"}, "soap": {"name": "Sabun / Kebersihan", "cat": "neutral"}};
+// Salinan tertanam (offline) untuk ikon fallback — Lucide "package", lisensi ISC.
+const PRODUCT_ICON_BUILTIN = {"package": "<path d=\"M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z\" /> <path d=\"M12 22V12\" /> <polyline points=\"3.29 7 12 12 20.71 7\" /> <path d=\"m7.5 4.27 9 5.15\" />"};
+
+// Aturan kata kunci (huruf kecil, tanpa aksen). Urutan = prioritas saat posisi kemunculan sama.
+const PRODUCT_ICON_RULES = [{"icon": "donut", "kw": ["donat", "donut", "doughnut"]}, {"icon": "icecream", "kw": ["es krim", "eskrim", "ice cream", "gelato", "popsicle"]}, {"icon": "burger", "kw": ["burger", "hamburger", "hotdog", "hot dog"]}, {"icon": "pizza", "kw": ["pizza", "piza"]}, {"icon": "soup", "kw": ["soto", "sop", "sup", "soup", "bakso kuah", "mie ayam", "ramen"]}, {"icon": "salad", "kw": ["salad", "salat"]}, {"icon": "popcorn", "kw": ["popcorn", "pop corn", "berondong"]}, {"icon": "candy", "kw": ["permen", "candy", "lolipop", "lollipop", "kembang gula"]}, {"icon": "sandwich", "kw": ["sandwich", "sandwhich", "kebab", "burrito"]}, {"icon": "grape", "kw": ["anggur", "grape"]}, {"icon": "banana", "kw": ["pisang segar", "banana"]}, {"icon": "watch", "kw": ["jam tangan", "arloji", "watch"]}, {"icon": "glasses", "kw": ["kacamata", "glasses"]}, {"icon": "gift", "kw": ["hampers", "parsel", "parcel", "kado", "gift", "bingkisan"]}, {"icon": "book", "kw": ["buku", "book", "notes", "alat tulis", "stationery"]}, {"icon": "plant", "kw": ["bibit", "benih", "tanaman", "sprout", "pupuk"]}, {"icon": "flower", "kw": ["bunga", "flower", "buket", "bouquet"]}, {"icon": "soap", "kw": ["sabun", "soap", "sampo", "shampoo", "detergen", "pembersih"]}, {"icon": "chips", "kw": ["keripik", "kripik", "kerupuk", "krupuk", "emping", "rempeyek", "camilan", "snack", "chips", "biskuit", "cookies", "pisang", "makaroni", "basreng", "wafer", "cokelat", "coklat"]}, {"icon": "bottle", "kw": ["sambal", "saus", "kecap", "cuka", "sauce", "dressing", "acar", "botol", "sambel", "terasi", "saos", "mayones", "mayonnaise", "pedas", "chili", "bumbu cair"]}, {"icon": "steak", "kw": ["rendang", "daging", "sapi", "kambing", "bakso", "sosis", "dendeng", "abon", "rawon", "gulai", "sate", "steak", "beef", "meat"]}, {"icon": "chicken", "kw": ["ayam", "bebek", "chicken", "unggas", "nugget", "kentucky"]}, {"icon": "fish", "kw": ["ikan", "udang", "cumi", "kepiting", "seafood", "teri", "tuna", "lele", "nila", "salmon", "bandeng", "dori"]}, {"icon": "egg", "kw": ["telur", "telor", "egg", "puyuh"]}, {"icon": "milk", "kw": ["susu", "milk", "keju", "mentega", "yogurt", "yoghurt", "kefir", "dairy", "cheese", "butter", "krim"]}, {"icon": "bean", "kw": ["biji kopi", "robusta", "green bean", "roasted", "coffee bean", "kakao", "cacao"]}, {"icon": "cup", "kw": ["kopi", "coffee", "espresso", "latte", "cappuccino", "arabika", "arabica", "gayo", "minuman", "beverage", "cold brew", "americano", "mocha", "kopi susu", "es kopi", "frappe"]}, {"icon": "soda", "kw": ["jus", "juice", "soda", "limun", "smoothie", "es", "boba", "cendol", "lemonade"]}, {"icon": "tea", "kw": ["teh", "tea", "matcha", "herbal", "jamu", "wedang"]}, {"icon": "honey", "kw": ["madu", "honey", "propolis", "sirup", "sirop", "syrup", "selai", "jam"]}, {"icon": "oil", "kw": ["minyak", "oil", "zaitun", "olive", "vco", "sawit"]}, {"icon": "rice", "kw": ["beras", "padi", "gabah", "ketan", "gandum", "jagung", "quinoa", "oat", "wheat", "sereal", "cereal", "rice", "nasi", "mie", "bihun", "pasta", "beras merah", "tiwul"]}, {"icon": "sack", "kw": ["tepung", "terigu", "gula", "garam", "bumbu", "rempah", "merica", "lada", "ketumbar", "kunyit", "jahe", "kacang", "kedelai", "sagu", "tapioka", "maizena", "flour", "sugar", "salt", "spice"]}, {"icon": "basket", "kw": ["bahan pokok", "sembako", "grocery", "bahan makanan"]}, {"icon": "cake", "kw": ["kue", "bolu", "brownies", "nastar", "lapis", "dodol", "wajik", "pastry", "cake", "tart", "pie", "cupcake", "pukis", "klepon"]}, {"icon": "bread", "kw": ["roti", "bakpia", "bun", "bread", "croissant", "bagel"]}, {"icon": "batik", "kw": ["batik", "tenun", "songket", "kain", "ulos", "sarung", "kebaya", "baju", "kemeja", "selendang", "mukena", "fashion", "pakaian", "tekstil", "kerajinan", "anyaman", "topi", "sepatu", "hijab", "jilbab", "kerudung", "rajut", "sulam", "kriya", "souvenir", "bordir"]}, {"icon": "bag", "kw": ["tas", "dompet", "ransel", "bag", "tote", "pouch"]}, {"icon": "gem", "kw": ["gelang", "kalung", "cincin", "anting", "aksesoris", "perhiasan", "manik", "gem", "bros"]}, {"icon": "veg", "kw": ["sayur", "sayuran", "bayam", "kangkung", "wortel", "tomat", "cabai", "cabe", "bawang", "selada", "vegetable", "fruit", "sawi", "brokoli", "kentang", "singkong", "ubi"]}, {"icon": "fruit", "kw": ["buah", "jeruk", "apel", "mangga", "melon", "semangka", "nanas", "alpukat", "durian", "salak", "fruit", "stroberi", "strawberry", "lemon", "pepaya", "jambu"]}];
+
+function normalizeProductText(s) {
+  return ' ' + String(s == null ? '' : s).toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, ' ').trim() + ' ';
+}
+
+const _piKwRegexCache = {};
+function _piKeywordRegex(kw) {
+  const key = normalizeProductText(kw).trim();
+  if (!key) return null;
+  if (!_piKwRegexCache[key]) {
+    const esc = key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    // kata pendek (<=4 huruf) harus kata utuh agar 'teh' tidak cocok dengan 'tehnik'; kata panjang boleh berawalan ('minyak' → 'minyaknya')
+    _piKwRegexCache[key] = new RegExp(' ' + esc + (key.length <= 4 ? ' ' : ''));
+  }
+  return _piKwRegexCache[key];
+}
+
+// Kembalikan ID ikon terbaik untuk satu teks; kemunculan paling awal menang, lalu kata kunci terpanjang, lalu urutan aturan.
+function _piMatchText(text) {
+  if (!text.trim()) return null;
+  let best = null;
+  PRODUCT_ICON_RULES.forEach((rule, order) => {
+    rule.kw.forEach(kw => {
+      const re = _piKeywordRegex(kw);
+      const m = re && re.exec(text);
+      if (!m) return;
+      const len = normalizeProductText(kw).trim().length;
+      if (!best || m.index < best.idx || (m.index === best.idx && (len > best.len || (len === best.len && order < best.order)))) {
+        best = { icon: rule.icon, idx: m.index, len, order };
+      }
+    });
+  });
+  return best ? best.icon : null;
+}
+
+// Warna badge pastel per KATEGORI produk (cat → variabel warna di style.css: .pi-badge[data-cat])
+const PRODUCT_CATEGORY_TONES = [
+  { re: /\b(kopi|minuman|coffee|beverage|drink)\b/, cat: 'coffee' },
+  { re: /\b(makanan|snack|camilan|food|kue)\b/, cat: 'food' },
+  { re: /\b(pokok|sembako|grocery|bahan)\b/, cat: 'staple' },
+  { re: /\b(kerajinan|fashion|craft|batik|pakaian)\b/, cat: 'craft' }
+];
+function productCategoryTone(category) {
+  const t = normalizeProductText(category);
+  const hit = PRODUCT_CATEGORY_TONES.find(x => x.re.test(t));
+  return hit ? hit.cat : null;
+}
+
+// ---- Indeks ikon Lucide (API jsDelivr) → pencocokan pintar nama produk ↔ nama ikon ----
+const _PI_IDX_KEY = 'pi_lucide_index_' + PRODUCT_ICON_LUCIDE_VERSION;
+const _PI_IDX_API = 'https://data.jsdelivr.com/v1/packages/npm/lucide-static@' + PRODUCT_ICON_LUCIDE_VERSION + '?structure=flat';
+let _piIndex = null;          // Set nama ikon Lucide (null = belum tersedia)
+let _piIndexPromise = null;
+// Kata umum & nama ikon antarmuka (UI) yang tidak boleh dianggap jenis produk.
+const _PI_TOKEN_SKIP = new Set(('paket produk premium original spesial special super mini jumbo besar kecil kemasan pcs gram ' +
+  'file home link menu mail lock key plus minus check search settings share star heart badge flag info alert save copy edit trash ' +
+  'play pause stop power target layers grid list table chart pin phone move text type code bug user users zoom mouse hash ' +
+  'cloud wifi sun moon eye tag tags bell map mic video image camera music radio server database folder window door').split(' '));
+
+function _piSetIndex(arr) {
+  if (!Array.isArray(arr) || arr.length < 50) return false;
+  _piIndex = new Set(arr);
+  return true;
+}
+function _piReadIndexCache() {
+  try { const v = localStorage.getItem(_PI_IDX_KEY); if (v) return _piSetIndex(JSON.parse(v)); } catch (e) { /* abaikan */ }
+  return false;
+}
+// Muat daftar seluruh ikon Lucide sekali (cache localStorage). Selesai → badge yang sudah tampil dihitung ulang.
+function loadLucideIndex() {
+  if (_piIndex) return Promise.resolve(true);
+  if (_piReadIndexCache()) return Promise.resolve(true);
+  if (_piIndexPromise) return _piIndexPromise;
+  if (typeof fetch !== 'function') return Promise.resolve(false);
+  _piIndexPromise = fetch(_PI_IDX_API)
+    .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(j => {
+      const names = (j.files || []).map(f => /^\/icons\/([a-z0-9-]+)\.svg$/.exec(f.name || '')).filter(Boolean).map(m => m[1]);
+      if (!_piSetIndex(names)) throw new Error('indeks kosong');
+      try { localStorage.setItem(_PI_IDX_KEY, JSON.stringify(names)); } catch (e) { /* abaikan */ }
+      return true;
+    })
+    .catch(() => false)
+    .then(ok => { _piIndexPromise = null; if (ok) refreshProductBadges(); return ok; });
+  return _piIndexPromise;
+}
+
+// Cari nama ikon Lucide dari kata-kata di nama produk: sama persis dulu, lalu awalan ("lamp" → "lamp-desk").
+function _piLucideFromIndex(text) {
+  if (!_piIndex && !_piReadIndexCache()) return null;
+  const tokens = text.trim().split(' ').filter(t => t.length >= 4 && !_PI_TOKEN_SKIP.has(t));
+  for (const t of tokens) {
+    for (const c of [t, t.replace(/s$/, '')]) if (_piIndex.has(c) && !_PI_TOKEN_SKIP.has(c)) return c;
+  }
+  for (const t of tokens) {
+    if (t.length < 5) continue;
+    let best = null;
+    _piIndex.forEach(n => { if (n.startsWith(t + '-') && (!best || n.length < best.length)) best = n; });
+    if (best) return best;
+  }
+  return null;
+}
+
+// Deteksi lokal dari nama produk (kategori hanya menentukan warna badge). Tidak cocok → null.
+function detectProductIcon(name) {
+  return _piMatchText(normalizeProductText(name));
+}
+
+// Pilihan ikon lama (data tersimpan): hanya ID ikon yang dikenal diterima, selain itu 'auto'. Ikon kini 100% otomatis.
+function normalizeProductIconChoice(raw) {
+  const key = String(raw == null ? '' : raw).trim();
+  if (PRODUCT_ICON_SYMBOLS[key]) return key;
+  return 'auto';
+}
+
+// Titik masuk utama: tentukan ikon + warna badge sepenuhnya otomatis dari {name, category}.
+// Hasil: { id (ID lokal atau null), lucide (nama ikon Lucide), cat (warna badge), label }
+function _piResolveBadge(p) {
+  const name = p && typeof p === 'object' ? p.name : p;
+  const category = p && typeof p === 'object' ? p.category : '';
+  const nText = normalizeProductText(name);
+  let id = _piMatchText(nText), lucide = null;
+  if (id) lucide = PRODUCT_ICON_SYMBOLS[id];
+  else {
+    const remote = _piLucideFromIndex(nText);
+    if (remote) lucide = remote;
+    else { id = PRODUCT_ICON_FALLBACK; lucide = PRODUCT_ICON_SYMBOLS[id]; }   // tidak ada kata kunci → ikon paket (warna ikut kategori)
+  }
+  const cat = productCategoryTone(category) || (id && PRODUCT_ICON_META[id] ? PRODUCT_ICON_META[id].cat : 'neutral');
+  const label = id && PRODUCT_ICON_META[id] ? PRODUCT_ICON_META[id].name : lucide.replace(/-/g, ' ');
+  return { id, lucide, cat, label };
+}
+
+// ID ikon lokal terbaik (selalu ada; fallback 'box'). Dipertahankan untuk kompatibilitas kode lain.
+function autoProductIcon(name, category) {
+  return detectProductIcon(name) || PRODUCT_ICON_FALLBACK;
+}
+function resolveProductIcon(p) {
+  return _piResolveBadge(p).id || PRODUCT_ICON_FALLBACK;
+}
+
+// ---- Pemuat ikon Lucide (CDN) ----
+const _piCache = {};      // nama Lucide → markup dalam <svg>
+const _piPending = {};    // nama Lucide → Promise yang sedang berjalan
+const _piFailed = {};     // nama Lucide → true bila CDN gagal
+const _PI_LS_PREFIX = 'pi_lucide_' + PRODUCT_ICON_LUCIDE_VERSION + '_';
+// Hanya izinkan elemen gambar SVG sederhana (cegah markup sembarang dari cache/CDN).
+const _PI_SAFE_RE = /^(?:\s*<(?:path|circle|rect|line|polyline|polygon|ellipse)\b[^<>]*\/?>\s*)+$/i;
+
+function _piLucideName(id) { return PRODUCT_ICON_SYMBOLS[id] || PRODUCT_ICON_SYMBOLS[PRODUCT_ICON_FALLBACK]; }
+
+function _piInnerFromSvg(text) {
+  const m = /<svg\b[^>]*>([\s\S]*?)<\/svg>/i.exec(String(text || ''));
+  return m ? m[1].replace(/\s+/g, ' ').trim() : '';
+}
+
+// Markup ikon bila sudah tersedia secara sinkron (memori → localStorage → bawaan offline), selain itu ''.
+function _piGetInner(name) {
+  if (_piCache[name]) return _piCache[name];
+  try {
+    const v = localStorage.getItem(_PI_LS_PREFIX + name);
+    if (v && _PI_SAFE_RE.test(v)) { _piCache[name] = v; return v; }
+  } catch (e) { /* storage tidak tersedia */ }
+  if (PRODUCT_ICON_BUILTIN[name]) return PRODUCT_ICON_BUILTIN[name];
+  return _piFailed[name] ? PRODUCT_ICON_BUILTIN.package : '';   // CDN gagal → ikon paket bawaan
+}
+
+// Isi ulang semua <svg data-pi="nama"> yang sudah ada di halaman setelah ikon selesai dimuat / gagal.
+function _piPaint(name) {
+  const inner = _piCache[name] || _piGetInner(name) || PRODUCT_ICON_BUILTIN.package;
+  const failed = !_piCache[name] && !PRODUCT_ICON_BUILTIN[name];
+  document.querySelectorAll('svg[data-pi="' + name + '"]').forEach(svg => {
+    svg.innerHTML = inner;
+    if (failed && svg.parentElement) svg.parentElement.setAttribute('data-pi-fallback', '1');
+  });
+}
+
+// Ambil satu ikon dari CDN (sekali per nama). Gagal / format tak dikenal → fallback paket.
+function loadProductIcon(name) {
+  if (!name || _piCache[name] || _piPending[name] || _piFailed[name] || PRODUCT_ICON_BUILTIN[name]) return Promise.resolve();
+  if (typeof fetch !== 'function') { _piFailed[name] = true; _piPaint(name); return Promise.resolve(); }
+  _piPending[name] = fetch(PRODUCT_ICON_CDN + encodeURIComponent(name) + '.svg')
+    .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
+    .then(t => {
+      const inner = _piInnerFromSvg(t);
+      if (!_PI_SAFE_RE.test(inner)) throw new Error('format ikon tidak dikenal');
+      _piCache[name] = inner;
+      try { localStorage.setItem(_PI_LS_PREFIX + name, inner); } catch (e) { /* abaikan */ }
+    })
+    .catch(() => { _piFailed[name] = true; })
+    .then(() => { delete _piPending[name]; _piPaint(name); });
+  return _piPending[name];
+}
+
+// Muat di awal semua ikon yang ada di daftar (default: semua ikon yang tersedia).
+function preloadProductIcons(ids) {
+  return Promise.all((ids || Object.keys(PRODUCT_ICON_SYMBOLS)).map(id => loadProductIcon(_piLucideName(id))));
+}
+
+function _piEsc(v) {
+  return String(v == null ? '' : v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+function productBadgeHtml(p, extraClass) {
+  const b = _piResolveBadge(p);
+  const inner = _piGetInner(b.lucide);
+  if (!inner) loadProductIcon(b.lucide);
+  const o = p && typeof p === 'object' ? p : { name: p, category: '' };
+  return `<span class="pi-badge ${extraClass || ''}" data-cat="${b.cat}" data-pn="${_piEsc(o.name)}" data-pc="${_piEsc(o.category)}" role="img" aria-label="${_piEsc(b.label)}"><svg viewBox="0 0 24 24" data-pi="${b.lucide}" focusable="false" aria-hidden="true">${inner}</svg></span>`;
+}
+
+// Hitung ulang semua badge yang sudah tampil (dipanggil setelah indeks Lucide selesai dimuat).
+function refreshProductBadges() {
+  document.querySelectorAll('.pi-badge[data-pn]').forEach(el => {
+    const b = _piResolveBadge({ name: el.dataset.pn, category: el.dataset.pc });
+    const svg = el.querySelector('svg');
+    el.setAttribute('data-cat', b.cat);
+    el.setAttribute('aria-label', b.label);
+    if (!svg || svg.getAttribute('data-pi') === b.lucide) return;
+    svg.setAttribute('data-pi', b.lucide);
+    const inner = _piGetInner(b.lucide);
+    svg.innerHTML = inner;
+    if (!inner) loadProductIcon(b.lucide);
+  });
+}
+
+// Tambah kata kunci baru ke ikon yang sudah ada (atau buat aturan baru). Mis: registerProductIconRule('tea', ['rooibos', 'chamomile'])
+function registerProductIconRule(iconId, keywords, opts) {
+  if (!PRODUCT_ICON_SYMBOLS[iconId]) return false;
+  const list = (Array.isArray(keywords) ? keywords : [keywords]).map(k => normalizeProductText(k).trim()).filter(Boolean);
+  let rule = PRODUCT_ICON_RULES.find(r => r.icon === iconId);
+  if (!rule) {
+    rule = { icon: iconId, kw: [] };
+    if (opts && opts.first) PRODUCT_ICON_RULES.unshift(rule); else PRODUCT_ICON_RULES.push(rule);
+  }
+  list.forEach(k => { if (!rule.kw.includes(k)) rule.kw.push(k); });
+  return true;
+}
+
+// Daftarkan ikon baru. Pakai nama ikon Lucide ({ lucide: 'popcorn' }) atau markup SVG sendiri pada grid 24 ({ svg: '<path d="..."/>' }).
+// cat (warna badge & garis): 'coffee' | 'drink' | 'food' | 'staple' | 'craft' | 'neutral'
+function registerProductIcon(id, { name, cat, lucide, svg, keywords } = {}) {
+  if (!/^[a-z][a-z0-9-]*$/.test(id) || !(lucide || svg)) return false;
+  if (svg) {
+    if (!_PI_SAFE_RE.test(svg)) return false;
+    const key = 'custom-' + id;
+    _piCache[key] = svg;
+    PRODUCT_ICON_SYMBOLS[id] = key;
+  } else {
+    if (!/^[a-z][a-z0-9-]*$/.test(lucide)) return false;
+    PRODUCT_ICON_SYMBOLS[id] = lucide;
+  }
+  PRODUCT_ICON_META[id] = { name: name || id, cat: cat || 'neutral' };
+  if (keywords) registerProductIconRule(id, keywords);
+  return true;
+}
+
+// Mulai muat indeks ikon Lucide di latar belakang (hasilnya di-cache; badge dihitung ulang otomatis).
+loadLucideIndex();
+
 // Default User Profile
 const DEFAULT_USER = {
   name: 'Hendra Wijaya',
@@ -32,7 +318,7 @@ const INITIAL_PRODUCTS = [
     stock: 18,
     minStock: 8,
     supplier: 'Koperasi Kopi Gayo (081234567890)',
-    icon: '☕'
+    icon: 'cup'
   },
   {
     id: 'prod-002',
@@ -44,7 +330,7 @@ const INITIAL_PRODUCTS = [
     stock: 4, // Low stock for demonstration!
     minStock: 10,
     supplier: 'Petani Lereng Sindoro (082199887766)',
-    icon: '🫘'
+    icon: 'bean'
   },
   {
     id: 'prod-003',
@@ -56,7 +342,7 @@ const INITIAL_PRODUCTS = [
     stock: 25,
     minStock: 10,
     supplier: 'UMKM Berkah Lumajang (085678123456)',
-    icon: '🍌'
+    icon: 'chips'
   },
   {
     id: 'prod-004',
@@ -68,7 +354,7 @@ const INITIAL_PRODUCTS = [
     stock: 2, // Critical low stock
     minStock: 6,
     supplier: 'Dapur Minang Asli (081344556677)',
-    icon: '🥩'
+    icon: 'steak'
   },
   {
     id: 'prod-005',
@@ -80,7 +366,7 @@ const INITIAL_PRODUCTS = [
     stock: 14,
     minStock: 5,
     supplier: 'Gapoktan Cianjur (081900112233)',
-    icon: '🌾'
+    icon: 'rice'
   },
   {
     id: 'prod-006',
@@ -92,7 +378,7 @@ const INITIAL_PRODUCTS = [
     stock: 7,
     minStock: 3,
     supplier: 'Pengrajin Trusmi Cirebon (087788990011)',
-    icon: '👘'
+    icon: 'batik'
   },
   {
     id: 'prod-007',
@@ -104,7 +390,7 @@ const INITIAL_PRODUCTS = [
     stock: 0, // Out of stock for demonstration
     minStock: 8,
     supplier: 'Ibu Maryam Manado (081298765432)',
-    icon: '🌶️'
+    icon: 'bottle'
   }
 ];
 
@@ -316,11 +602,17 @@ function switchTab(tabId) {
   }
 }
 
-function showToast(msg, type = 'info') {
+// Ikon toast mengikuti jenis notifikasi (Lucide, tone pastel). Ikon lain: showToast(msg, type, 'nama-ikon-lucide')
+const TOAST_ICONS = { success: 'circle-check', error: 'circle-x', danger: 'circle-x', warning: 'triangle-alert', warn: 'triangle-alert', info: 'info' };
+const TOAST_TONES = { success: 'mint', error: 'rose', danger: 'rose', warning: 'amber', warn: 'amber', info: 'sky' };
+// Markup ikon Lucide (lihat icons.js). Aman dipanggil walau icons.js belum termuat.
+function iconHtml(name, opts) { return window.UIIcon ? window.UIIcon.html(name, opts) : ''; }
+
+function showToast(msg, type = 'info', icon) {
   const container = document.getElementById('toastContainer');
   const toast = document.createElement('div');
   toast.className = `toast toast-${type}`;
-  toast.innerHTML = `<span>⚡</span><span>${msg}</span>`;
+  toast.innerHTML = iconHtml(icon || TOAST_ICONS[type] || 'info', { badge: true, size: 'sm', tone: TOAST_TONES[type] || 'sky' }) + `<span>${msg}</span>`;
   container.appendChild(toast);
   setTimeout(() => {
     toast.style.opacity = '0';
@@ -464,15 +756,15 @@ function renderSmartInsight(lowStockProds) {
 
   if (lowStockProds.length > 0) {
     const worst = lowStockProds[0];
-    insightText.innerHTML = `⚠️ <strong>TransformaAI Smart Restock:</strong> Stok produk <strong>${escapeHtml(worst.name)}</strong> tersisa <strong>${worst.stock} unit</strong> (di bawah ambang ${worst.minStock}). AI menyarankan restock segera ke supplier.`;
-    insightAction.textContent = 'Buka Saran Stok AI →';
+    insightText.innerHTML = `<i data-ic="triangle-alert" data-badge></i> <span class="smart-insight-msg"><strong>TransformaAI Smart Restock:</strong> Stok produk <strong>${escapeHtml(worst.name)}</strong> tersisa <strong>${worst.stock} unit</strong> (di bawah ambang ${worst.minStock}). AI menyarankan restock segera ke supplier.</span>`;
+    insightAction.innerHTML = 'Buka Saran Stok AI ' + iconHtml('arrow-right');
     insightAction.onclick = () => {
       switchTab('ai-assistant');
       switchAiTab('stock-advisor');
     };
   } else {
-    insightText.innerHTML = `✨ <strong>TransformaAI Smart Opportunity:</strong> Semua stok dalam kondisi aman. AI merekomendasikan pembuatan kampanye promosi dan bundling untuk meningkatkan omzet hingga +25%.`;
-    insightAction.textContent = 'Buka Asisten AI →';
+    insightText.innerHTML = `<i data-ic="sparkles" data-badge></i> <span class="smart-insight-msg"><strong>TransformaAI Smart Opportunity:</strong> Semua stok dalam kondisi aman. AI merekomendasikan pembuatan kampanye promosi dan bundling untuk meningkatkan omzet hingga +25%.</span>`;
+    insightAction.innerHTML = 'Buka Asisten AI ' + iconHtml('arrow-right');
     insightAction.onclick = () => {
       switchTab('ai-assistant');
       switchAiTab('social-caption');
@@ -854,7 +1146,7 @@ function renderPosCatalog() {
 
     card.innerHTML = `
       <span class="prod-badge-stock ${badgeClass}">${badgeText}</span>
-      <span class="prod-icon-large">${escapeHtml(p.icon || '📦')}</span>
+      ${productBadgeHtml(p, 'prod-icon-large')}
       <div>
         <div class="prod-name">${escapeHtml(p.name)}</div>
         <div class="prod-sku">${escapeHtml(p.sku)}</div>
@@ -1279,7 +1571,7 @@ function sendReceiptViaWhatsApp() {
   msg += `--------------------------------\n`;
   if (trx.discount > 0) msg += `Diskon: -${formatRupiah(trx.discount)}\n`;
   msg += `*TOTAL BAYAR: ${formatRupiah(trx.grandTotal)}* (${trx.method})\n\n`;
-  msg += `Terima kasih telah berbelanja di UMKM kami! 🙏`;
+  msg += `Terima kasih telah berbelanja di UMKM kami!`;
 
   const phone = trx.customerPhone || '';
   if (phone) {
@@ -1344,7 +1636,7 @@ function renderInventoryTable() {
     tr.innerHTML = `
       <td>
         <div style="display:flex;align-items:center;gap:0.5rem;">
-          <span style="font-size:1.3rem;">${escapeHtml(p.icon || '📦')}</span>
+          ${productBadgeHtml(p, 'pi-sm')}
           <div>
             <strong>${escapeHtml(p.name)}</strong><br/>
             <small style="font-family:var(--font-mono);color:var(--text-subtle);">${escapeHtml(p.sku)}</small>
@@ -1389,11 +1681,102 @@ document.getElementById('invSearchInput').addEventListener('input', () => {
   renderInventoryTable();
 });
 
+// ========================================================
+// Auto-generate Kode SKU produk (form Tambah Produk Baru)
+// Format: <KATEGORI>-<KATA NAMA>-<UKURAN>  mis. KOP-ARABIKA-250 · tanpa nama → <KATEGORI>-001, 002, ...
+// Terisi otomatis saat Nama diketik / Kategori diganti. Kolom SKU baca-saja (tidak ada input manual).
+// ========================================================
+const SKU_CATEGORY_PREFIX = [
+  { re: /\b(kopi|minuman|coffee|beverage|drink)\b/, prefix: 'KOP' },
+  { re: /\b(makanan|snack|camilan|food)\b/, prefix: 'SNK' },
+  { re: /\b(pokok|sembako|grocery|bahan)\b/, prefix: 'SEM' },
+  { re: /\b(kerajinan|fashion|craft|batik|pakaian)\b/, prefix: 'TEX' }
+];
+// Kata umum yang tidak membedakan produk — dilewati saat memilih kata kunci SKU.
+const SKU_SKIP_WORDS = new Set('kopi biji minuman makanan snack keripik kain paket produk premium original khas asli single origin dan the isi pcs kemasan'.split(' '));
+
+function skuCategoryPrefix(category) {
+  const t = normalizeProductText(category);
+  const hit = SKU_CATEGORY_PREFIX.find(x => x.re.test(t));
+  if (hit) return hit.prefix;
+  const letters = String(category || '').toUpperCase().replace(/[^A-Z]/g, '').slice(0, 3);
+  return letters.length === 3 ? letters : 'PRD';
+}
+
+function skuSizeToken(tokens) {
+  for (let i = tokens.length - 1; i >= 0; i--) {
+    const m = /^(\d+)(g|gr|gram|kg|ml|l|ltr|liter|pcs)?$/.exec(tokens[i]);
+    if (!m || (!m[2] && i !== tokens.length - 1)) continue;   // angka tanpa satuan hanya sah di akhir nama
+    const unit = m[2] || '';
+    return m[1] + (unit === 'kg' || unit === 'l' || unit === 'ltr' || unit === 'liter' ? (unit === 'kg' ? 'KG' : 'L') : '');
+  }
+  return '';
+}
+
+function skuIsTaken(sku, ignoreId) {
+  const up = sku.toUpperCase();
+  return products.some(p => p.id !== ignoreId && String(p.sku || '').toUpperCase() === up);
+}
+
+function generateProductSku(name, category, ignoreId) {
+  const prefix = skuCategoryPrefix(category);
+  const tokens = normalizeProductText(name).trim().split(' ').filter(Boolean);
+  const word = (tokens.find(t => /^[a-z]{3,}$/.test(t) && !SKU_SKIP_WORDS.has(t)) || tokens.find(t => /^[a-z]{3,}$/.test(t)) || '').toUpperCase().slice(0, 8);
+  if (word) {
+    const base = [prefix, word, skuSizeToken(tokens)].filter(Boolean).join('-');
+    let sku = base, n = 2;
+    while (skuIsTaken(sku, ignoreId)) sku = base + '-' + (n++);
+    return sku;
+  }
+  // belum ada nama: nomor urut berikutnya untuk kategori ini
+  let max = 0;
+  products.forEach(p => {
+    const m = new RegExp('^' + prefix + '-(\\d+)$', 'i').exec(String(p.sku || ''));
+    if (m) max = Math.max(max, parseInt(m[1], 10));
+  });
+  let sku;
+  do { sku = prefix + '-' + String(++max).padStart(3, '0'); } while (skuIsTaken(sku, ignoreId));
+  return sku;
+}
+
+function updateSkuHint() {
+  const hint = document.getElementById('prodSkuHint');
+  if (!hint) return;
+  const editing = !!document.getElementById('prodEditId').value;
+  hint.textContent = editing
+    ? 'Kode SKU dikunci agar riwayat stok & transaksi tetap konsisten.'
+    : 'Dibuat otomatis dari nama & kategori produk.';
+  hint.classList.add('is-auto');
+}
+
+// Isi ulang SKU otomatis (hanya mode tambah produk; kolom SKU bersifat baca-saja).
+function autoFillProductSku() {
+  const input = document.getElementById('prodSku');
+  if (!input || document.getElementById('prodEditId').value) return;
+  input.value = generateProductSku(
+    document.getElementById('prodName').value,
+    document.getElementById('prodCategory').value
+  );
+  updateSkuHint();
+}
+
+(function initProductSkuAuto() {
+  const input = document.getElementById('prodSku');
+  if (!input || input.dataset.skuBound) return;
+  input.dataset.skuBound = '1';
+  input.readOnly = true;
+  input.setAttribute('aria-readonly', 'true');
+  const n = document.getElementById('prodName'), c = document.getElementById('prodCategory');
+  if (n) n.addEventListener('input', autoFillProductSku);
+  if (c) c.addEventListener('change', autoFillProductSku);
+})();
+
 // Product CRUD
 function openAddProductModal() {
   document.getElementById('productModalTitle').textContent = 'Tambah Produk Baru';
   document.getElementById('prodEditId').value = '';
   document.getElementById('productForm').reset();
+  autoFillProductSku();
   const descEl = document.getElementById('prodDescription');
   if (descEl) descEl.value = '';
   openModal('productModal');
@@ -1408,12 +1791,12 @@ function openEditProductModal(id) {
   document.getElementById('prodName').value = p.name;
   document.getElementById('prodCategory').value = p.category;
   document.getElementById('prodSku').value = p.sku;
+  updateSkuHint();
   document.getElementById('prodCostPrice').value = p.costPrice;
   document.getElementById('prodSellPrice').value = p.sellPrice;
   document.getElementById('prodStock').value = p.stock;
   document.getElementById('prodMinStock').value = p.minStock;
   document.getElementById('prodSupplier').value = p.supplier || '';
-  document.getElementById('prodImage').value = p.icon || '📦';
   const descEl = document.getElementById('prodDescription');
   if (descEl) descEl.value = p.description || '';
 
@@ -1425,13 +1808,14 @@ function handleProductFormSubmit(e) {
   const editId = document.getElementById('prodEditId').value;
   const name = document.getElementById('prodName').value.trim();
   const category = document.getElementById('prodCategory').value;
-  const sku = document.getElementById('prodSku').value.trim() || `SKU-${Date.now().toString().slice(-4)}`;
+  // SKU selalu otomatis: produk baru → dibuat dari nama & kategori; produk lama → kode tetap dipertahankan.
+  const existing = editId ? products.find(x => x.id === editId) : null;
+  const sku = String((existing && existing.sku) || generateProductSku(name, category, editId)).toUpperCase();
   const costPrice = Number(document.getElementById('prodCostPrice').value);
   const sellPrice = Number(document.getElementById('prodSellPrice').value);
   const stock = Number(document.getElementById('prodStock').value);
   const minStock = Number(document.getElementById('prodMinStock').value);
   const supplier = document.getElementById('prodSupplier').value.trim();
-  const icon = document.getElementById('prodImage').value.trim() || '📦';
   const descEl = document.getElementById('prodDescription');
   const description = descEl ? descEl.value.trim() : '';
 
@@ -1452,7 +1836,7 @@ function handleProductFormSubmit(e) {
       p.stock = stock;
       p.minStock = minStock;
       p.supplier = supplier;
-      p.icon = icon;
+      p.icon = 'auto';
       p.description = description;
       showToast(`Produk "${name}" berhasil diperbarui!`, 'success');
     }
@@ -1467,7 +1851,7 @@ function handleProductFormSubmit(e) {
       stock,
       minStock,
       supplier,
-      icon,
+      icon: 'auto', // ikon dipilih otomatis dari nama & kategori
       description
     };
     products.unshift(newProd);
@@ -1550,7 +1934,7 @@ function renderCrmTable() {
   filtered.forEach(c => {
     const isVip = c.totalSpent >= 200000;
     const segmentBadge = isVip
-      ? '<span class="status-badge" style="background:rgba(34, 211, 238,0.2);color:#67e8f9;">⭐ VIP Member</span>'
+      ? '<span class="status-badge" style="background:rgba(34, 211, 238,0.2);color:#67e8f9;"><i data-ic="star"></i> VIP Member</span>'
       : '<span class="status-badge" style="background:var(--bg-hover);color:var(--text-muted);">Regular</span>';
 
     const tr = document.createElement('tr');
@@ -1563,7 +1947,7 @@ function renderCrmTable() {
       <td><small style="color:var(--text-subtle);">${escapeHtml(c.lastVisit || '-')}</small></td>
       <td>
         <button type="button" class="btn btn-xs btn-smart btn-crm-chat" style="text-decoration:none;">
-          <span>💬 Chat WA</span>
+          <span><i data-ic="message-circle"></i> Chat WA</span>
         </button>
       </td>
     `;
@@ -1630,11 +2014,11 @@ function openBroadcastPromoModal() {
 function selectPromoTemplate(type) {
   const textarea = document.getElementById('promoCustomText');
   if (type === 'weekend') {
-    textarea.value = `Halo kak! 🎉 Promo Spesial Weekend hadir di Transforma UMKM!\nDapatkan diskon langsung 15% untuk semua pembelian varian kopi dan makanan pilihan kami.\nKunjungi toko kami atau pesan langsung via katalog online!`;
+    textarea.value = `Halo kak! Promo Spesial Weekend hadir di Transforma UMKM!\nDapatkan diskon langsung 15% untuk semua pembelian varian kopi dan makanan pilihan kami.\nKunjungi toko kami atau pesan langsung via katalog online!`;
   } else if (type === 'loyalty') {
-    textarea.value = `Halo kak! ⭐ Poin loyalitas belanja Anda di Transforma UMKM sudah terkumpul!\nTukarkan 20 poin belanja Anda untuk mendapatkan GRATIS 1 kemasan Keripik Pisang Lumer atau potongan harga langsung di kasir!`;
+    textarea.value = `Halo kak! Poin loyalitas belanja Anda di Transforma UMKM sudah terkumpul!\nTukarkan 20 poin belanja Anda untuk mendapatkan GRATIS 1 kemasan Keripik Pisang Lumer atau potongan harga langsung di kasir!`;
   } else if (type === 'new') {
-    textarea.value = `Halo kak! ✨ Menu baru sudah tiba di Transforma UMKM: Biji Kopi Gayo Single Origin 250g dengan aroma bunga dan rasa karamel khas.\nStok terbatas, pesan sekarang ya kak!`;
+    textarea.value = `Halo kak! Menu baru sudah tiba di Transforma UMKM: Biji Kopi Gayo Single Origin 250g dengan aroma bunga dan rasa karamel khas.\nStok terbatas, pesan sekarang ya kak!`;
   }
 }
 
@@ -1675,7 +2059,7 @@ function renderPublicStorefront() {
     card.className = 'public-product-card';
     card.innerHTML = `
       <div>
-        <div class="pub-prod-icon">${escapeHtml(p.icon || '📦')}</div>
+        ${productBadgeHtml(p, 'pub-prod-icon')}
         <div class="pub-prod-name">${escapeHtml(p.name)}</div>
         <div class="pub-prod-cat">${escapeHtml(p.category)} &bull; Stok: ${p.stock}</div>
         ${p.description ? `<p style="font-size:0.75rem;color:var(--text-subtle);margin-top:0.4rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.35;">${escapeHtml(p.description)}</p>` : ''}
@@ -1907,10 +2291,10 @@ let notifReadAt = 0;
 function buildNotifications() {
   const items = [];
   products.filter(p => p.stock <= p.minStock).slice(0, 5).forEach(p => items.push({
-    kind: 'warn', icon: '⚠️', title: 'Stok menipis', text: `${p.name} tersisa ${p.stock} unit`, tab: 'inventory', ts: 2
+    kind: 'warn', icon: '<i data-ic="triangle-alert"></i>', title: 'Stok menipis', text: `${p.name} tersisa ${p.stock} unit`, tab: 'inventory', ts: 2
   }));
   transactions.slice().reverse().slice(0, 3).forEach(t => items.push({
-    kind: 'ok', icon: '🧾', title: `Transaksi ${t.id}`, text: `${t.customerName || 'Umum'} · ${formatRupiah(t.grandTotal)}`, tab: 'dashboard', ts: 1
+    kind: 'ok', icon: '<i data-ic="receipt"></i>', title: `Transaksi ${t.id}`, text: `${t.customerName || 'Umum'} · ${formatRupiah(t.grandTotal)}`, tab: 'dashboard', ts: 1
   }));
   return items;
 }
@@ -2142,20 +2526,20 @@ function renderAiStockAdvisor() {
     if (p.stock <= 0) {
       criticalCount++;
       recRestock = Math.max(20, p.minStock * 3);
-      statusHtml = '<span class="runout-badge runout-danger">🚨 Stok Habis (0 Hari)</span>';
+      statusHtml = '<span class="runout-badge runout-danger"><i data-ic="siren"></i> Stok Habis (0 Hari)</span>';
       recAction = `Restock darurat +${recRestock} unit`;
     } else if (p.stock <= p.minStock || runoutDays <= 3) {
       criticalCount++;
       recRestock = Math.max(15, p.minStock * 2 - p.stock);
-      statusHtml = `<span class="runout-badge runout-warning">⚠️ Kritis (~${runoutDays} Hari)</span>`;
+      statusHtml = `<span class="runout-badge runout-warning"><i data-ic="triangle-alert"></i> Kritis (~${runoutDays} Hari)</span>`;
       recAction = `Pesan ulang +${recRestock} unit (Target 14 hari)`;
     } else if (p.stock > p.minStock * 3 && qtySold < 3) {
       recRestock = 0;
-      statusHtml = `<span class="runout-badge runout-overstock">📦 Overstock (~${runoutDays} Hari)</span>`;
+      statusHtml = `<span class="runout-badge runout-overstock"><i data-ic="package"></i> Overstock (~${runoutDays} Hari)</span>`;
       recAction = `Diskon promo / bundling untuk putar modal`;
     } else {
       recRestock = 0;
-      statusHtml = `<span class="runout-badge runout-safe">✅ Aman (~${runoutDays} Hari)</span>`;
+      statusHtml = `<span class="runout-badge runout-safe"><i data-ic="circle-check"></i> Aman (~${runoutDays} Hari)</span>`;
       recAction = `Kondisi aman, pantau akhir pekan`;
     }
 
@@ -2166,7 +2550,7 @@ function renderAiStockAdvisor() {
     tr.innerHTML = `
       <td>
         <div style="display:flex;align-items:center;gap:0.5rem;">
-          <span style="font-size:1.3rem;">${escapeHtml(p.icon || '📦')}</span>
+          ${productBadgeHtml(p, 'pi-sm')}
           <div>
             <strong>${escapeHtml(p.name)}</strong><br/>
             <small class="ai-sub">${escapeHtml(p.category)} &bull; SKU: ${escapeHtml(p.sku)}</small>
@@ -2209,7 +2593,7 @@ function renderAiStockAdvisor() {
   if (summaryFooter) {
     summaryFooter.innerHTML = `
       <div style="display:flex; align-items:flex-start; gap:0.75rem;">
-        <span style="font-size:1.4rem;">💡</span>
+        <i data-ic="lightbulb" data-badge></i>
         <div>
           <strong>Diagnosis Intelijen AI TransformaUMKM:</strong>
           <p style="margin-top:0.25rem; color:var(--text-muted);">
@@ -2262,7 +2646,7 @@ function populateAiCopywriterDropdown() {
   products.forEach(p => {
     const opt = document.createElement('option');
     opt.value = p.id;
-    opt.textContent = `${p.icon || '📦'} ${p.name} (${p.category}) - ${formatRupiah(p.sellPrice)}`;
+    opt.textContent = `${p.name} (${p.category}) - ${formatRupiah(p.sellPrice)}`;
     select.appendChild(opt);
   });
 
@@ -2297,7 +2681,7 @@ function handleGenerateAiDescription(e) {
 
   const btn = document.getElementById('btnRunAiCopywriter');
   btn.disabled = true;
-  btn.innerHTML = `<span>⏳ AI Meracik Copywriting...</span>`;
+  btn.innerHTML = `<span><i data-ic="hourglass"></i> AI Meracik Copywriting...</span>`;
 
   setTimeout(() => {
     const aiResult = generateSmartProductDescription(name, category, features, tone, audience);
@@ -2313,19 +2697,19 @@ function handleGenerateAiDescription(e) {
     outputBox.innerHTML = `
       <div class="ai-copy-result-card">
         <div style="font-size:1.15rem; font-weight:800; color:var(--cyan-primary); margin-bottom:0.75rem;">
-          ✨ ${aiResult.headline}
+          <i data-ic="sparkles" data-badge></i> ${aiResult.headline}
         </div>
         <p style="font-size:0.92rem; line-height:1.6; margin-bottom:1rem; color:var(--text-main);">
           ${aiResult.body}
         </p>
         <div style="background:var(--bg-hover); border:1px solid var(--border-color); border-radius:var(--radius-sm); padding:0.75rem; margin-bottom:1rem;">
-          <strong style="color:var(--text-main); font-size:0.85rem; display:block; margin-bottom:0.4rem;">🌟 Keunggulan Produk:</strong>
-          <ul style="padding-left:1.25rem; font-size:0.85rem; color:var(--text-muted); line-height:1.6;">
-            ${aiResult.bullets.map(b => `<li>${b}</li>`).join('')}
+          <strong style="color:var(--text-main); font-size:0.85rem; display:block; margin-bottom:0.4rem;"><i data-ic="star" data-badge></i> Keunggulan Produk:</strong>
+          <ul style="list-style:none; padding-left:0; display:grid; gap:0.45rem; font-size:0.85rem; color:var(--text-muted); line-height:1.6;">
+            ${aiResult.bullets.map((b, i) => `<li style="display:flex; gap:0.5rem; align-items:flex-start;">${iconHtml((aiResult.bulletIcons || [])[i] || 'sparkles', { badge: true, size: 'sm' })}<span>${b}</span></li>`).join('')}
           </ul>
         </div>
         <div style="font-size:0.85rem; font-weight:700; color:#10b981; margin-bottom:0.75rem;">
-          🛍️ ${aiResult.cta}
+          <i data-ic="shopping-bag" data-badge></i> ${aiResult.cta}
         </div>
         <div style="color:var(--cyan-primary); font-size:0.8rem; font-family:var(--font-mono);">
           ${aiResult.hashtags}
@@ -2335,7 +2719,7 @@ function handleGenerateAiDescription(e) {
 
     document.getElementById('aiCopyActionsRow').style.display = 'flex';
     btn.disabled = false;
-    btn.innerHTML = `<span>✨ Hasilkan Deskripsi AI Otomatis</span>`;
+    btn.innerHTML = `<span><i data-ic="sparkles"></i> Hasilkan Deskripsi AI Otomatis</span>`;
     showToast('Deskripsi produk AI berhasil dibuat!', 'success');
   }, 450);
 }
@@ -2351,9 +2735,9 @@ function generateSmartProductDescription(name, category, features, tone, audienc
     headline = `Sensasi Kehangatan dan Kenikmatan Sejati: ${name}!`;
     body = `Dihadirkan dari kecintaan mendalam terhadap cita rasa lokal, ${name} memadukan keaslian bahan berkualitas dengan proses higienis terbaik. ${features || 'Setiap gigitan dan tegukannya menghadirkan kepuasan yang memanjakan lidah Anda.'}`;
     bullets = [
-      `🌱 Bahan Pilihan Otentik: Diproses dari hasil bumi Nusantara bermutu tinggi.`,
-      `☕ Cita Rasa Khas: Harmoni rasa yang seimbang, nyaman dinikmati kapan saja.`,
-      `❤️ Mendukung UMKM Lokal: Setiap pembelian Anda berkontribusi pada petani & pengrajin daerah.`
+      `{{sprout}} Bahan Pilihan Otentik: Diproses dari hasil bumi Nusantara bermutu tinggi.`,
+      `{{coffee}} Cita Rasa Khas: Harmoni rasa yang seimbang, nyaman dinikmati kapan saja.`,
+      `{{heart}} Mendukung UMKM Lokal: Setiap pembelian Anda berkontribusi pada petani & pengrajin daerah.`
     ];
     cta = `Pesan sekarang untuk menemani momen santai berkualitas Anda!`;
     hashtags = `#${name.replace(/[^a-zA-Z0-9]/g, '')} #UMKMIndonesia #CitaRasaNusantara #BanggaBuatanIndonesia`;
@@ -2361,19 +2745,19 @@ function generateSmartProductDescription(name, category, features, tone, audienc
     headline = `Kemewahan Cita Rasa Eksklusif: ${name}`;
     body = `Sebuah persembahan mahakarya artisan untuk Anda yang menghargai kesempurnaan. ${name} diracik secara presisi dengan standar kemurnian tinggi. ${features || 'Karakter rasa yang kompleks dan elegan memberikan pengalaman istimewa di setiap kesempatan.'}`;
     bullets = [
-      `💎 Kualitas Seleksi Teratas: Hanya varietas dan bahan terbaik grade A.`,
-      `🏆 Standar Higienis Artisan: Dikemas secara eksklusif menjaga kesegaran maksimal.`,
-      `✨ Kesempurnaan Momen: Pilihan tepat untuk konsumsi pribadi berkelas maupun bingkisan elegan.`
+      `{{gem}} Kualitas Seleksi Teratas: Hanya varietas dan bahan terbaik grade A.`,
+      `{{trophy}} Standar Higienis Artisan: Dikemas secara eksklusif menjaga kesegaran maksimal.`,
+      `{{sparkles}} Kesempurnaan Momen: Pilihan tepat untuk konsumsi pribadi berkelas maupun bingkisan elegan.`
     ];
     cta = `Miliki edisi terbaik ini sekarang sebelum kehabisan kuota batch!`;
     hashtags = `#${name.replace(/[^a-zA-Z0-9]/g, '')} #ArtisanSelection #ProdukPremium #GayaHidupBerkelas`;
   } else if (tone === 'fomo') {
-    headline = `🔥 SPESIAL HARI INI! Dapatkan ${name} Sebelum Kehabisan!`;
+    headline = `SPESIAL HARI INI! Dapatkan ${name} Sebelum Kehabisan!`;
     body = `Peringatan: Stok batch terbatas! ${name} menjadi incaran banyak pelanggan berkat kenikmatannya yang tak tertandingi. ${features || 'Rasa juara yang selalu bikin repeat order.'}`;
     bullets = [
-      `⚡ Best Value Guarantee: Kualitas bintang lima dengan harga ramah kantong.`,
-      `📦 Fresh From Production: Baru selesai diproduksi untuk menjaga kesegaran tertinggi.`,
-      `🚀 Pengiriman Cepat: Siap dikirim hari ini ke alamat Anda.`
+      `{{zap}} Best Value Guarantee: Kualitas bintang lima dengan harga ramah kantong.`,
+      `{{package}} Fresh From Production: Baru selesai diproduksi untuk menjaga kesegaran tertinggi.`,
+      `{{rocket}} Pengiriman Cepat: Siap dikirim hari ini ke alamat Anda.`
     ];
     cta = `Checkout segera sebelum stok ludes diserbu pembeli lain!`;
     hashtags = `#FlashSale #PromoHariIni #BuruanBeli #${name.replace(/[^a-zA-Z0-9]/g, '')}`;
@@ -2382,16 +2766,19 @@ function generateSmartProductDescription(name, category, features, tone, audienc
     headline = `Pilihan Juara Pelanggan: ${name} Paling Direkomendasikan!`;
     body = `Ingin menikmati produk terbaik dengan kualitas terjamin dan harga jujur? ${name} adalah solusi sempurna untuk kebutuhan harian Anda. ${features || 'Terbukti disukai banyak pelanggan dan menjadi produk favorit di toko kami.'}`;
     bullets = [
-      `⭐ 100% Kualitas Terjamin: Bahan segar bermutu tanpa kompromi.`,
-      `💰 Harga Jujur & Kompetitif: Langsung dari tangan pertama produsen UMKM.`,
-      `👍 Praktis & Siap Dinikmati: Cocok untuk konsumsi harian keluarga tercinta.`
+      `{{star}} 100% Kualitas Terjamin: Bahan segar bermutu tanpa kompromi.`,
+      `{{wallet}} Harga Jujur & Kompetitif: Langsung dari tangan pertama produsen UMKM.`,
+      `{{thumbs-up}} Praktis & Siap Dinikmati: Cocok untuk konsumsi harian keluarga tercinta.`
     ];
     cta = `Klik pesan sekarang dan nikmati promo spesialnya!`;
     hashtags = `#${name.replace(/[^a-zA-Z0-9]/g, '')} #RekomendasiUMKM #ProdukFavorit #JualOnline`;
   }
 
+  // Penanda {{ikon-lucide}} di awal bullet → daftar ikon terpisah; teks bullet tetap polos (aman untuk disalin).
+  const bulletIcons = bullets.map(b => (/^\{\{([a-z0-9-]+)\}\}/.exec(b) || [])[1] || 'sparkles');
+  bullets = bullets.map(b => b.replace(/^\{\{[a-z0-9-]+\}\}\s*/, ''));
   const rawText = `${headline}\n\n${body}\n\nKeunggulan Utama:\n• ${bullets.join('\n• ')}\n\n${cta}\n\n${hashtags}`;
-  return { headline, body, bullets, cta, hashtags, rawText };
+  return { headline, body, bullets, bulletIcons, cta, hashtags, rawText };
 }
 
 function applyAiDescriptionToSelectedProduct() {
@@ -2424,7 +2811,7 @@ function generateAiDescriptionInModal() {
     return;
   }
 
-  showToast('✨ AI sedang meracik deskripsi produk...', 'info');
+  showToast('AI sedang meracik deskripsi produk...', 'info', 'sparkles');
   setTimeout(() => {
     const descObj = generateSmartProductDescription(name, category, '', 'persuasive', 'umum');
     const descArea = document.getElementById('prodDescription');
@@ -2445,7 +2832,7 @@ function handleGenerateAiCaption(e) {
 
   const btn = document.getElementById('btnRunAiCaption');
   btn.disabled = true;
-  btn.innerHTML = `<span>⏳ AI Mengolah Data Penjualan...</span>`;
+  btn.innerHTML = `<span><i data-ic="hourglass"></i> AI Mengolah Data Penjualan...</span>`;
 
   setTimeout(() => {
     // Identify top selling product and slow moving product from data
@@ -2485,7 +2872,7 @@ function handleGenerateAiCaption(e) {
 
     document.getElementById('aiCaptionActionsRow').style.display = 'flex';
     btn.disabled = false;
-    btn.innerHTML = `<span>🚀 Buat Caption AI Berdasarkan Data Penjualan</span>`;
+    btn.innerHTML = `<span><i data-ic="rocket"></i> Buat Caption AI Berdasarkan Data Penjualan</span>`;
     showToast('Caption promosi AI berhasil dibuat berdasarkan data riil!', 'success');
   }, 400);
 }
@@ -2498,63 +2885,63 @@ function generateAiCaptionText(platform, strategy, discount, urgency, bestSeller
 
   if (platform === 'whatsapp') {
     if (strategy === 'bestseller') {
-      caption = `🔥 *PROMO SPESIAL PRODUK TERLARIS: ${bestSeller.name.toUpperCase()}!*\n\n` +
-        `Halo Sahabat setia ${storeName}! 👋\n\n` +
+      caption = `*PROMO SPESIAL PRODUK TERLARIS: ${bestSeller.name.toUpperCase()}!*\n\n` +
+        `Halo Sahabat setia ${storeName}!\n\n` +
         `Kabar gembira! Produk nomor #1 paling banyak dibeli minggu ini, *${bestSeller.name}*, sedang promo spesial:\n\n` +
-        `✨ *PENAWARAN*: Diskon Spesial ${discount}!\n` +
-        `🏷️ Dari harga normal ~${formatRupiah(bestSeller.sellPrice)}~ jadi *HANYA ${discPriceBest}*!\n` +
-        `⏰ *WAKTU*: ${urgency}!\n\n` +
+        `*PENAWARAN*: Diskon Spesial ${discount}!\n` +
+        `Dari harga normal ~${formatRupiah(bestSeller.sellPrice)}~ jadi *HANYA ${discPriceBest}*!\n` +
+        `*WAKTU*: ${urgency}!\n\n` +
         `Kenapa wajib order sekarang?\n` +
-        `✅ Bahan pilihan bermutu tinggi & cita rasa juara\n` +
-        `✅ Stok cepat habis karena banyak pesanan harian\n` +
-        `✅ Kemasan aman & higienis\n\n` +
-        `📲 *Mau pesan sekarang?*\n` +
+        `- Bahan pilihan bermutu tinggi & cita rasa juara\n` +
+        `- Stok cepat habis karena banyak pesanan harian\n` +
+        `- Kemasan aman & higienis\n\n` +
+        `*Mau pesan sekarang?*\n` +
         `Balas pesan ini atau ketik: *"Kak, saya mau ambil Promo ${bestSeller.name}"*\n\n` +
-        `_Salam hangat dari UMKM ${storeName} 🙏_`;
+        `_Salam hangat dari UMKM ${storeName}_`;
     } else if (strategy === 'slowmoving') {
-      caption = `⚡ *FLASH SALE CUCI GUDANG — HEMAT HINGGA ${discount}!* ⚡\n\n` +
+      caption = `*FLASH SALE CUCI GUDANG — HEMAT HINGGA ${discount}!*\n\n` +
         `Halo semuanya! Mau cemilan / produk berkualitas dengan harga modal?\n\n` +
         `Khusus *${urgency}*, kami buka Flash Sale spesial untuk:\n` +
-        `🎁 *${slowMoving.name}*\n` +
-        `💸 Harga Cuci Gudang: *Cuma ${discPriceSlow}* (Stok Terbatas!)\n\n` +
+        `*${slowMoving.name}*\n` +
+        `Harga Cuci Gudang: *Cuma ${discPriceSlow}* (Stok Terbatas!)\n\n` +
         `Jangan sampai ketinggalan kesempatan hemat ini ya!\n` +
-        `👉 Balas *"PESAN FLASH SALE"* sekarang juga sebelum stok ludes!`;
+        `Balas *"PESAN FLASH SALE"* sekarang juga sebelum stok ludes!`;
     } else if (strategy === 'loyalty') {
-      caption = `⭐ *APRESIASI SPESIAL MEMBER LOYALITAS KAMI!* ⭐\n\n` +
+      caption = `*APRESIASI SPESIAL MEMBER LOYALITAS KAMI!*\n\n` +
         `Terima kasih telah setia berbelanja di *${storeName}*.\n\n` +
         `Punya poin belanja yang tersimpan? Tukarkan poin Anda sekarang dan nikmati:\n` +
-        `🎉 ${discount} untuk transaksi berikutnya!\n` +
-        `🎁 Hadiah langsung produk pilihan setiap penukaran 50 poin.\n\n` +
+        `${discount} untuk transaksi berikutnya!\n` +
+        `Hadiah langsung produk pilihan setiap penukaran 50 poin.\n\n` +
         `Cek poin Anda sekarang dengan membalas pesan ini!`;
     } else {
-      caption = `🎉 *PROMO AKHIR PEKAN SERU — HEMAT ${discount}!* 🎉\n\n` +
+      caption = `*PROMO AKHIR PEKAN SERU — HEMAT ${discount}!*\n\n` +
         `Weekend makin asik ditemani sajian favorit dari *${storeName}*.\n\n` +
         `Nikmati penawaran istimewa *${discount}* untuk semua menu dan produk pilihan!\n` +
-        `⏰ Berlaku: *${urgency}*\n\n` +
-        `Yuk pesan sekarang dan rasakan kelezatannya bersama keluarga! Hubungi kami sekarang ya! 🙏`;
+        `Berlaku: *${urgency}*\n\n` +
+        `Yuk pesan sekarang dan rasakan kelezatannya bersama keluarga! Hubungi kami sekarang ya!`;
     }
   } else if (platform === 'instagram') {
     if (strategy === 'bestseller') {
-      caption = `🔥 IT'S OFFICIAL: ${bestSeller.name} JADI JUARA TERLARIS PEKAN INI! 🔥\n\n` +
-        `Buat kamu yang belum coba, ini dia produk yang selalu bikin pelanggan setia kami repeat order tiada henti! Cita rasa otentik yang bikin nagih sejak suapan / seduhan pertama. ✨\n\n` +
+      caption = `IT'S OFFICIAL: ${bestSeller.name} JADI JUARA TERLARIS PEKAN INI!\n\n` +
+        `Buat kamu yang belum coba, ini dia produk yang selalu bikin pelanggan setia kami repeat order tiada henti! Cita rasa otentik yang bikin nagih sejak suapan / seduhan pertama.\n\n` +
         `Spesial minggu ini, kamu bisa nikmati:\n` +
-        `🏷️ ${discount} OFF\n` +
-        `⚡ Hanya berlaku: ${urgency}!\n\n` +
+        `${discount} OFF\n` +
+        `Hanya berlaku: ${urgency}!\n\n` +
         `Buruan amankan stokmu sekarang sebelum kehabisan slot!\n` +
-        `👉 Klik link di bio untuk order via WhatsApp!\n\n` +
+        `Klik link di bio untuk order via WhatsApp!\n\n` +
         `#${bestSeller.name.replace(/[^a-zA-Z0-9]/g, '')} #KulinerIndonesia #UMKMIndonesia #BestSeller #DiskonSpesial #FoodieNusantara #BanggaBuatanIndonesia`;
     } else {
-      caption = `✨ SAATNYA SELF-REWARD DENGAN PROMO ${discount.toUpperCase()}! ✨\n\n` +
+      caption = `SAATNYA SELF-REWARD DENGAN PROMO ${discount.toUpperCase()}!\n\n` +
         `Weekend seru makin lengkap kalau ditemani produk terbaik dari @${storeName.toLowerCase().replace(/[^a-z0-9]/g, '')}.\n\n` +
         `Dapatkan potongan harga spesial ${discount} untuk produk pilihan favorit kamu! (${urgency})\n\n` +
-        `Jangan nunggu besok, pesan sekarang juga via link di bio! 🛒\n\n` +
+        `Jangan nunggu besok, pesan sekarang juga via link di bio!\n\n` +
         `#PromoSpesial #DiskonWeekend #JajanOnline #UMKMJuara #ProdukLokal`;
     }
   } else {
     // TikTok script & caption
-    caption = `[HOOK VIDEO 3 DETIK PERTAMA]: "Jangan beli ini kalau kamu gak mau ketagihan tiap hari!" 😱\n\n` +
+    caption = `[HOOK VIDEO 3 DETIK PERTAMA]: "Jangan beli ini kalau kamu gak mau ketagihan tiap hari!"\n\n` +
       `Kenalin ${bestSeller.name} dari ${storeName}. Teksturnya juara, rasanya beneran otentik dan harganya lagi diskon ${discount} khusus ${urgency}!\n\n` +
-      `Check out sekarang di keranjang kuning / klik link profil ya! 🛒✨\n\n` +
+      `Check out sekarang di keranjang kuning / klik link profil ya!\n\n` +
       `#racuntiktok #tiktokshopindonesia #fyp #kulinerenak #jajanantiktok #${bestSeller.name.replace(/[^a-zA-Z0-9]/g, '')}`;
   }
 
@@ -2678,33 +3065,33 @@ function processAiBusinessQuery(query) {
         <li><strong>Flash Sale Khusus Jam Sepi (Jam 14.00 - 17.00):</strong> Kirim broadcast WhatsApp penawaran diskon khusus di jam istirahat sore untuk memancing repeat order dari pelanggan terdaftar.</li>
         <li><strong>Aktivasi Katalog Mini Online:</strong> Bagikan link katalog publik toko Anda ke status WhatsApp dan grup komunitas lokal untuk menjaring pembeli tanpa potongan komisi marketplace.</li>
       </ol>
-      <p style="color:var(--cyan-primary); font-weight:700;">💡 Saran Aksi Cepat: Gunakan tab <em>"3. Caption Promosi WA & Medsos"</em> di atas untuk membuat pesan promosi paket bundling sekarang!</p>
+      <p style="color:var(--cyan-primary); font-weight:700;"><i data-ic="lightbulb"></i> Saran Aksi Cepat: Gunakan tab <em>"3. Caption Promosi WA & Medsos"</em> di atas untuk membuat pesan promosi paket bundling sekarang!</p>
     `;
   } else if (q.includes('margin') || q.includes('profit') || q.includes('laba') || q.includes('hpp')) {
     return `
       <p>Berikut adalah <strong>Diagnosis Finansial Real-time</strong> toko Anda:</p>
       <ul style="padding-left:1.2rem; margin:0.5rem 0; line-height:1.6;">
-        <li>💰 <strong>Total Pendapatan Terhitung:</strong> ${formatRupiah(totalRev)}</li>
-        <li>📦 <strong>Total Beban Pokok (HPP):</strong> ${formatRupiah(totalCost)}</li>
-        <li>📈 <strong>Laba Kotor Bersih:</strong> ${formatRupiah(grossProfit)} (Margin Rata-rata: <strong>${marginPct}%</strong>)</li>
+        <li><i data-ic="wallet"></i> <strong>Total Pendapatan Terhitung:</strong> ${formatRupiah(totalRev)}</li>
+        <li><i data-ic="package"></i> <strong>Total Beban Pokok (HPP):</strong> ${formatRupiah(totalCost)}</li>
+        <li><i data-ic="trending-up"></i> <strong>Laba Kotor Bersih:</strong> ${formatRupiah(grossProfit)} (Margin Rata-rata: <strong>${marginPct}%</strong>)</li>
       </ul>
       <p>Kesehatan finansial toko Anda berada pada kategori <strong>Sangat Baik</strong> (margin di atas 30%). Produk dengan kontribusi keuntungan tertinggi adalah kategori <em>Kopi & Minuman</em> dan <em>Kerajinan</em>.</p>
     `;
   } else if (q.includes('stok') || q.includes('restock') || q.includes('habis')) {
     const listNames = lowStockItems.map(p => `<strong>${p.name}</strong> (sisa ${p.stock} unit)`).join(', ');
     return `
-      <p>⚠️ Peringatan Kritis Ketersediaan Stok:</p>
+      <p><i data-ic="triangle-alert"></i> Peringatan Kritis Ketersediaan Stok:</p>
       <p>Saat ini terdapat <strong>${lowStockItems.length} produk</strong> yang berada di bawah batas safety stock: ${listNames || 'Semua stok dalam batas aman'}.</p>
       <p>AI menyarankan untuk segera mengirim Purchase Order ke pemasok agar tidak kehilangan momentum penjualan di akhir pekan. Silakan buka tab <em>"1. Saran Stok & Prediksi Kritis"</em> untuk mengirim PO via WhatsApp dalam 1 klik!</p>
     `;
   } else if (q.includes('bundling') || q.includes('paket') || q.includes('snack')) {
     return `
-      <p>🎁 <strong>Rekomendasi Paket Bundling Cerdas (AI Synergy):</strong></p>
+      <p><i data-ic="gift"></i> <strong>Rekomendasi Paket Bundling Cerdas (AI Synergy):</strong></p>
       <div style="background:var(--bg-hover); border:1px solid var(--border-color); padding:0.75rem; border-radius:6px; margin:0.5rem 0;">
         <strong style="color:var(--cyan-primary);">Paket "Ngopi Santai Nusantara"</strong><br/>
         • 1x ${bestName} (Harga Normal: ${formatRupiah(65000)})<br/>
         • 1x Keripik Pisang Cokelat Lumer 200g (Harga Normal: ${formatRupiah(22000)})<br/>
-        • <em>Harga Bundling Normal: Rp 87.000 &rarr; <strong>Harga Promo: Rp 78.000 (Hemat 10%)</strong></em>
+        • <em>Harga Bundling Normal: Rp 87.000, menjadi <strong>Harga Promo: Rp 78.000 (Hemat 10%)</strong></em>
       </div>
       <p>Bundling ini meningkatkan rata-rata belanja konsumen (*basket size*) dari Rp 65.000 menjadi Rp 78.000 (+20%).</p>
     `;
