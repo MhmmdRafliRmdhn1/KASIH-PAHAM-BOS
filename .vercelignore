@@ -1,5 +1,8 @@
-# Abaikan folder backend agar Vercel mendeteksi sebagai Pure Static Site
+# Abaikan file backend dan package manager agar Vercel murni Static Deploy
 backend/
+node_modules/
+pnpm-lock.yaml
+package-lock.json
 Proposal_*.docx
 Proposal_*.doc
 temp_docx/

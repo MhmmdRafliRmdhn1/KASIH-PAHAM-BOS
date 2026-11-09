@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "TransformaUMKM — Platform Operasi Digital Terpadu untuk Akselerasi Bisnis & UMKM Indonesia",
   "scripts": {
-    "build": "echo 'Building static site...'",
     "dev": "live-server . --port=8080"
   },
   "keywords": [],
