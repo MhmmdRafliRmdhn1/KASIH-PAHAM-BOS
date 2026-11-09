@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -369,29 +370,22 @@ if (typeof window !== 'undefined') {
             <h2 id="loginHeading">Selamat datang kembali</h2>
             <p class="auth-sub">Masuk ke akun usaha Anda untuk membuka dashboard.</p>
 
-            <div class="demo-row">
-              <span>Akun demo:</span>
-              <button type="button" class="demo-pill" onclick="quickFillLogin('owner')">Pemilik</button>
-              <button type="button" class="demo-pill" onclick="quickFillLogin('cashier')">Kasir</button>
-            </div>
-
             <form id="standaloneLoginForm" onsubmit="handleLoginSubmit(event)" novalidate>
               <div class="a-field">
                 <label for="loginEmail" class="a-label"><span>Email atau nama pengguna</span></label>
                 <div class="a-control">
                   <span class="a-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/></svg></span>
-                  <input type="text" id="loginEmail" class="a-input has-icon" required placeholder="owner@nusantara.id" value="owner@nusantara.id" autocomplete="username" />
+                  <input type="text" id="loginEmail" class="a-input has-icon" required placeholder="nama@usaha.id" value="" autocomplete="username" />
                 </div>
               </div>
 
               <div class="a-field">
                 <div class="a-label">
                   <label for="loginPassword">Kata sandi</label>
-                  <a href="javascript:void(0)" onclick="showToast('Petunjuk demo: kata sandi default adalah demo1234')">Lupa sandi?</a>
                 </div>
                 <div class="a-control">
                   <span class="a-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span>
-                  <input type="password" id="loginPassword" class="a-input has-icon has-action" required placeholder="••••••••" value="demo1234" autocomplete="current-password" />
+                  <input type="password" id="loginPassword" class="a-input has-icon has-action" required placeholder="Masukkan kata sandi" value="" autocomplete="current-password" />
                   <button type="button" class="a-action" onclick="togglePasswordVisibility('loginPassword', this)" aria-label="Tampilkan kata sandi">
                     <span class="eye-open" style="display:flex"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span><span class="eye-closed" style="display:none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><path d="M1 1l22 22"/></svg></span>
                   </button>
@@ -1487,18 +1481,174 @@ if (typeof window !== 'undefined') {
     <section class="tab-pane" id="pane-settings">
       <div class="pane-header">
         <div>
-          <h2>Pengaturan</h2>
-          <p class="pane-sub">Tampilan, performa, dan preferensi aplikasi.</p>
+          <h2>Pengaturan Usaha</h2>
+          <p class="pane-sub">Konfigurasi profil toko, sistem kasir, inventori, keamanan, dan cadangan data UMKM.</p>
         </div>
       </div>
 
-      <p class="settings-section-title">Tentang</p>
+      <!-- KELOMPOK 1: PROFIL & IDENTITAS TOKO -->
+      <p class="settings-section-title">1. Profil &amp; Identitas Usaha</p>
       <div class="settings-section">
-        <div class="settings-toggle-row">
-          <div class="settings-toggle-label">
-            <strong>TransformaUMKM</strong>
-            <span>Platform operasi digital untuk POS, inventori, CRM, dan analitik UMKM.</span>
+        <form id="formStoreProfile" onsubmit="saveStoreProfileSettings(event)" style="padding:1.25rem 0;">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="setStoreName" class="form-label">Nama Toko / Usaha <span class="req">*</span></label>
+              <input type="text" id="setStoreName" class="form-input" required placeholder="Contoh: Kopi & Ritel Nusantara" />
+            </div>
+            <div class="form-group">
+              <label for="setStorePhone" class="form-label">No. WhatsApp Toko <span class="req">*</span></label>
+              <input type="tel" id="setStorePhone" class="form-input" required placeholder="Contoh: 081234567890" />
+            </div>
+            <div class="form-group full">
+              <label for="setStoreDesc" class="form-label">Deskripsi Singkat / Slogan Toko</label>
+              <input type="text" id="setStoreDesc" class="form-input" placeholder="Menyediakan aneka produk berkualitas ramah UMKM..." />
+            </div>
+            <div class="form-group full">
+              <label for="setStoreAddress" class="form-label">Alamat Lengkap Toko</label>
+              <input type="text" id="setStoreAddress" class="form-input" placeholder="Jl. Merdeka No. 45, Bandung" />
+            </div>
+            <div class="form-group full">
+              <label for="setReceiptFooter" class="form-label">Catatan Kaki Struk Kasir</label>
+              <input type="text" id="setReceiptFooter" class="form-input" placeholder="Terima Kasih Atas Kunjungan Anda!" />
+            </div>
           </div>
+          <div style="display:flex; justify-content:flex-end; margin-top:1rem;">
+            <button type="submit" class="btn btn-primary">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2zM17 21v-8H7v8M7 3v5h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              <span>Simpan Profil Toko</span>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- KELOMPOK 2: PENGATURAN KASIR & PEMBAYARAN -->
+      <p class="settings-section-title">2. Pengaturan Kasir &amp; Pembayaran</p>
+      <div class="settings-section">
+        <form id="formCheckoutSettings" onsubmit="saveCheckoutSettings(event)" style="padding:1.25rem 0;">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="setTaxRate" class="form-label">Tarif Pajak PPN (%)</label>
+              <input type="number" id="setTaxRate" class="form-input" min="0" max="100" step="0.5" value="11" />
+              <small style="color:var(--text-subtle); display:block; margin-top:0.3rem;">Digunakan saat opsi pajak dicentang pada kasir POS.</small>
+            </div>
+            <div class="form-group">
+              <label for="setBankInfo" class="form-label">Informasi Rekening Transfer Toko</label>
+              <input type="text" id="setBankInfo" class="form-input" placeholder="BCA: 8829-1029-3849 a.n. Pemilik Toko" />
+            </div>
+            <div class="form-group full">
+              <label for="setQrisHolder" class="form-label">Nama Pemilik Akun QRIS (NMID / Merchant)</label>
+              <input type="text" id="setQrisHolder" class="form-input" placeholder="TRANSFORMA KOPI NUSANTARA" />
+            </div>
+          </div>
+          <div style="display:flex; justify-content:flex-end; margin-top:1rem;">
+            <button type="submit" class="btn btn-primary">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2zM17 21v-8H7v8M7 3v5h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              <span>Simpan Pengaturan Kasir</span>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- KELOMPOK 3: INVENTORI & SISTEM STOK -->
+      <p class="settings-section-title">3. Inventori &amp; Notifikasi Stok</p>
+      <div class="settings-section">
+        <form id="formInventorySettings" onsubmit="saveInventorySettings(event)" style="padding:1.25rem 0;">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="setDefaultMinStock" class="form-label">Default Ambang Stok Menipis (Safety Stock)</label>
+              <input type="number" id="setDefaultMinStock" class="form-input" min="1" max="100" value="5" />
+              <small style="color:var(--text-subtle); display:block; margin-top:0.3rem;">Batas peringatan bawaan saat menambah produk baru.</small>
+            </div>
+            <div class="form-group">
+              <label for="setCurrencyPrefix" class="form-label">Simbol Mata Uang</label>
+              <input type="text" id="setCurrencyPrefix" class="form-input" value="Rp" readonly />
+              <small style="color:var(--text-subtle); display:block; margin-top:0.3rem;">Format baku mata uang Indonesia (IDR).</small>
+            </div>
+          </div>
+          <div style="display:flex; justify-content:flex-end; margin-top:1rem;">
+            <button type="submit" class="btn btn-primary">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2zM17 21v-8H7v8M7 3v5h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              <span>Simpan Pengaturan Inventori</span>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- KELOMPOK 4: MANAJEMEN DATA & BACKUP/RESTORE -->
+      <p class="settings-section-title">4. Manajemen Data &amp; Backup</p>
+      <div class="settings-section" style="padding:1.25rem;">
+        <div style="display:flex; flex-direction:column; gap:1.2rem;">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; border-bottom:1px solid var(--border-color); padding-bottom:1rem;">
+            <div>
+              <strong style="color:var(--text-main); font-size:0.95rem;">Ekspor &amp; Cadangkan Data (Backup)</strong>
+              <p style="color:var(--text-subtle); font-size:0.83rem; margin-top:0.2rem;">Unduh semua data produk, transaksi, dan riwayat pelanggan ke file JSON lokal.</p>
+            </div>
+            <button type="button" class="btn btn-outline-cyan" onclick="exportDataBackup()">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              <span>Download Backup (.JSON)</span>
+            </button>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; border-bottom:1px solid var(--border-color); padding-bottom:1rem;">
+            <div>
+              <strong style="color:var(--text-main); font-size:0.95rem;">Pulihkan Data (Restore)</strong>
+              <p style="color:var(--text-subtle); font-size:0.83rem; margin-top:0.2rem;">Impor kembali file cadangan JSON yang pernah diunduh.</p>
+            </div>
+            <div>
+              <input type="file" id="fileRestoreBackup" accept=".json" style="display:none;" onchange="importDataBackup(event)" />
+              <button type="button" class="btn btn-outline-cyan" onclick="document.getElementById('fileRestoreBackup').click()">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                <span>Pilih File Backup</span>
+              </button>
+            </div>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+            <div>
+              <strong style="color:#ef4444; font-size:0.95rem;">Kosongkan Semua Data</strong>
+              <p style="color:var(--text-subtle); font-size:0.83rem; margin-top:0.2rem;">Hapus semua produk, transaksi, dan pelanggan. Data tidak bisa dikembalikan.</p>
+            </div>
+            <button type="button" class="btn btn-ghost" style="color:#ef4444; border:1px solid #fecaca; background:#fff;" onclick="resetToDemoData()">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              <span>Kosongkan Semua Data</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- KELOMPOK 5: AKUN & KEAMANAN SESI -->
+      <p class="settings-section-title">5. Akun &amp; Keamanan Sesi</p>
+      <div class="settings-section" style="padding:1.25rem;">
+        <div style="display:flex; flex-direction:column; gap:1.2rem;">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; border-bottom:1px solid var(--border-color); padding-bottom:1rem;">
+            <div>
+              <strong style="color:var(--text-main); font-size:0.95rem;">Sesi Pengguna Aktif</strong>
+              <p style="color:var(--text-subtle); font-size:0.83rem; margin-top:0.2rem;" id="setAccountUserDetail">Masuk sebagai: owner@nusantara.id (Role: Owner / Pengelola Toko)</p>
+            </div>
+            <button type="button" class="btn btn-ghost" style="color:#ef4444; border:1px solid #cbd5e1;" onclick="handleLogout()">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              <span>Keluar (Logout)</span>
+            </button>
+          </div>
+
+          <form id="formChangePassword" onsubmit="handleChangePassword(event)">
+            <p style="font-weight:600; color:var(--text-main); margin-bottom:0.75rem; font-size:0.92rem;">Ganti Kata Sandi Akun</p>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="setCurrPassword" class="form-label">Kata Sandi Saat Ini</label>
+                <input type="password" id="setCurrPassword" class="form-input" required placeholder="••••••••" />
+              </div>
+              <div class="form-group">
+                <label for="setNewPassword" class="form-label">Kata Sandi Baru</label>
+                <input type="password" id="setNewPassword" class="form-input" required placeholder="Minimal 6 karakter" minlength="6" />
+              </div>
+            </div>
+            <div style="display:flex; justify-content:flex-end; margin-top:0.75rem;">
+              <button type="submit" class="btn btn-primary">
+                <span>Perbarui Kata Sandi</span>
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </section>
@@ -2094,23 +2244,40 @@ if (typeof window !== 'undefined') {
       btn.setAttribute('aria-label', show ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi');
     }
 
-    function quickFillLogin(role) {
-      const owner = role === 'owner';
-      document.getElementById('loginEmail').value = owner ? 'owner@nusantara.id' : 'kasir@nusantara.id';
-      document.getElementById('loginPassword').value = 'demo1234';
-      showToast(owner ? 'Kredensial Pemilik terisi otomatis.' : 'Kredensial Kasir terisi otomatis.');
+    const STORAGE_KEY_USERS = 'transforma_umkm_users_db';
+
+    function getRegisteredUsers() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY_USERS);
+        return raw ? JSON.parse(raw) : [];
+      } catch (e) {
+        return [];
+      }
     }
 
-    // Catatan: sesi disimpan di client Storage (purwarupa offline-first).
     function handleLoginSubmit(e) {
       e.preventDefault();
       const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value;
       const remember = document.getElementById('loginRemember').checked;
-      if (!email) { showToast('Silakan masukkan email atau nama pengguna.'); return; }
+      if (!email || !password) { showToast('Silakan masukkan email dan kata sandi.'); return; }
 
-      const user = email.toLowerCase().includes('kasir')
-        ? { name: 'Siti Rahma', role: 'cashier', roleLabel: 'Kasir Toko', email: email, storeName: 'Kopi & Ritel Nusantara', phone: '081298765432', category: 'Retail' }
-        : { name: 'Hendra Wijaya', role: 'owner', roleLabel: 'Owner (Pemilik)', email: email || 'owner@nusantara.id', storeName: 'Kopi & Ritel Nusantara', phone: '081234567890', category: 'Kuliner & F&B' };
+      const users = getRegisteredUsers();
+      const found = users.find(u => u.email.toLowerCase() === email.toLowerCase());
+
+      if (users.length > 0 && !found) {
+        showToast('Akun tidak ditemukan. Silakan daftar terlebih dahulu!');
+        return;
+      }
+
+      if (found && found.password && found.password !== password) {
+        showToast('Kata sandi yang Anda masukkan salah!');
+        return;
+      }
+
+      const user = found
+        ? { name: found.name, role: found.role || 'owner', roleLabel: found.roleLabel || 'Owner (Pemilik)', email: found.email, storeName: found.storeName, phone: found.phone, category: found.category }
+        : { name: email.split('@')[0], role: 'owner', roleLabel: 'Owner (Pemilik)', email: email, storeName: 'Toko Saya', phone: '', category: 'Umum' };
 
       if (typeof SessionSecurity !== 'undefined') {
         SessionSecurity.saveSession(user, remember);
@@ -2206,6 +2373,7 @@ if (typeof window !== 'undefined') {
         return;
       }
 
+      const STORAGE_KEY_USERS = 'transforma_umkm_users_db';
       const user = {
         name: ownerName,
         role: 'owner',
@@ -2213,8 +2381,33 @@ if (typeof window !== 'undefined') {
         email: email,
         storeName: businessName,
         phone: phone,
-        category: category
+        category: category,
+        password: password
       };
+
+      try {
+        const rawUsers = localStorage.getItem(STORAGE_KEY_USERS);
+        const users = rawUsers ? JSON.parse(rawUsers) : [];
+        const existingIdx = users.findIndex(u => u.email.toLowerCase() === email.toLowerCase());
+        if (existingIdx >= 0) {
+          users[existingIdx] = user;
+        } else {
+          users.push(user);
+        }
+        localStorage.setItem(STORAGE_KEY_USERS, JSON.stringify(users));
+      } catch (e) {}
+
+      // Inisialisasi profil toko baru sesuai pendaftaran
+      try {
+        const newStoreProfile = {
+          name: businessName,
+          phone: phone,
+          desc: `Toko resmi ${businessName} - Melayani pelanggan dengan produk terbaik.`,
+          address: 'Alamat toko belum diatur',
+          receiptFooter: 'Terima Kasih Atas Kunjungan Anda!'
+        };
+        localStorage.setItem('transforma_umkm_store_profile', JSON.stringify(newStoreProfile));
+      } catch (e) {}
 
       // Simpan sesi terenkripsi dengan auto-expiry
       if (typeof SessionSecurity !== 'undefined') {
@@ -2545,133 +2738,11 @@ function registerProductIcon(id, { name, cat, lucide, svg, keywords } = {}) {
 loadLucideIndex();
 
 // Default User Profile
-const DEFAULT_USER = {
-  name: 'Hendra Wijaya',
-  role: 'owner',
-  roleLabel: 'Owner (Pemilik)',
-  email: 'owner@nusantara.id',
-  storeName: 'Kopi & Ritel Nusantara',
-  phone: '081234567890',
-  category: 'Kuliner & F&B'
-};
+const DEFAULT_USER = null;
 
-// Initial Demo Dataset (Realistic Indonesian SME)
-const INITIAL_PRODUCTS = [
-  {
-    id: 'prod-001',
-    sku: 'KOP-GAYO-250',
-    name: 'Kopi Arabika Gayo Single Origin 250g',
-    category: 'Kopi & Minuman',
-    costPrice: 42000,
-    sellPrice: 65000,
-    stock: 18,
-    minStock: 8,
-    supplier: 'Koperasi Kopi Gayo (081234567890)',
-    icon: 'cup'
-  },
-  {
-    id: 'prod-002',
-    sku: 'KOP-ROB-500',
-    name: 'Biji Kopi Robusta Temanggung 500g',
-    category: 'Kopi & Minuman',
-    costPrice: 35000,
-    sellPrice: 55000,
-    stock: 4, // Low stock for demonstration!
-    minStock: 10,
-    supplier: 'Petani Lereng Sindoro (082199887766)',
-    icon: 'bean'
-  },
-  {
-    id: 'prod-003',
-    sku: 'SNK-PISANG-200',
-    name: 'Keripik Pisang Cokelat Lumer 200g',
-    category: 'Makanan & Snack',
-    costPrice: 12000,
-    sellPrice: 22000,
-    stock: 25,
-    minStock: 10,
-    supplier: 'UMKM Berkah Lumajang (085678123456)',
-    icon: 'chips'
-  },
-  {
-    id: 'prod-004',
-    sku: 'FOD-RENDANG-250',
-    name: 'Rendang Daging Sapi Kemasan Vakum 250g',
-    category: 'Makanan & Snack',
-    costPrice: 48000,
-    sellPrice: 75000,
-    stock: 2, // Critical low stock
-    minStock: 6,
-    supplier: 'Dapur Minang Asli (081344556677)',
-    icon: 'steak'
-  },
-  {
-    id: 'prod-005',
-    sku: 'SEM-BERAS-5KG',
-    name: 'Beras Organik Pandan Wangi 5kg',
-    category: 'Bahan Pokok',
-    costPrice: 72000,
-    sellPrice: 88000,
-    stock: 14,
-    minStock: 5,
-    supplier: 'Gapoktan Cianjur (081900112233)',
-    icon: 'rice'
-  },
-  {
-    id: 'prod-006',
-    sku: 'TEX-BATIK-MGM',
-    name: 'Kain Batik Tulis Motif Mega Mendung',
-    category: 'Kerajinan & Fashion',
-    costPrice: 160000,
-    sellPrice: 250000,
-    stock: 7,
-    minStock: 3,
-    supplier: 'Pengrajin Trusmi Cirebon (087788990011)',
-    icon: 'batik'
-  },
-  {
-    id: 'prod-007',
-    sku: 'SNK-SAMBAL-ROA',
-    name: 'Sambal Roa Khas Manado Botol 150g',
-    category: 'Makanan & Snack',
-    costPrice: 20000,
-    sellPrice: 35000,
-    stock: 0, // Out of stock for demonstration
-    minStock: 8,
-    supplier: 'Ibu Maryam Manado (081298765432)',
-    icon: 'bottle'
-  }
-];
-
-const INITIAL_CUSTOMERS = [
-  {
-    id: 'cust-001',
-    name: 'Ibu Ratna Dewi',
-    phone: '081288990011',
-    totalSpent: 480000,
-    points: 48,
-    lastVisit: '2026-10-18',
-    notes: 'Pelanggan setia, suka biji kopi Arabika'
-  },
-  {
-    id: 'cust-002',
-    name: 'Mas Dimas Pratama',
-    phone: '085711223344',
-    totalSpent: 215000,
-    points: 21,
-    lastVisit: '2026-10-17',
-    notes: 'Suka camilan dan rendang siap saji'
-  },
-  {
-    id: 'cust-003',
-    name: 'Pak Hendro Kusumo',
-    phone: '081399001122',
-    totalSpent: 75000,
-    points: 7,
-    lastVisit: '2026-10-10',
-    notes: 'Pelanggan baru'
-  }
-];
+// Initial Dataset: Kosong (Clean State agar pengguna mulai dari nol)
+const INITIAL_PRODUCTS = [];
+const INITIAL_CUSTOMERS = [];
 
 // App State
 let products = [];
@@ -2694,10 +2765,24 @@ document.addEventListener('DOMContentLoaded', () => {
   initClock();
   initNav();
   initShell();
+  loadAllSettingsForm();
   renderAllViews();
 });
 
 function initStorage() {
+  // === VERSION MIGRATION: bersihkan data lama jika versi berbeda ===
+  const APP_VERSION_KEY = 'transforma_umkm_app_version';
+  const CURRENT_VERSION = '2.0';
+  const storedVersion = localStorage.getItem(APP_VERSION_KEY);
+  if (storedVersion !== CURRENT_VERSION) {
+    localStorage.removeItem(STORAGE_KEY_PRODUCTS);
+    localStorage.removeItem(STORAGE_KEY_TRX);
+    localStorage.removeItem(STORAGE_KEY_CUSTOMERS);
+    localStorage.setItem(APP_VERSION_KEY, CURRENT_VERSION);
+    console.log('[TransformaUMKM] Migrasi v2.0: data lama dihapus, mulai dari kosong.');
+  }
+  // =================================================================
+
   const storedProds = localStorage.getItem(STORAGE_KEY_PRODUCTS);
   if (!storedProds) {
     products = JSON.parse(JSON.stringify(INITIAL_PRODUCTS));
@@ -2724,34 +2809,7 @@ function initStorage() {
 }
 
 function generateInitialTransactions() {
-  const now = new Date();
-  const trxs = [];
-  const sampleProducts = [INITIAL_PRODUCTS[0], INITIAL_PRODUCTS[2], INITIAL_PRODUCTS[4]];
-
-  // Generate simulated history for past 3 days
-  for (let i = 2; i >= 0; i--) {
-    const d = new Date(now.getTime() - i * 86400000);
-    const dateStr = d.toISOString().split('T')[0];
-    const timeStr = `${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}`;
-    
-    trxs.push({
-      id: `TRX-${1000 + i}`,
-      date: dateStr,
-      time: timeStr,
-      customerId: 'cust-001',
-      customerName: 'Ibu Ratna Dewi',
-      items: [
-        { id: sampleProducts[0].id, name: sampleProducts[0].name, price: sampleProducts[0].sellPrice, cost: sampleProducts[0].costPrice, qty: 2 }
-      ],
-      subtotal: sampleProducts[0].sellPrice * 2,
-      discount: 0,
-      tax: 0,
-      grandTotal: sampleProducts[0].sellPrice * 2,
-      method: 'QRIS',
-      status: 'Selesai'
-    });
-  }
-  return trxs;
+  return [];
 }
 
 function saveProducts() {
@@ -3539,7 +3597,9 @@ function updateCartTotals(subtotal) {
 
   const discountAmount = Math.round(subtotal * (discountPct / 100));
   const afterDiscount = Math.max(0, subtotal - discountAmount);
-  const taxAmount = isTaxActive ? Math.round(afterDiscount * 0.11) : 0;
+  const posCfg = typeof getPosSettings === 'function' ? getPosSettings() : { taxRate: 11 };
+  const currentTaxRate = (posCfg.taxRate !== undefined ? posCfg.taxRate : 11) / 100;
+  const taxAmount = isTaxActive ? Math.round(afterDiscount * currentTaxRate) : 0;
   const grandTotal = afterDiscount + taxAmount;
 
   document.getElementById('cartSubtotal').textContent = formatRupiah(subtotal);
@@ -3788,6 +3848,16 @@ function showReceiptModal(trx) {
   } else {
     document.getElementById('rcPayCashRow').style.display = 'none';
     document.getElementById('rcChangeRow').style.display = 'none';
+  }
+
+  const storeCfg = typeof getStoreProfile === 'function' ? getStoreProfile() : null;
+  const rcFooter = document.querySelector('.rc-footer p');
+  if (rcFooter && storeCfg && storeCfg.receiptFooter) {
+    rcFooter.textContent = storeCfg.receiptFooter;
+  }
+  const rcStoreSub = document.getElementById('rcStoreSub');
+  if (rcStoreSub && storeCfg && storeCfg.name) {
+    rcStoreSub.textContent = storeCfg.name;
   }
 
   openModal('receiptModal');
@@ -4389,6 +4459,269 @@ function updateAlertBadges() {
     alertPill.style.display = lowCount > 0 ? 'inline-block' : 'none';
   }
   if (typeof renderNotifications === 'function') renderNotifications();
+}
+
+// ========================================================
+// 8B. SETTINGS & BUSINESS CONFIGURATION MODULE (5 KELOMPOK)
+// ========================================================
+const STORAGE_KEY_STORE_PROFILE = 'transforma_umkm_store_profile';
+const STORAGE_KEY_POS_SETTINGS = 'transforma_umkm_pos_settings';
+const STORAGE_KEY_INV_SETTINGS = 'transforma_umkm_inv_settings';
+
+const DEFAULT_STORE_PROFILE = {
+  name: 'Toko UMKM Saya',
+  phone: '',
+  desc: 'Selamat datang di toko kami. Menyediakan produk berkualitas untuk Anda.',
+  address: 'Belum diatur',
+  receiptFooter: 'Terima Kasih Atas Kunjungan Anda!'
+};
+
+const DEFAULT_POS_SETTINGS = {
+  taxRate: 0,
+  bankInfo: 'Belum diatur',
+  qrisHolder: 'TOKO UMKM'
+};
+
+const DEFAULT_INV_SETTINGS = {
+  defaultMinStock: 5,
+  currencyPrefix: 'Rp'
+};
+
+function getStoreProfile() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY_STORE_PROFILE);
+    return raw ? { ...DEFAULT_STORE_PROFILE, ...JSON.parse(raw) } : { ...DEFAULT_STORE_PROFILE };
+  } catch (e) {
+    return { ...DEFAULT_STORE_PROFILE };
+  }
+}
+
+function getPosSettings() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY_POS_SETTINGS);
+    return raw ? { ...DEFAULT_POS_SETTINGS, ...JSON.parse(raw) } : { ...DEFAULT_POS_SETTINGS };
+  } catch (e) {
+    return { ...DEFAULT_POS_SETTINGS };
+  }
+}
+
+function getInvSettings() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY_INV_SETTINGS);
+    return raw ? { ...DEFAULT_INV_SETTINGS, ...JSON.parse(raw) } : { ...DEFAULT_INV_SETTINGS };
+  } catch (e) {
+    return { ...DEFAULT_INV_SETTINGS };
+  }
+}
+
+function loadAllSettingsForm() {
+  const store = getStoreProfile();
+  const pos = getPosSettings();
+  const inv = getInvSettings();
+
+  // 1. Profil Toko
+  const elName = document.getElementById('setStoreName');
+  const elPhone = document.getElementById('setStorePhone');
+  const elDesc = document.getElementById('setStoreDesc');
+  const elAddr = document.getElementById('setStoreAddress');
+  const elRcFoot = document.getElementById('setReceiptFooter');
+  if (elName) elName.value = store.name || '';
+  if (elPhone) elPhone.value = store.phone || '';
+  if (elDesc) elDesc.value = store.desc || '';
+  if (elAddr) elAddr.value = store.address || '';
+  if (elRcFoot) elRcFoot.value = store.receiptFooter || '';
+
+  // Sinkronkan ke UI Toko & Struk jika elemen ada
+  applyStoreProfileToUI(store);
+
+  // 2. Pengaturan Kasir
+  const elTax = document.getElementById('setTaxRate');
+  const elBank = document.getElementById('setBankInfo');
+  const elQris = document.getElementById('setQrisHolder');
+  if (elTax) elTax.value = pos.taxRate !== undefined ? pos.taxRate : 11;
+  if (elBank) elBank.value = pos.bankInfo || '';
+  if (elQris) elQris.value = pos.qrisHolder || '';
+
+  // 3. Inventori
+  const elMinStock = document.getElementById('setDefaultMinStock');
+  if (elMinStock) elMinStock.value = inv.defaultMinStock || 5;
+
+  // 5. Akun Detail
+  const elUserDetail = document.getElementById('setAccountUserDetail');
+  if (elUserDetail && currentUser) {
+    elUserDetail.textContent = `Masuk sebagai: ${currentUser.email || 'owner@nusantara.id'} (Role: ${currentUser.role || 'Owner / Pengelola Toko'})`;
+  }
+}
+
+function applyStoreProfileToUI(store) {
+  const pubTitle = document.getElementById('pubStoreTitle');
+  const pubDesc = document.getElementById('pubStoreDesc');
+  const rcStoreSub = document.getElementById('rcStoreSub');
+
+  if (pubTitle) pubTitle.textContent = store.name;
+  if (pubDesc) pubDesc.textContent = store.desc;
+  if (rcStoreSub) rcStoreSub.textContent = store.name;
+
+  const storeContacts = document.querySelector('.store-contacts');
+  if (storeContacts) {
+    storeContacts.innerHTML = `
+      <span><i data-ic="map-pin"></i> ${escapeHtml(store.address)}</span> &bull; 
+      <span><i data-ic="phone"></i> WA: ${escapeHtml(store.phone)}</span>
+    `;
+    if (typeof LucideStaticFallback !== 'undefined' && LucideStaticFallback.scan) {
+      LucideStaticFallback.scan(storeContacts);
+    }
+  }
+}
+
+function saveStoreProfileSettings(e) {
+  if (e) e.preventDefault();
+  const profile = {
+    name: document.getElementById('setStoreName').value.trim() || DEFAULT_STORE_PROFILE.name,
+    phone: document.getElementById('setStorePhone').value.trim() || DEFAULT_STORE_PROFILE.phone,
+    desc: document.getElementById('setStoreDesc').value.trim(),
+    address: document.getElementById('setStoreAddress').value.trim(),
+    receiptFooter: document.getElementById('setReceiptFooter').value.trim() || DEFAULT_STORE_PROFILE.receiptFooter
+  };
+  localStorage.setItem(STORAGE_KEY_STORE_PROFILE, JSON.stringify(profile));
+  applyStoreProfileToUI(profile);
+  showToast('Profil dan identitas toko berhasil diperbarui!', 'success');
+}
+
+function saveCheckoutSettings(e) {
+  if (e) e.preventDefault();
+  const pos = {
+    taxRate: Number(document.getElementById('setTaxRate').value) || 0,
+    bankInfo: document.getElementById('setBankInfo').value.trim(),
+    qrisHolder: document.getElementById('setQrisHolder').value.trim()
+  };
+  localStorage.setItem(STORAGE_KEY_POS_SETTINGS, JSON.stringify(pos));
+  
+  // Update bank info di modal checkout jika ada
+  const bankBox = document.querySelector('.bank-acc-row strong');
+  if (bankBox && pos.bankInfo) {
+    bankBox.textContent = pos.bankInfo;
+  }
+  
+  // Recalculate cart if items exist
+  const subtotal = cart.reduce((sum, i) => sum + i.price * i.qty, 0);
+  updateCartTotals(subtotal);
+  showToast('Pengaturan kasir & pembayaran berhasil disimpan!', 'success');
+}
+
+function saveInventorySettings(e) {
+  if (e) e.preventDefault();
+  const inv = {
+    defaultMinStock: Number(document.getElementById('setDefaultMinStock').value) || 5,
+    currencyPrefix: 'Rp'
+  };
+  localStorage.setItem(STORAGE_KEY_INV_SETTINGS, JSON.stringify(inv));
+  
+  // Update default value di form tambah produk
+  const prodMinStock = document.getElementById('prodMinStock');
+  if (prodMinStock) prodMinStock.value = inv.defaultMinStock;
+
+  showToast('Pengaturan inventori berhasil disimpan!', 'success');
+}
+
+function exportDataBackup() {
+  exportDatabase();
+}
+
+function importDataBackup(e) {
+  const file = e.target.files && e.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(evt) {
+    try {
+      const data = JSON.parse(evt.target.result);
+      if (!data.products && !data.transactions && !data.customers) {
+        showToast('Format file backup tidak sesuai!', 'danger');
+        return;
+      }
+
+      if (confirm('Pulihkan data dari backup? Data transaksi dan produk saat ini akan diperbarui dengan isi file.')) {
+        if (Array.isArray(data.products)) {
+          products = data.products;
+          saveProducts();
+        }
+        if (Array.isArray(data.transactions)) {
+          transactions = data.transactions;
+          saveTransactions();
+        }
+        if (Array.isArray(data.customers)) {
+          customers = data.customers;
+          saveCustomers();
+        }
+        renderAllViews();
+        showToast('Data berhasil dipulihkan dari file backup!', 'success');
+      }
+    } catch (err) {
+      showToast('Gagal membaca file JSON: ' + err.message, 'danger');
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+}
+
+function resetToDemoData() {
+  if (!confirm('Apakah Anda yakin ingin mengosongkan seluruh database (produk, transaksi, pelanggan)?')) {
+    return;
+  }
+  products = [];
+  saveProducts();
+  transactions = [];
+  saveTransactions();
+  customers = [];
+  saveCustomers();
+  
+  localStorage.removeItem(STORAGE_KEY_STORE_PROFILE);
+  localStorage.removeItem(STORAGE_KEY_POS_SETTINGS);
+  localStorage.removeItem(STORAGE_KEY_INV_SETTINGS);
+  
+  loadAllSettingsForm();
+  renderAllViews();
+  showToast('Database berhasil dikosongkan!', 'info');
+}
+
+function handleChangePassword(e) {
+  if (e) e.preventDefault();
+  const curr = document.getElementById('setCurrPassword').value.trim();
+  const newPass = document.getElementById('setNewPassword').value.trim();
+
+  if (!curr) {
+    showToast('Masukkan kata sandi saat ini!', 'warning');
+    return;
+  }
+  if (newPass.length < 6) {
+    showToast('Kata sandi baru minimal 6 karakter!', 'warning');
+    return;
+  }
+
+  // Validasi password lama dari database pengguna
+  try {
+    const session = typeof SessionSecurity !== 'undefined' ? SessionSecurity.getSession() : null;
+    const usersRaw = localStorage.getItem('transforma_umkm_users_db');
+    const users = usersRaw ? JSON.parse(usersRaw) : [];
+    const userEmail = session ? session.email : null;
+    const userRecord = users.find(u => u.email === userEmail);
+
+    if (userRecord) {
+      if (userRecord.password !== curr) {
+        showToast('Kata sandi saat ini tidak tepat!', 'error');
+        return;
+      }
+      // Update password di database
+      userRecord.password = newPass;
+      localStorage.setItem('transforma_umkm_users_db', JSON.stringify(users));
+    }
+  } catch (err) {
+    console.warn('[handleChangePassword]', err);
+  }
+
+  showToast('Kata sandi berhasil diperbarui!', 'success');
+  document.getElementById('formChangePassword').reset();
 }
 
 // ========================================================

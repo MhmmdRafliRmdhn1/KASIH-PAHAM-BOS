@@ -1,239 +1,295 @@
-# TransformaUMKM — Asisten Bisnis Berbasis AI & Smart SME Operating System
+# TransformaUMKM
 
-> **TransformaUMKM — Platform Solusi Digital Terpadu untuk UMKM Indonesia**  
-> **Misi:** *Accelerating Digital Transformation for Business and SMEs*  
-> **Pilar Inovasi:** *Asisten Bisnis Berbasis AI (Smart Restock, Auto Copywriter & Data-Driven Promo)*  
-> **Fokus Industri:** *Business, UMKM & Digital Economy*  
+> **Platform Operasi Digital Terpadu untuk UMKM Indonesia**  
+> Kasir POS · Inventori · Asisten Bisnis AI · CRM · Katalog Digital — dalam satu aplikasi web.
 
-[![Platform](https://img.shields.io/badge/Platform-Web%20SPA-00D4FF)](https://github.com/)
-[![AI-Assistant](https://img.shields.io/badge/AI%20Copilot-TransformaAI-8B5CF6)](https://github.com/)
+[![Platform](https://img.shields.io/badge/Platform-Web%20SPA-00D4FF)](#)
+[![Tech](https://img.shields.io/badge/Stack-HTML%20%2F%20CSS%20%2F%20Vanilla%20JS-F7DF1E)](#)
 [![License](https://img.shields.io/badge/License-MIT-10B981)](LICENSE)
-[![Status](https://img.shields.io/badge/Status-Live%20Ready-FF6B35)](https://vercel.com/)
+[![Status](https://img.shields.io/badge/Status-Production%20Ready-22c55e)](#)
 
 ---
 
-## 1. Deskripsi Masalah & Solusi Inovatif
+## Tampilan Aplikasi
 
-### Masalah Riil (Problem Background)
-Sektor Usaha Mikro, Kecil, dan Menengah (UMKM) menyumbang lebih dari 61% terhadap PDB Indonesia. Namun, mayoritas pelaku UMKM masih terjebak pada operasional analog dan keterbatasan wawasan bisnis:
-1. **Kebutaan Prediksi Stok (*Stock Blindness*)**: Stok produk sering habis mendadak tanpa peringatan runout days, atau sebaliknya terjadi *overstock* barang lambat laku (*dead stock*) yang mematikan modal kerja.
-2. **Keterbatasan Keterampilan Copywriting**: Pemilik UMKM kesulitan merangkai deskripsi produk yang memikat untuk katalog online, sehingga konversi penjualan online rendah.
-3. **Pemasaran Media Sosial yang Tidak Berbasis Data**: Pelaku usaha bingung membuat caption promosi Instagram, TikTok, dan broadcast WhatsApp yang relevan dengan momentum penjualan atau stok berlebih yang perlu cuci gudang.
-4. **Pencatatan Transaksi & Kasir Manual**: Nota kertas lambat, rentan salah hitung, serta tidak terhubung ke analitik keuntungan bersih.
-
-### Solusi Inovasi Teknologi: Asisten Bisnis Berbasis AI
-**TransformaUMKM** menghadirkan terobosan teknologi melalui **TransformaAI Copilot**, sebuah asisten bisnis cerdas terpadu yang menganalisis data transaksi harian secara realtime untuk menggerakkan 4 modul inovasi:
-- **Saran Stok Berbasis AI (Demand Forecasting & Auto-PO)**: Menganalisis *sales velocity* (kecepatan penjualan per hari), menghitung sisa hari ketersediaan stok (*runout days*), mendeteksi anomali *Darurat/Kritis/Overstock*, dan menyiapkan draf Purchase Order WhatsApp ke supplier dalam 1 klik.
-- **Generator Deskripsi Produk Otomatis Berbasis AI (AI Copywriter)**: Menghasilkan copywriting persuasif (headline, sensory body, bullet points, CTA, dan SEO tags) untuk katalog produk toko dengan pilihan gaya bahasa (*Storytelling, Persuasif, Premium, FOMO*).
-- **Generator Caption Promosi Medsos & WA Berbasis AI**: Membaca data riil toko (produk terlaris #1, produk lambat laku untuk flash sale cuci gudang, promo gajian/weekend, dan voucher loyalitas pelanggan) lalu menyusun caption promosi siap salin/kirim ke WhatsApp, Instagram, dan TikTok.
-- **Chat Konsultan Bisnis AI Interaktif**: Asisten tanya-jawab cerdas yang dapat menjawab pertanyaan strategis pemilik toko secara kuantitatif berdasarkan data nyata (omzet, laba kotor riil, persentase margin, rekomendasi paket bundling, dan prioritas restock).
+| Dashboard | Kasir POS | Asisten AI |
+|-----------|-----------|------------|
+| Monitoring omzet, laba, stok real-time | Transaksi cepat dengan filter kategori | Rekomendasi restock & caption promosi |
 
 ---
 
-## 2. Fitur Utama & Modul Asisten AI
+## Fitur Utama
 
-### Fitur Unggulan Sistem
-| Modul | Fitur Unggulan | Sentuhan Inovasi AI & Nilai Tambah |
-|---|---|---|
-| **Asisten AI Bisnis** | **Saran Stok Berbasis AI, Generator Deskripsi Otomatis, Caption Promosi Penjualan, Chat Copilot** | **Pilar Utama Inovasi: Otomasi cerdas tanpa biaya API mahal, langsung dari data penjualan lokal.** |
-| **Inventori & Restock AI** | Prediksi *Runout Days*, Klasifikasi Status (Darurat, Menipis, Aman, Overstock), One-Click WhatsApp PO ke Supplier | Mencegah *stockout* dan mengurangi *dead stock* hingga 40%. |
-| **AI Product Copywriter** | Generator deskripsi instan di katalog dan form produk, 4 pilihan tone, integrasi langsung ke etalase online | Meningkatkan konversi penjualan katalog digital UMKM. |
-| **AI Promo Caption Generator** | Rekomendasi promosi otomatis berbasis produk terlaris, dead-stock sale, promo akhir pekan, format WA/IG/TikTok | Efisiensi waktu pembuatan konten pemasaran dari jam ke detik. |
-| **TransformaAI Chat Advisor** | Dialog interaktif dengan metrik keuangan riil (omzet, margin kotor, rekomendasi bundling produk) | Konsultan bisnis virtual 24/7 bagi pelaku UMKM. |
-| **Smart POS & Kasir** | Filter Kategori, Diskon Fleksibel, PPN Toggle, QRIS Canvas Dinamis, Struk Digital WhatsApp | Transaksi kasir tuntas dalam < 15 detik. |
-| **Executive Dashboard** | Realtime KPI (Omzet, Laba Bersih, Transaksi, Alert Stok), Grafik Tren 7 Hari Canvas, Donut Chart Kategori | Visibilitas kesehatan finansial secara instan tanpa rekap manual. |
-| **CRM & WhatsApp** | Database Pelanggan, Poin Hadiah (1 pt / 10k), Segmentasi VIP, Template Promo WA Terotomatisasi | Meningkatkan repeat order hingga 30%. |
-| **Katalog Digital Publik** | Mini Storefront publik dengan deskripsi AI, sinkronisasi stok realtime, order via WhatsApp | Akselerasi penetrasi ekonomi digital UMKM tanpa potongan komisi marketplace. |
-| **Portal Masuk & Daftar Terpisah** | Halaman Mandiri (`login.html` & `register.html`), Form Kredensial Khusus, Presets Cepat Demo (Owner & Kasir) | Akses profesional dan aman bagi pengguna. |
-| **Dialog Keluar (Logout)** | Modal dialog cerdas saat tekan keluar: Pilihan ke Portal Login atau Buat Akun | Alur sesi yang fleksibel & intuitif. |
-| **Mobile Simulator Mode** | Toggle simulasi fisik smartphone + bottom navigation bar responsif | Pengalaman aplikasi mobile native seketika. |
+| Modul | Deskripsi |
+|-------|-----------|
+| 📊 **Executive Dashboard** | KPI real-time: omzet harian, estimasi laba bersih, total transaksi, alert stok. Grafik tren 7 hari & donut chart kategori. |
+| 🛒 **Kasir POS** | Transaksi cepat, filter kategori produk, diskon fleksibel, toggle PPN, QRIS canvas dinamis, struk digital via WhatsApp. |
+| 📦 **Inventori & Stok** | CRUD produk, SKU otomatis, peringatan stok minimum, ikon produk otomatis dari Lucide Icons. |
+| 🤖 **Asisten Bisnis AI** | Saran restock berbasis sales velocity, generator deskripsi produk, caption promosi WA/IG/TikTok, chat konsultan AI. |
+| 👥 **CRM Pelanggan** | Database pelanggan, poin reward (1 pt / Rp 10.000), segmentasi VIP, template pesan WhatsApp. |
+| 🏪 **Katalog Digital Publik** | Mini storefront publik dengan sinkronisasi stok real-time, order via WhatsApp. |
+| ⚙️ **Pengaturan (5 Kelompok)** | Profil Toko, Kasir/Pembayaran, Inventori, Backup Data, Akun & Keamanan. |
+| 🔐 **Auth Mandiri** | Registrasi & login dengan kredensial sendiri, enkripsi sesi XOR, auto-expiry token. |
 
 ---
 
-## 3. Tech Stack & Arsitektur Sistem
+## Cara Menjalankan
 
-Sistem dibangun dengan arsitektur **Zero-Heavy-Dependency Single Page Application (SPA)** untuk performa maksimal dan waktu muat di bawah 1 detik:
+### Prasyarat
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                       CLIENT VIEWPORT                       │
-│  (Desktop Browser • Tablet iPad/Android • Smartphone)       │
-└──────────────────────────────┬──────────────────────────────┘
-                               │
-            ┌──────────────────┴──────────────────┐
-            v                                     v
-┌───────────────────────┐             ┌───────────────────────┐
-│     FRONTEND UI       │             │   SMART AUTOMATION    │
-│  Semantic HTML5       │             │  Stock Safety Triggers│
-│  Vanilla CSS3 Tokens  │             │  Auto PO Generator WA │
-│  Responsive Flex/Grid │             │  Profit Margin Engine │
-│  Glassmorphism Light  │             │  QRIS Canvas Painter  │
-└───────────┬───────────┘             └───────────┬───────────┘
-            │                                     │
-            └──────────────────┬──────────────────┘
-                               v
-┌─────────────────────────────────────────────────────────────┐
-│                   PERSISTENT CLIENT STORAGE                 │
-│  LocalStorage Cache Engine • JSON Backup/Export • Schema SQL│
-└─────────────────────────────────────────────────────────────┘
+- **Node.js** versi 18 ke atas → [Download di nodejs.org](https://nodejs.org)
+- **pnpm** (package manager) — lihat cara install di bawah
+
+---
+
+### 1. Install pnpm (Sekali Saja)
+
+Buka **Terminal / PowerShell**, jalankan:
+
+```powershell
+npm install -g pnpm@9
 ```
 
-- **Frontend Core**: Semantic HTML5, Vanilla JavaScript (ES6+ Modular Architecture).
-- **Styling**: Vanilla CSS3 Custom Design System, CSS Variables, Glassmorphism, Micro-animations.
-- **Visualisasi Data**: Native HTML5 Canvas 2D Engine (Line Area Chart & Donut Chart tanpa library luar).
-- **Storage & Relasional**: LocalStorage Persistence didukung skema relasional `database/schema.sql` untuk kesiapan migrasi backend PostgreSQL/MySQL.
+> **Windows — pnpm tidak dikenali?**  
+> Jalankan perintah ini di PowerShell untuk patch otomatis:
+> ```powershell
+> $f = "$env:APPDATA\npm\pnpm.ps1"
+> $c = Get-Content $f -Raw
+> $patched = $c -replace 'if \(Test-Path.*?\n.*?\n.*?\} else \{', '# patched'
+> # Cara manual: edit file $f, ganti baris node dengan path absolut:
+> # & "C:\Program Files\nodejs\node.exe" "$basedir/node_modules/pnpm/bin/pnpm.cjs" $args
+> ```
+> Atau ikuti langkah manual di bagian **Troubleshooting** bawah.
 
 ---
 
-## 4. Struktur Repository
+### 2. Clone / Download Proyek
 
-Sesuai dengan standar teknis industri modern:
-
-```
-transforma-umkm/
-├── index.html              # Aplikasi web utama (SPA 5 Modul Terintegrasi)
-├── style.css               # Desain sistem responsif (light theme), komponen kasir
-├── script.js               # Business logic, state management, CRUD, kalkulasi laba, canvas chart
-├── vercel.json             # Konfigurasi deployment platform Vercel
-├── .gitignore              # Proteksi file kredensial, env, dan runtime logs
-├── LICENSE                 # Lisensi open-source MIT
-├── README.md               # Dokumentasi teknis lengkap kompetisi
-├── database/
-│   └── schema.sql          # Skema database relasional (PostgreSQL/MySQL ready)
-└── docs/
-    └── PROPOSAL_UX_CASE_STUDY.md  # Draf proposal lengkap dan panduan UX Case Study
-```
-
----
-
-## 5. Cara Instalasi & Menjalankan Aplikasi
-
-Aplikasi dibangun tanpa ketergantungan build-tools rumit (zero configuration):
-
-### Opsi 1: Buka Langsung di Browser (Paling Cepat)
-Cukup klik ganda file `index.html` pada file explorer Anda, atau seret file ke browser (Chrome, Edge, Firefox, Safari).
-
-### Opsi 2: Menggunakan Local Development Server (Node.js / Python)
 ```bash
-# Masuk ke direktori project
+# Clone via Git
+git clone https://github.com/username/transforma-umkm.git
 cd transforma-umkm
 
-# Menggunakan Python
-python -m http.server 3000
-
-# Atau menggunakan npx serve
-npx -y serve .
-```
-Buka browser pada alamat: `http://localhost:3000`.
-
----
-
-## 6. Environment Variables
-
-Sesuai prinsip keamanan web modern (*best security practices*), aplikasi ini tidak mengekspos kredensial sensitif secara publik:
-```env
-# Mode Aplikasi (Client-Side Standalone)
-APP_ENV=production
-APP_DEBUG=false
-APP_NAME="TransformaUMKM"
-
-# Catatan Keamanan:
-# File .env dikecualikan dari repositori melalui .gitignore
-# API keys/secret database tidak pernah di-commit ke Git.
+# Atau: ekstrak ZIP yang sudah didownload, lalu buka foldernya
 ```
 
 ---
 
-## 7. Panduan Deployment Publik
+### 3. Install Dependensi
 
-Aplikasi telah dilengkapi `vercel.json` dan siap dideploy langsung ke hosting publik gratis:
-1. **Deploy ke Vercel**:
-   ```bash
-   npm i -g vercel
-   cd transforma-umkm
-   vercel --prod
-   ```
-2. **Deploy ke Netlify**: Drag & drop folder `transforma-umkm` ke [Netlify Drop](https://app.netlify.com/drop).
-3. **Deploy ke GitHub Pages**: Aktifkan GitHub Pages dari branch utama pada pengaturan repositori.
+```powershell
+cd C:\Users\NamaAnda\Downloads\KASIH-PAHAM-BOS
+
+pnpm install
+```
 
 ---
 
-## Standar Mutu & Keunggulan TransformaUMKM
+### 4. Jalankan Dev Server
 
-- **Fungsionalitas & Implementasi (25%)**: Alur kasir, cetak struk, kalkulasi diskon/pajak, dan CRUD inventori bekerja 100% tanpa mock statis.
-- **Relevansi Masalah & Solusi (20%)**: Menjawab langsung subtema *Accelerating Digital Transformation for Business and SMEs*.
-- **Kualitas Teknis & Arsitektur (20%)**: Struktur kode modular, clean code, semantik standar W3C, performa load < 1 detik.
-- **UI/UX & Design (15%)**: Light glassmorphism modern, visual hierarchy teruji, responsive di smartphone/tablet/desktop.
-- **Dampak Bisnis (10%)**: Efisiensi waktu pembukuan hingga 80%, nol kertas kasir, dan integrasi WhatsApp marketing.
-- **Dokumentasi (10%)**: Dilengkapi proposal lengkap di `docs/PROPOSAL_UX_CASE_STUDY.md`, skema database, dan README berstandar tinggi.
+```powershell
+pnpm run dev
+```
 
+Aplikasi akan berjalan di: **http://127.0.0.1:8080**
+
+Buka browser dan akses URL tersebut.
 
 ---
 
-## Product Icon System (Lucide Icons via CDN + Deteksi Otomatis)
+### Alternatif: Tanpa pnpm (Python)
 
-**Ikon tersedia (24):** `cup`, `bean`, `soda`, `tea`, `honey`, `oil`, `chips`, `steak`, `chicken`, `fish`, `egg`, `milk`, `bread`, `cake`, `bottle`, `rice`, `sack`, `basket`, `veg`, `fruit`, `batik`, `bag`, `gem`, dan `box` (fallback paket).
+Jika tidak ingin install Node.js/pnpm, gunakan Python:
 
-**Ikon produk = Lucide Icons via CDN** (gaya *thick line art*, garis 2,5 px, badge pastel **berwarna per kategori produk**).
+```bash
+# Python 3
+python -m http.server 8080
 
-Ikon diambil dinamis per nama dari CDN jsDelivr (`lucide-static@1.70.0/icons/<nama>.svg`), di-cache di memori + `localStorage`, lalu disisipkan inline ke badge. Tidak ada emoji di kartu produk.
-
-**Cara kerja (100% otomatis — tidak ada pilihan ikon manual di form)** (`script.js`):
-
-1. **Nama produk** dicocokkan dengan kata kunci lokal (Indonesia + Inggris) di `PRODUCT_ICON_RULES`. Kemunculan kata paling awal menang; seri → kata terpanjang → urutan aturan.
-2. Jika belum cocok, **indeks ikon Lucide** (API jsDelivr `data.jsdelivr.com/v1/packages/npm/lucide-static@1.70.0`, di-cache di `localStorage`) dipakai: kata di nama produk yang sama dengan nama ikon Lucide (mis. "Trophy" → `trophy`) otomatis dapat ikonnya. Badge yang sudah tampil dihitung ulang saat indeks selesai dimuat.
-3. Tidak ada kata kunci cocok **atau CDN gagal dimuat** → ikon paket Lucide (`package`), tertanam di kode sehingga tetap tampil offline.
-4. **Warna & latar badge pastel mengikuti KATEGORI produk** (Kopi & Minuman = cokelat, Makanan & Snack = oranye, Bahan Pokok = hijau, Kerajinan & Fashion = biru; lainnya abu-abu).
-
-```js
-products.push({ name: 'Teh Melati Premium 100g', category: 'Kopi & Minuman' /* tanpa field icon */ }); // → ikon daun (teh)
+# Buka browser: http://localhost:8080
 ```
 
-**Menambah kata kunci / ikon sendiri** (nama ikon: https://lucide.dev/icons):
+---
 
-```js
-registerProductIconRule('tea', ['rooibos', 'chamomile']);                        // kata kunci baru
-registerProductIcon('popcorn', { name: 'Popcorn', cat: 'food', lucide: 'popcorn', keywords: ['popcorn', 'berondong'] });
-preloadProductIcons();                                                           // opsional: muat semua ikon di awal
+### Alternatif: Buka File Langsung
+
+Klik ganda `index.html` untuk membuka langsung di browser.  
+> ⚠️ Beberapa fitur (CDN icon, font) membutuhkan koneksi internet.
+
+---
+
+## Alur Pertama Kali Pakai
+
+```
+1. Buka http://127.0.0.1:8080
+         ↓
+2. Halaman Login → klik "Daftar Sekarang"
+         ↓
+3. Isi form registrasi:
+   - Nama pemilik
+   - Nama usaha / toko
+   - No. WhatsApp
+   - Email
+   - Kata sandi (min. 6 karakter)
+         ↓
+4. Login dengan email & kata sandi yang baru didaftarkan
+         ↓
+5. Dashboard kosong siap digunakan!
+   → Tambah produk di menu Inventori
+   → Lakukan transaksi di menu Kasir
+   → Pantau performa di Dashboard
 ```
 
-- Kata ≤ 4 huruf dicocokkan sebagai kata utuh (`teh` tidak cocok dengan `teknik`); kata lebih panjang boleh berawalan.
-- Form produk tidak lagi memiliki pemilih ikon; field `icon` pada produk disimpan `'auto'` dan diabaikan saat render.
-- Versi Lucide dipin lewat `PRODUCT_ICON_LUCIDE_VERSION`; ubah di situ untuk upgrade (cache `localStorage` ikut berganti).
-- Gaya garis (tebal) dan warna ada di blok "Product Icon System" `style.css`: `.pi-badge svg { stroke-width: 2.5 }`; warna garis `--ic-ink` + latar `--ic-bg` per `data-cat`: `coffee` (cokelat), `drink` (emas), `food` (oranye/merah), `staple` (hijau), `craft` (biru), `neutral` (abu). Kategori tiap ikon ada di `PRODUCT_ICON_META`.
-- Salinan lokal ikon (referensi/offline): `assets/icons/*.svg`.
-- Catatan: `index.html` menyimpan salinan tertanam dari `script.js` (`id="src-script"`); jika `script.js` diubah, sinkronkan juga di sana.
+---
 
-## Kode SKU Otomatis
+## Pengaturan Aplikasi
 
-Di form Tambah Produk Baru, kolom **Kode SKU / Barcode** terisi otomatis saat Nama diketik atau Kategori diganti (format `KATEGORI-KATA-UKURAN`, mis. `KOP-ARABIKA-250`; tanpa nama → `KOP-001`, `KOP-002`, ...). Prefiks: KOP (Kopi & Minuman), SNK (Makanan & Snack), SEM (Bahan Pokok), TEX (Kerajinan & Fashion). Kode yang sudah dipakai produk lain diberi akhiran `-2`, `-3`. Kolom tetap bisa diedit manual (isian manual tidak ditimpa; kosongkan kolom untuk kembali ke otomatis). Saat Edit Produk, SKU lama tidak diubah.
+Buka sidebar → klik **Pengaturan** untuk mengakses 5 kelompok konfigurasi:
 
+| Kelompok | Isi |
+|----------|-----|
+| **1. Profil Toko** | Nama toko, nomor WA, deskripsi, alamat, footer struk |
+| **2. Kasir & Pembayaran** | Tarif PPN (%), info rekening bank, nama pemegang QRIS |
+| **3. Aturan Inventori** | Stok minimum default untuk peringatan restock |
+| **4. Backup & Restore Data** | Export data ke file JSON, import dari backup, kosongkan semua data |
+| **5. Akun & Keamanan** | Ganti kata sandi (verifikasi password lama dulu) |
 
-## Sistem Ikon (Lucide, tanpa emoji)
+---
 
-Seluruh antarmuka memakai ikon SVG [Lucide](https://lucide.dev) (lisensi ISC) yang diambil dari CDN jsDelivr
-(`lucide-static@1.70.0`), lalu di-cache di memori + `localStorage`. Tidak ada karakter emoji di UI.
+## Struktur Proyek
 
-| Berkas | Peran |
-| --- | --- |
-| `icons.js` | Mesin ikon bersama untuk login, register, dan dasbor (`UIIcon.html()`, hidrasi otomatis `[data-ic]`) |
-| `script.js` | Ikon produk otomatis (`productBadgeHtml`) + helper `iconHtml()` dan ikon toast per jenis |
-| `style.css` | Bagian "UI Icon System": garis tebal 2.5, badge pastel per fungsi (`data-tone`) |
-
-Pemakaian:
-
-```html
-<i data-ic="sparkles"></i>              <!-- ikon saja, warna pastel otomatis -->
-<i data-ic="zap" data-badge></i>        <!-- ikon di atas badge pastel -->
-<i data-ic="gift" data-tone="pink"></i> <!-- paksa warna -->
+```
+KASIH-PAHAM-BOS/
+├── index.html              # Aplikasi utama (SPA — semua modul terintegrasi)
+├── style.css               # Design system lengkap (CSS Variables, komponen)
+├── package.json            # Konfigurasi proyek & script dev server
+├── pnpm-lock.yaml          # Lock file dependensi pnpm
+├── vercel.json             # Konfigurasi deploy ke Vercel
+├── favicon.ico             # Favicon aplikasi
+├── assets/
+│   ├── logo.svg            # Logo TransformaUMKM
+│   ├── teks-logo.svg       # Versi teks logo
+│   ├── favicon.png         # Favicon PNG
+│   └── icons/              # Icon SVG produk (Lucide Icons, offline fallback)
+├── database/
+│   ├── schema.sql          # Skema database relasional (siap migrasi ke PostgreSQL)
+│   └── transforma.db       # SQLite database (referensi struktur)
+├── docs/
+│   └── PROPOSAL_UX_CASE_STUDY.md
+└── LICENSE                 # Lisensi MIT
 ```
 
-```js
-UIIcon.html('triangle-alert', { badge: true });   // untuk template string JS
-showToast('Tersimpan', 'success');                // ikon mengikuti jenis toast
-showToast('AI bekerja...', 'info', 'sparkles');   // ikon khusus
+> **Catatan**: File `script.js`, `api.js`, `server.js`, dll. adalah file referensi legacy.  
+> Semua logika aktif ada di dalam `index.html` sebagai embedded scripts.
+
+---
+
+## Stack Teknologi
+
+| Layer | Teknologi |
+|-------|-----------|
+| **Frontend** | HTML5 Semantik, Vanilla JavaScript (ES6+) |
+| **Styling** | Vanilla CSS3, CSS Custom Properties (Design Tokens) |
+| **Charts** | HTML5 Canvas 2D (tanpa library eksternal) |
+| **Storage** | localStorage (offline-first, JSON serialization) |
+| **Icons** | Lucide Icons via jsDelivr CDN + cache localStorage |
+| **Fonts** | Plus Jakarta Sans, Inter, JetBrains Mono (Google Fonts) |
+| **Dev Server** | live-server (via pnpm) |
+| **Auth** | Client-side XOR session encryption + auto token expiry |
+
+---
+
+## Deploy ke Hosting Publik
+
+### Vercel (Gratis, Tercepat)
+
+```bash
+npm i -g vercel
+cd KASIH-PAHAM-BOS
+vercel --prod
 ```
 
-Auto-mapping & fallback: nama ikon kosong/tidak valid, tidak ada di Lucide, atau CDN gagal dimuat
-otomatis menampilkan ikon paket (`package`) bawaan. Produk baru tanpa kata kunci khusus juga memakai ikon paket
-dengan warna badge mengikuti kategorinya. Tone tersedia: rose, peach, amber, lime, mint, teal, sky, indigo, lavender, pink, slate.
+### Netlify
+
+Drag & drop folder `KASIH-PAHAM-BOS` ke [app.netlify.com/drop](https://app.netlify.com/drop)
+
+### GitHub Pages
+
+1. Push ke GitHub repository
+2. Settings → Pages → pilih branch `main` → Save
+3. Akses di `https://username.github.io/nama-repo`
+
+---
+
+## Troubleshooting
+
+### `pnpm` tidak dikenali di PowerShell
+
+**Penyebab**: Node.js tidak ada di PATH yang digunakan pnpm.ps1.
+
+**Solusi**:
+
+1. Buka file: `C:\Users\NamaAnda\AppData\Roaming\npm\pnpm.ps1`
+2. Edit dengan Notepad, ubah isinya menjadi:
+
+```powershell
+#!/usr/bin/env pwsh
+$basedir=Split-Path $MyInvocation.MyCommand.Definition -Parent
+$nodeExe = "C:\Program Files\nodejs\node.exe"
+if (Test-Path "$basedir/node.exe") { $nodeExe = "$basedir/node.exe" }
+if ($MyInvocation.ExpectingInput) {
+  $input | & "$nodeExe" "$basedir/node_modules/pnpm/bin/pnpm.cjs" $args
+} else {
+  & "$nodeExe" "$basedir/node_modules/pnpm/bin/pnpm.cjs" $args
+}
+exit $LASTEXITCODE
+```
+
+3. Simpan → buka terminal baru → coba `pnpm --version`
+
+---
+
+### Data lama / demo masih muncul setelah update
+
+Aplikasi otomatis membersihkan data lama saat versi berubah. Jika masih muncul:
+
+1. Buka browser → `F12` → tab **Application**
+2. Kiri: **Local Storage** → `http://127.0.0.1:8080`
+3. Klik kanan → **Clear All** → refresh halaman
+
+---
+
+### Port 8080 sudah dipakai
+
+```powershell
+# Cek proses yang pakai port 8080
+netstat -ano | findstr :8080
+
+# Kill proses (ganti PID dengan angka dari hasil di atas)
+taskkill /PID 12345 /F
+
+# Lalu jalankan ulang
+pnpm run dev
+```
+
+---
+
+### Lupa kata sandi
+
+Karena sistem berbasis localStorage (tidak ada backend), reset manual:
+
+1. Buka DevTools → Application → Local Storage
+2. Hapus key `transforma_umkm_users_db`
+3. Refresh → daftar akun baru
+
+---
+
+## Lisensi
+
+Proyek ini menggunakan lisensi **MIT** — bebas digunakan, dimodifikasi, dan didistribusikan.  
+Lihat file [LICENSE](LICENSE) untuk detail lengkap.
+
+---
+
+<p align="center">
+  Dibuat dengan ❤️ untuk UMKM Indonesia &nbsp;•&nbsp; TransformaUMKM 2026
+</p>
