@@ -1,8 +1,10 @@
-# Abaikan file backend dan package manager agar Vercel murni Static Deploy
-backend/
-node_modules/
-pnpm-lock.yaml
+# Jangan unggah package.json & node_modules ke Vercel agar 100% dideteksi sebagai Static HTML Site murni
+package.json
 package-lock.json
-Proposal_*.docx
-Proposal_*.doc
+pnpm-lock.yaml
+node_modules/
+backend/
+transforma-umkm/
+Proposal_*.doc*
+docs/
 temp_docx/
