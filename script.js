@@ -2824,85 +2824,135 @@ function generateAiDescriptionInModal() {
 
 // 3. GENERATOR CAPTION PROMOSI BERBASIS DATA PENJUALAN
 function handleGenerateAiCaption(e) {
-  e.preventDefault();
-  const platform = document.querySelector('input[name="aiPlatform"]:checked').value;
-  const strategy = document.getElementById('aiCaptionStrategy').value;
-  const discount = document.getElementById('aiCaptionDiscount').value;
-  const urgency = document.getElementById('aiCaptionUrgency').value;
+  if (e) e.preventDefault();
+  const platformEl = document.querySelector('input[name="aiPlatform"]:checked');
+  const platform = platformEl ? platformEl.value : 'whatsapp';
+  const strategyEl = document.getElementById('aiCaptionStrategy');
+  const strategy = strategyEl ? strategyEl.value : 'bestseller';
+  const discountEl = document.getElementById('aiCaptionDiscount');
+  const discount = discountEl ? discountEl.value : '15%';
+  const urgencyEl = document.getElementById('aiCaptionUrgency');
+  const urgency = urgencyEl ? urgencyEl.value : 'Hari Ini Saja';
 
   const btn = document.getElementById('btnRunAiCaption');
-  btn.disabled = true;
-  btn.innerHTML = `<span><i data-ic="hourglass"></i> AI Mengolah Data Penjualan...</span>`;
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = `<span><i data-ic="hourglass"></i> AI Mengolah Data Penjualan...</span>`;
+    if (typeof UIIcon !== 'undefined' && UIIcon.hydrate) UIIcon.hydrate(btn);
+  }
 
   setTimeout(() => {
-    // Identify top selling product and slow moving product from data
+    // Hitung penjualan dari data transaksi jika ada
     const salesMap = {};
-    transactions.forEach(t => {
-      t.items.forEach(it => {
-        salesMap[it.name] = (salesMap[it.name] || 0) + it.qty;
+    if (Array.isArray(transactions)) {
+      transactions.forEach(t => {
+        if (t && Array.isArray(t.items)) {
+          t.items.forEach(it => {
+            if (it && it.name) {
+              salesMap[it.name] = (salesMap[it.name] || 0) + (Number(it.qty) || 1);
+            }
+          });
+        }
       });
-    });
+    }
 
-    let bestSeller = products[0] || { name: 'Kopi Arabika Gayo', sellPrice: 65000 };
+    // Fallback default jika produk di database masih kosong
+    const defaultProduct = {
+      name: 'Produk Unggulan Kami',
+      sellPrice: 50000,
+      price: 50000
+    };
+
+    let bestSeller = (Array.isArray(products) && products.length > 0) ? products[0] : defaultProduct;
     let maxSold = -1;
-    products.forEach(p => {
-      if ((salesMap[p.name] || 0) > maxSold) {
-        maxSold = salesMap[p.name] || 0;
-        bestSeller = p;
-      }
-    });
+    if (Array.isArray(products) && products.length > 0) {
+      products.forEach(p => {
+        const sold = salesMap[p.name] || 0;
+        if (sold > maxSold) {
+          maxSold = sold;
+          bestSeller = p;
+        }
+      });
+    }
 
-    // Slow moving item (high stock, lowest sales)
-    let slowMoving = products[products.length - 1] || products[0];
-    let minSold = 9999;
-    products.forEach(p => {
-      if (p.stock > 5 && (salesMap[p.name] || 0) < minSold) {
-        minSold = salesMap[p.name] || 0;
-        slowMoving = p;
-      }
-    });
+    // Slow moving item (stok ada tapi penjualan paling rendah)
+    let slowMoving = (Array.isArray(products) && products.length > 0) 
+      ? (products[products.length - 1] || products[0]) 
+      : defaultProduct;
+    let minSold = 999999;
+    if (Array.isArray(products) && products.length > 0) {
+      products.forEach(p => {
+        const sold = salesMap[p.name] || 0;
+        if ((Number(p.stock) || 0) > 0 && sold < minSold) {
+          minSold = sold;
+          slowMoving = p;
+        }
+      });
+    }
+
+    // Pastikan kedua objek tidak pernah null / undefined
+    bestSeller = bestSeller || defaultProduct;
+    slowMoving = slowMoving || bestSeller || defaultProduct;
 
     const caption = generateAiCaptionText(platform, strategy, discount, urgency, bestSeller, slowMoving);
     lastGeneratedAiCaption = caption;
 
     const outputBox = document.getElementById('aiCaptionOutputBox');
-    outputBox.innerHTML = `
-      <div style="background:var(--bg-hover); border:1px solid var(--border-color); border-radius:var(--radius-sm); padding:1rem; font-family:${platform === 'whatsapp' ? 'var(--font-mono)' : 'var(--font-sans)'}; font-size:0.88rem; line-height:1.65; white-space:pre-wrap;">${caption}</div>
-    `;
+    if (outputBox) {
+      outputBox.innerHTML = `
+        <div style="background:var(--bg-hover); border:1px solid var(--border-color); border-radius:var(--radius-sm); padding:1rem; font-family:${platform === 'whatsapp' ? 'var(--font-mono)' : 'var(--font-sans)'}; font-size:0.88rem; line-height:1.65; white-space:pre-wrap;">${caption}</div>
+      `;
+    }
 
-    document.getElementById('aiCaptionActionsRow').style.display = 'flex';
-    btn.disabled = false;
-    btn.innerHTML = `<span><i data-ic="rocket"></i> Buat Caption AI Berdasarkan Data Penjualan</span>`;
+    const actionsRow = document.getElementById('aiCaptionActionsRow');
+    if (actionsRow) actionsRow.style.display = 'flex';
+
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = `<span><i data-ic="rocket"></i> Buat Caption AI Berdasarkan Data Penjualan</span>`;
+      if (typeof UIIcon !== 'undefined' && UIIcon.hydrate) UIIcon.hydrate(btn);
+    }
     showToast('Caption promosi AI berhasil dibuat berdasarkan data riil!', 'success');
-  }, 400);
+  }, 350);
 }
 
 function generateAiCaptionText(platform, strategy, discount, urgency, bestSeller, slowMoving) {
   let caption = '';
-  const storeName = (currentUser && currentUser.storeName) || 'Kopi & Ritel Nusantara';
-  const discPriceBest = formatRupiah(Math.round(bestSeller.sellPrice * 0.85));
-  const discPriceSlow = formatRupiah(Math.round(slowMoving.sellPrice * 0.8));
+  const storeProfile = typeof getStoreProfile === 'function' ? getStoreProfile() : null;
+  const storeName = (storeProfile && storeProfile.name) || (currentUser && (currentUser.businessName || currentUser.storeName)) || 'Toko UMKM Saya';
+
+  // Safeguard harga dan nama produk
+  const safeBest = bestSeller || { name: 'Produk Unggulan Kami', sellPrice: 50000 };
+  const safeSlow = slowMoving || safeBest;
+
+  const bestName = safeBest.name || 'Produk Unggulan Kami';
+  const slowName = safeSlow.name || bestName;
+  const bestPrice = Number(safeBest.sellPrice ?? safeBest.price ?? 50000);
+  const slowPrice = Number(safeSlow.sellPrice ?? safeSlow.price ?? bestPrice);
+
+  const discPriceBest = formatRupiah(Math.round(bestPrice * 0.85));
+  const discPriceSlow = formatRupiah(Math.round(slowPrice * 0.8));
 
   if (platform === 'whatsapp') {
     if (strategy === 'bestseller') {
-      caption = `*PROMO SPESIAL PRODUK TERLARIS: ${bestSeller.name.toUpperCase()}!*\n\n` +
+      caption = `*PROMO SPESIAL PRODUK TERLARIS: ${bestName.toUpperCase()}!*\n\n` +
         `Halo Sahabat setia ${storeName}!\n\n` +
-        `Kabar gembira! Produk nomor #1 paling banyak dibeli minggu ini, *${bestSeller.name}*, sedang promo spesial:\n\n` +
+        `Kabar gembira! Produk nomor #1 paling banyak dibeli minggu ini, *${bestName}*, sedang promo spesial:\n\n` +
         `*PENAWARAN*: Diskon Spesial ${discount}!\n` +
-        `Dari harga normal ~${formatRupiah(bestSeller.sellPrice)}~ jadi *HANYA ${discPriceBest}*!\n` +
+        `Dari harga normal ~${formatRupiah(bestPrice)}~ jadi *HANYA ${discPriceBest}*!\n` +
         `*WAKTU*: ${urgency}!\n\n` +
         `Kenapa wajib order sekarang?\n` +
         `- Bahan pilihan bermutu tinggi & cita rasa juara\n` +
         `- Stok cepat habis karena banyak pesanan harian\n` +
         `- Kemasan aman & higienis\n\n` +
         `*Mau pesan sekarang?*\n` +
-        `Balas pesan ini atau ketik: *"Kak, saya mau ambil Promo ${bestSeller.name}"*\n\n` +
+        `Balas pesan ini atau ketik: *"Kak, saya mau ambil Promo ${bestName}"*\n\n` +
         `_Salam hangat dari UMKM ${storeName}_`;
     } else if (strategy === 'slowmoving') {
       caption = `*FLASH SALE CUCI GUDANG — HEMAT HINGGA ${discount}!*\n\n` +
         `Halo semuanya! Mau cemilan / produk berkualitas dengan harga modal?\n\n` +
         `Khusus *${urgency}*, kami buka Flash Sale spesial untuk:\n` +
-        `*${slowMoving.name}*\n` +
+        `*${slowName}*\n` +
         `Harga Cuci Gudang: *Cuma ${discPriceSlow}* (Stok Terbatas!)\n\n` +
         `Jangan sampai ketinggalan kesempatan hemat ini ya!\n` +
         `Balas *"PESAN FLASH SALE"* sekarang juga sebelum stok ludes!`;
@@ -2922,14 +2972,14 @@ function generateAiCaptionText(platform, strategy, discount, urgency, bestSeller
     }
   } else if (platform === 'instagram') {
     if (strategy === 'bestseller') {
-      caption = `IT'S OFFICIAL: ${bestSeller.name} JADI JUARA TERLARIS PEKAN INI!\n\n` +
+      caption = `IT'S OFFICIAL: ${bestName} JADI JUARA TERLARIS PEKAN INI!\n\n` +
         `Buat kamu yang belum coba, ini dia produk yang selalu bikin pelanggan setia kami repeat order tiada henti! Cita rasa otentik yang bikin nagih sejak suapan / seduhan pertama.\n\n` +
         `Spesial minggu ini, kamu bisa nikmati:\n` +
         `${discount} OFF\n` +
         `Hanya berlaku: ${urgency}!\n\n` +
         `Buruan amankan stokmu sekarang sebelum kehabisan slot!\n` +
         `Klik link di bio untuk order via WhatsApp!\n\n` +
-        `#${bestSeller.name.replace(/[^a-zA-Z0-9]/g, '')} #KulinerIndonesia #UMKMIndonesia #BestSeller #DiskonSpesial #FoodieNusantara #BanggaBuatanIndonesia`;
+        `#${bestName.replace(/[^a-zA-Z0-9]/g, '')} #KulinerIndonesia #UMKMIndonesia #BestSeller #DiskonSpesial #FoodieNusantara #BanggaBuatanIndonesia`;
     } else {
       caption = `SAATNYA SELF-REWARD DENGAN PROMO ${discount.toUpperCase()}!\n\n` +
         `Weekend seru makin lengkap kalau ditemani produk terbaik dari @${storeName.toLowerCase().replace(/[^a-z0-9]/g, '')}.\n\n` +
@@ -2940,9 +2990,9 @@ function generateAiCaptionText(platform, strategy, discount, urgency, bestSeller
   } else {
     // TikTok script & caption
     caption = `[HOOK VIDEO 3 DETIK PERTAMA]: "Jangan beli ini kalau kamu gak mau ketagihan tiap hari!"\n\n` +
-      `Kenalin ${bestSeller.name} dari ${storeName}. Teksturnya juara, rasanya beneran otentik dan harganya lagi diskon ${discount} khusus ${urgency}!\n\n` +
+      `Kenalin ${bestName} dari ${storeName}. Teksturnya juara, rasanya beneran otentik dan harganya lagi diskon ${discount} khusus ${urgency}!\n\n` +
       `Check out sekarang di keranjang kuning / klik link profil ya!\n\n` +
-      `#racuntiktok #tiktokshopindonesia #fyp #kulinerenak #jajanantiktok #${bestSeller.name.replace(/[^a-zA-Z0-9]/g, '')}`;
+      `#racuntiktok #tiktokshopindonesia #fyp #kulinerenak #jajanantiktok #${bestName.replace(/[^a-zA-Z0-9]/g, '')}`;
   }
 
   return caption;
