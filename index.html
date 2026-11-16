@@ -16,6 +16,9 @@
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
   <link rel="stylesheet" href="style.css" />
 
+  <!-- Backend REST API Client -->
+  <script src="backend/api-client.js"></script>
+
   <!-- Modul sesi (dimuat sekali; dipakai router untuk memilih halaman) -->
   <script>
 /**
@@ -2738,16 +2741,142 @@ function registerProductIcon(id, { name, cat, lucide, svg, keywords } = {}) {
 loadLucideIndex();
 
 // Default User Profile
-const DEFAULT_USER = null;
+const DEFAULT_USER = {
+  name: 'Hendra Wijaya',
+  role: 'owner',
+  roleLabel: 'Owner (Pemilik)',
+  email: 'owner@nusantara.id',
+  storeName: 'Kopi & Ritel Nusantara',
+  phone: '081234567890',
+  category: 'Kuliner & F&B'
+};
 
-// Initial Dataset: Kosong (Clean State agar pengguna mulai dari nol)
-const INITIAL_PRODUCTS = [];
-const INITIAL_CUSTOMERS = [];
+// Initial Demo Dataset (Realistic Indonesian SME)
+const INITIAL_PRODUCTS = [
+  {
+    id: 'prod-001',
+    sku: 'KOP-GAYO-250',
+    name: 'Kopi Arabika Gayo Single Origin 250g',
+    category: 'Kopi & Minuman',
+    costPrice: 42000,
+    sellPrice: 65000,
+    stock: 18,
+    minStock: 8,
+    supplier: 'Koperasi Kopi Gayo (081234567890)',
+    icon: 'cup'
+  },
+  {
+    id: 'prod-002',
+    sku: 'KOP-ROB-500',
+    name: 'Biji Kopi Robusta Temanggung 500g',
+    category: 'Kopi & Minuman',
+    costPrice: 35000,
+    sellPrice: 55000,
+    stock: 4, // Low stock for demonstration!
+    minStock: 10,
+    supplier: 'Petani Lereng Sindoro (082199887766)',
+    icon: 'bean'
+  },
+  {
+    id: 'prod-003',
+    sku: 'SNK-PISANG-200',
+    name: 'Keripik Pisang Cokelat Lumer 200g',
+    category: 'Makanan & Snack',
+    costPrice: 12000,
+    sellPrice: 22000,
+    stock: 25,
+    minStock: 10,
+    supplier: 'UMKM Berkah Lumajang (085678123456)',
+    icon: 'chips'
+  },
+  {
+    id: 'prod-004',
+    sku: 'FOD-RENDANG-250',
+    name: 'Rendang Daging Sapi Kemasan Vakum 250g',
+    category: 'Makanan & Snack',
+    costPrice: 48000,
+    sellPrice: 75000,
+    stock: 2, // Critical low stock
+    minStock: 6,
+    supplier: 'Dapur Minang Asli (081344556677)',
+    icon: 'steak'
+  },
+  {
+    id: 'prod-005',
+    sku: 'SEM-BERAS-5KG',
+    name: 'Beras Organik Pandan Wangi 5kg',
+    category: 'Bahan Pokok',
+    costPrice: 72000,
+    sellPrice: 88000,
+    stock: 14,
+    minStock: 5,
+    supplier: 'Gapoktan Cianjur (081900112233)',
+    icon: 'rice'
+  },
+  {
+    id: 'prod-006',
+    sku: 'TEX-BATIK-MGM',
+    name: 'Kain Batik Tulis Motif Mega Mendung',
+    category: 'Kerajinan & Fashion',
+    costPrice: 160000,
+    sellPrice: 250000,
+    stock: 7,
+    minStock: 3,
+    supplier: 'Pengrajin Trusmi Cirebon (087788990011)',
+    icon: 'batik'
+  },
+  {
+    id: 'prod-007',
+    sku: 'SNK-SAMBAL-ROA',
+    name: 'Sambal Roa Khas Manado Botol 150g',
+    category: 'Makanan & Snack',
+    costPrice: 20000,
+    sellPrice: 35000,
+    stock: 0, // Out of stock for demonstration
+    minStock: 8,
+    supplier: 'Ibu Maryam Manado (081298765432)',
+    icon: 'bottle'
+  }
+];
 
-// App State
+const INITIAL_CUSTOMERS = [
+  {
+    id: 'cust-001',
+    name: 'Ibu Ratna Dewi',
+    phone: '081288990011',
+    totalSpent: 480000,
+    points: 48,
+    lastVisit: '2026-10-18',
+    notes: 'Pelanggan setia, suka biji kopi Arabika'
+  },
+  {
+    id: 'cust-002',
+    name: 'Mas Dimas Pratama',
+    phone: '085711223344',
+    totalSpent: 215000,
+    points: 21,
+    lastVisit: '2026-10-17',
+    notes: 'Suka camilan dan rendang siap saji'
+  },
+  {
+    id: 'cust-003',
+    name: 'Pak Hendro Kusumo',
+    phone: '081399001122',
+    totalSpent: 75000,
+    points: 7,
+    lastVisit: '2026-10-10',
+    notes: 'Pelanggan baru'
+  }
+];
+
+// App State (7 Entitas Bisnis REST API)
 let products = [];
 let transactions = [];
 let customers = [];
+let categories = [];
+let suppliers = [];
+let transactionItems = [];
+let stockMutations = [];
 let cart = [];
 let currentCartCustomer = 'guest';
 let lastCompletedTrx = null;
@@ -2756,72 +2885,226 @@ let currentInvFilter = 'all';
 let currentUser = null;
 
 // ========================================================
+// API CLIENT INTEGRATION & NORMALIZATION HELPERS (7 Entitas)
+// ========================================================
+function normalizeProduct(p) {
+  if (!p) return p;
+  const costPrice = p.costPrice !== undefined ? Number(p.costPrice) : Number(p.cost_price || 0);
+  const sellPrice = p.sellPrice !== undefined ? Number(p.sellPrice) : Number(p.sell_price || 0);
+  const minStock = p.minStock !== undefined ? Number(p.minStock) : Number(p.min_stock_threshold !== undefined ? p.min_stock_threshold : 5);
+  const stock = Number(p.stock || 0);
+  const category = p.category || p.category_name || '';
+  const supplier = p.supplier || p.supplier_name || '';
+  return {
+    ...p,
+    costPrice,
+    cost_price: costPrice,
+    sellPrice,
+    sell_price: sellPrice,
+    stock,
+    minStock,
+    min_stock_threshold: minStock,
+    category,
+    category_name: category,
+    supplier,
+    supplier_name: supplier,
+    icon: p.icon || p.icon_emoji || 'auto'
+  };
+}
+
+function normalizeCustomer(c) {
+  if (!c) return c;
+  const totalSpent = c.totalSpent !== undefined ? Number(c.totalSpent) : Number(c.total_spent || 0);
+  const points = c.points !== undefined ? Number(c.points) : Number(c.loyalty_points || 0);
+  const phone = c.phone || c.phone_whatsapp || '';
+  const lastVisit = c.lastVisit || (c.last_visit_at ? c.last_visit_at.slice(0, 10) : '');
+  return {
+    ...c,
+    phone,
+    phone_whatsapp: phone,
+    totalSpent,
+    total_spent: totalSpent,
+    points,
+    loyalty_points: points,
+    lastVisit,
+    last_visit_at: lastVisit,
+    segment: c.segment || (totalSpent >= 5000000 ? 'VIP' : 'REGULAR')
+  };
+}
+
+function normalizeTransaction(t) {
+  if (!t) return t;
+  const createdAt = t.created_at || (t.date ? `${t.date} ${t.time || '00:00:00'}` : new Date().toISOString());
+  const date = t.date || createdAt.slice(0, 10);
+  const time = t.time || (createdAt.length >= 16 ? createdAt.slice(11, 16) : '00:00');
+  const discount = t.discount !== undefined ? Number(t.discount) : Number(t.discount_amount || 0);
+  const tax = t.tax !== undefined ? Number(t.tax) : Number(t.tax_amount || 0);
+  const grandTotal = t.grandTotal !== undefined ? Number(t.grandTotal) : Number(t.grand_total || 0);
+  const method = (t.method || t.payment_method || 'CASH').toUpperCase();
+  const customerId = t.customerId || t.customer_id || null;
+  const customerName = t.customerName || t.customer_name || 'Umum (Guest)';
+  const customerPhone = t.customerPhone || t.customer_phone || '';
+  const cashPaid = t.cashPaid !== undefined ? Number(t.cashPaid) : Number(t.cash_paid || grandTotal);
+  const cashChange = t.cashChange !== undefined ? Number(t.cashChange) : Number(t.cash_change || 0);
+  const items = Array.isArray(t.items) ? t.items.map(it => ({
+    ...it,
+    id: it.id || it.product_id,
+    product_id: it.product_id || it.id,
+    name: it.name || it.product_name,
+    product_name: it.product_name || it.name,
+    price: it.price !== undefined ? it.price : it.unit_price,
+    unit_price: it.unit_price !== undefined ? it.unit_price : it.price,
+    cost: it.cost !== undefined ? it.cost : it.unit_cost,
+    unit_cost: it.unit_cost !== undefined ? it.unit_cost : it.cost,
+    qty: it.qty !== undefined ? it.qty : it.quantity,
+    quantity: it.quantity !== undefined ? it.quantity : it.qty,
+  })) : [];
+
+  return {
+    ...t,
+    date,
+    time,
+    created_at: createdAt,
+    customerId,
+    customer_id: customerId,
+    customerName,
+    customer_name: customerName,
+    customerPhone,
+    customer_phone: customerPhone,
+    subtotal: Number(t.subtotal || 0),
+    discount,
+    discount_amount: discount,
+    tax,
+    tax_amount: tax,
+    grandTotal,
+    grand_total: grandTotal,
+    method,
+    payment_method: method,
+    cashPaid,
+    cash_paid: cashPaid,
+    cashChange,
+    cash_change: cashChange,
+    items,
+  };
+}
+
+async function syncAllBusinessData() {
+  if (typeof API === 'undefined') return;
+  try {
+    const [pRes, tRes, cRes, catRes, supRes, smRes, tiRes] = await Promise.allSettled([
+      API.products.getAll({ include_inactive: 'false' }),
+      API.transactions.getAll({ limit: 100 }),
+      API.customers.getAll(),
+      API.categories.getAll(),
+      API.suppliers.getAll(),
+      API.stockMutations.getAll({ limit: 100 }),
+      API.transactionItems.getAll()
+    ]);
+
+    if (pRes.status === 'fulfilled' && pRes.value && pRes.value.data) {
+      products = pRes.value.data.map(normalizeProduct);
+    }
+    if (tRes.status === 'fulfilled' && tRes.value && tRes.value.data) {
+      transactions = tRes.value.data.map(normalizeTransaction);
+    }
+    if (cRes.status === 'fulfilled' && cRes.value && cRes.value.data) {
+      customers = cRes.value.data.map(normalizeCustomer);
+    }
+    if (catRes.status === 'fulfilled' && catRes.value && catRes.value.data) {
+      categories = catRes.value.data;
+    }
+    if (supRes.status === 'fulfilled' && supRes.value && supRes.value.data) {
+      suppliers = supRes.value.data;
+    }
+    if (smRes.status === 'fulfilled' && smRes.value && smRes.value.data) {
+      stockMutations = smRes.value.data;
+    }
+    if (tiRes.status === 'fulfilled' && tiRes.value && tiRes.value.data) {
+      transactionItems = tiRes.value.data;
+    }
+  } catch (err) {
+    console.warn('[API Sync] Gagal sinkronisasi data bisnis:', err);
+  }
+}
+
+// ========================================================
 // INITIALIZATION
 // ========================================================
-document.addEventListener('DOMContentLoaded', () => {
-  initStorage();
+document.addEventListener('DOMContentLoaded', async () => {
   const isAuthenticated = initAuth();
   if (!isAuthenticated) return;
+  await initStorage();
   initClock();
   initNav();
   initShell();
-  loadAllSettingsForm();
   renderAllViews();
 });
 
-function initStorage() {
-  // === VERSION MIGRATION: bersihkan data lama jika versi berbeda ===
-  const APP_VERSION_KEY = 'transforma_umkm_app_version';
-  const CURRENT_VERSION = '2.0';
-  const storedVersion = localStorage.getItem(APP_VERSION_KEY);
-  if (storedVersion !== CURRENT_VERSION) {
-    localStorage.removeItem(STORAGE_KEY_PRODUCTS);
-    localStorage.removeItem(STORAGE_KEY_TRX);
-    localStorage.removeItem(STORAGE_KEY_CUSTOMERS);
-    localStorage.setItem(APP_VERSION_KEY, CURRENT_VERSION);
-    console.log('[TransformaUMKM] Migrasi v2.0: data lama dihapus, mulai dari kosong.');
-  }
-  // =================================================================
-
-  const storedProds = localStorage.getItem(STORAGE_KEY_PRODUCTS);
-  if (!storedProds) {
-    products = JSON.parse(JSON.stringify(INITIAL_PRODUCTS));
-    saveProducts();
-  } else {
-    products = JSON.parse(storedProds);
+async function initStorage() {
+  let loadedFromApi = false;
+  if (typeof API !== 'undefined') {
+    try {
+      await syncAllBusinessData();
+      if (products && products.length > 0) loadedFromApi = true;
+    } catch (e) {
+      console.warn('[Storage] API fetch gagal, fallback ke in-memory initial data');
+    }
   }
 
-  const storedTrx = localStorage.getItem(STORAGE_KEY_TRX);
-  if (!storedTrx) {
-    transactions = generateInitialTransactions();
-    saveTransactions();
-  } else {
-    transactions = JSON.parse(storedTrx);
-  }
-
-  const storedCust = localStorage.getItem(STORAGE_KEY_CUSTOMERS);
-  if (!storedCust) {
-    customers = JSON.parse(JSON.stringify(INITIAL_CUSTOMERS));
-    saveCustomers();
-  } else {
-    customers = JSON.parse(storedCust);
+  if (!loadedFromApi || products.length === 0) {
+    if (typeof INITIAL_PRODUCTS !== 'undefined' && INITIAL_PRODUCTS.length > 0) {
+      products = JSON.parse(JSON.stringify(INITIAL_PRODUCTS)).map(normalizeProduct);
+    }
+    if (typeof INITIAL_CUSTOMERS !== 'undefined' && INITIAL_CUSTOMERS.length > 0) {
+      customers = JSON.parse(JSON.stringify(INITIAL_CUSTOMERS)).map(normalizeCustomer);
+    }
+    if (typeof generateInitialTransactions === 'function') {
+      transactions = generateInitialTransactions().map(normalizeTransaction);
+    }
   }
 }
 
 function generateInitialTransactions() {
-  return [];
+  const now = new Date();
+  const trxs = [];
+  const sampleProducts = [INITIAL_PRODUCTS[0], INITIAL_PRODUCTS[2], INITIAL_PRODUCTS[4]];
+
+  // Generate simulated history for past 3 days
+  for (let i = 2; i >= 0; i--) {
+    const d = new Date(now.getTime() - i * 86400000);
+    const dateStr = d.toISOString().split('T')[0];
+    const timeStr = `${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}`;
+    
+    trxs.push({
+      id: `TRX-${1000 + i}`,
+      date: dateStr,
+      time: timeStr,
+      customerId: 'cust-001',
+      customerName: 'Ibu Ratna Dewi',
+      items: [
+        { id: sampleProducts[0].id, name: sampleProducts[0].name, price: sampleProducts[0].sellPrice, cost: sampleProducts[0].costPrice, qty: 2 }
+      ],
+      subtotal: sampleProducts[0].sellPrice * 2,
+      discount: 0,
+      tax: 0,
+      grandTotal: sampleProducts[0].sellPrice * 2,
+      method: 'QRIS',
+      status: 'Selesai'
+    });
+  }
+  return trxs;
 }
 
-function saveProducts() {
-  localStorage.setItem(STORAGE_KEY_PRODUCTS, JSON.stringify(products));
+async function saveProducts() {
+  // Disimpan langsung ke backend REST API (http://localhost:3001/api/products)
 }
 
-function saveTransactions() {
-  localStorage.setItem(STORAGE_KEY_TRX, JSON.stringify(transactions));
+async function saveTransactions() {
+  // Disimpan langsung ke backend REST API (http://localhost:3001/api/transactions)
 }
 
-function saveCustomers() {
-  localStorage.setItem(STORAGE_KEY_CUSTOMERS, JSON.stringify(customers));
+async function saveCustomers() {
+  // Disimpan langsung ke backend REST API (http://localhost:3001/api/customers)
 }
 
 // ========================================================
@@ -2854,15 +3137,10 @@ function initNav() {
   });
 
   // Reset/Seed Button
-  document.getElementById('btnResetSeed').addEventListener('click', () => {
+  document.getElementById('btnResetSeed').addEventListener('click', async () => {
     if (confirm('Muat ulang dataset realistis UMKM? Data yang diubah akan kembali ke nilai default demo.')) {
-      products = JSON.parse(JSON.stringify(INITIAL_PRODUCTS));
-      customers = JSON.parse(JSON.stringify(INITIAL_CUSTOMERS));
-      transactions = generateInitialTransactions();
       cart = [];
-      saveProducts();
-      saveCustomers();
-      saveTransactions();
+      await initStorage();
       renderAllViews();
       showToast('Dataset demo UMKM berhasil dimuat ulang!');
     }
@@ -3597,9 +3875,7 @@ function updateCartTotals(subtotal) {
 
   const discountAmount = Math.round(subtotal * (discountPct / 100));
   const afterDiscount = Math.max(0, subtotal - discountAmount);
-  const posCfg = typeof getPosSettings === 'function' ? getPosSettings() : { taxRate: 11 };
-  const currentTaxRate = (posCfg.taxRate !== undefined ? posCfg.taxRate : 11) / 100;
-  const taxAmount = isTaxActive ? Math.round(afterDiscount * currentTaxRate) : 0;
+  const taxAmount = isTaxActive ? Math.round(afterDiscount * 0.11) : 0;
   const grandTotal = afterDiscount + taxAmount;
 
   document.getElementById('cartSubtotal').textContent = formatRupiah(subtotal);
@@ -3738,7 +4014,7 @@ function renderQrisDummyCanvas() {
   ctx.fillText('QRIS', size / 2, size / 2 + 3);
 }
 
-function processPayment() {
+async function processPayment() {
   const method = document.querySelector('input[name="payMethod"]:checked').value;
   const subtotal = cart.reduce((sum, i) => sum + i.price * i.qty, 0);
   const discountPct = Number(document.getElementById('cartDiscountPercent').value) || 0;
@@ -3755,6 +4031,39 @@ function processPayment() {
     }
   }
 
+  const now = new Date();
+  const trxId = 'TRX-' + (1000 + transactions.length + 1);
+  const cust = customers.find(c => c.id === currentCartCustomer);
+
+  // Catat transaksi via api-client.js ke backend REST API
+  if (typeof API !== 'undefined') {
+    const apiItems = cart.map(item => ({
+      product_id: item.id,
+      quantity: item.qty,
+      unit_price: item.price,
+      unit_cost: item.cost,
+      product_name: item.name
+    }));
+
+    try {
+      await API.transactions.create({
+        id: trxId,
+        customer_id: cust ? cust.id : null,
+        items: apiItems,
+        payment_method: method.toUpperCase(),
+        discount_amount: discAmt,
+        tax_amount: taxAmt,
+        subtotal: subtotal,
+        grand_total: grand,
+        cash_paid: method === 'cash' ? Number(document.getElementById('cashReceivedInput').value) : grand,
+        cash_change: method === 'cash' ? Number(document.getElementById('cashReceivedInput').value) - grand : 0,
+        status: 'SELESAI'
+      });
+    } catch (apiErr) {
+      console.warn('[POS] Gagal kirim transaksi ke REST API:', apiErr);
+    }
+  }
+
   // 1. Deduct Stock in Database
   cart.forEach(item => {
     const p = products.find(prod => prod.id === item.id);
@@ -3762,22 +4071,20 @@ function processPayment() {
       p.stock = Math.max(0, p.stock - item.qty);
     }
   });
-  saveProducts();
 
   // 2. Add Customer Reward Points (1 point per Rp 10.000)
-  const cust = customers.find(c => c.id === currentCartCustomer);
   if (cust) {
     const earnedPoints = Math.floor(grand / 10000);
     cust.points += earnedPoints;
+    cust.loyalty_points = cust.points;
     cust.totalSpent += grand;
+    cust.total_spent = cust.totalSpent;
     cust.lastVisit = new Date().toISOString().split('T')[0];
-    saveCustomers();
+    cust.last_visit_at = cust.lastVisit;
   }
 
   // 3. Record Transaction
-  const now = new Date();
-  const trxId = 'TRX-' + (1000 + transactions.length + 1);
-  const newTrx = {
+  const newTrx = normalizeTransaction({
     id: trxId,
     date: now.toISOString().split('T')[0],
     time: now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }),
@@ -3793,10 +4100,9 @@ function processPayment() {
     cashPaid: method === 'cash' ? Number(document.getElementById('cashReceivedInput').value) : grand,
     cashChange: method === 'cash' ? Number(document.getElementById('cashReceivedInput').value) - grand : 0,
     status: 'Selesai'
-  };
+  });
 
-  transactions.push(newTrx);
-  saveTransactions();
+  transactions.unshift(newTrx);
   lastCompletedTrx = newTrx;
 
   closeModal('checkoutModal');
@@ -3812,6 +4118,9 @@ function processPayment() {
 
   // Show Digital Receipt Modal
   showReceiptModal(newTrx);
+
+  // Sinkronisasi data bisnis terbaru dari backend
+  syncAllBusinessData();
 }
 
 // ========================================================
@@ -3848,16 +4157,6 @@ function showReceiptModal(trx) {
   } else {
     document.getElementById('rcPayCashRow').style.display = 'none';
     document.getElementById('rcChangeRow').style.display = 'none';
-  }
-
-  const storeCfg = typeof getStoreProfile === 'function' ? getStoreProfile() : null;
-  const rcFooter = document.querySelector('.rc-footer p');
-  if (rcFooter && storeCfg && storeCfg.receiptFooter) {
-    rcFooter.textContent = storeCfg.receiptFooter;
-  }
-  const rcStoreSub = document.getElementById('rcStoreSub');
-  if (rcStoreSub && storeCfg && storeCfg.name) {
-    rcStoreSub.textContent = storeCfg.name;
   }
 
   openModal('receiptModal');
@@ -4122,7 +4421,7 @@ function openEditProductModal(id) {
   openModal('productModal');
 }
 
-function handleProductFormSubmit(e) {
+async function handleProductFormSubmit(e) {
   e.preventDefault();
   const editId = document.getElementById('prodEditId').value;
   const name = document.getElementById('prodName').value.trim();
@@ -4149,18 +4448,39 @@ function handleProductFormSubmit(e) {
     if (p) {
       p.name = name;
       p.category = category;
+      p.category_name = category;
       p.sku = sku;
       p.costPrice = costPrice;
+      p.cost_price = costPrice;
       p.sellPrice = sellPrice;
+      p.sell_price = sellPrice;
       p.stock = stock;
       p.minStock = minStock;
+      p.min_stock_threshold = minStock;
       p.supplier = supplier;
+      p.supplier_name = supplier;
       p.icon = 'auto';
       p.description = description;
+
+      if (typeof API !== 'undefined') {
+        try {
+          await API.products.update(editId, {
+            name,
+            sku,
+            cost_price: costPrice,
+            sell_price: sellPrice,
+            stock,
+            min_stock_threshold: minStock,
+            icon_emoji: 'auto'
+          });
+        } catch (err) {
+          console.warn('[Inventory] Gagal update via REST API:', err);
+        }
+      }
       showToast(`Produk "${name}" berhasil diperbarui!`, 'success');
     }
   } else {
-    const newProd = {
+    const newProd = normalizeProduct({
       id: 'prod-' + Date.now().toString().slice(-6),
       name,
       category,
@@ -4172,23 +4492,49 @@ function handleProductFormSubmit(e) {
       supplier,
       icon: 'auto', // ikon dipilih otomatis dari nama & kategori
       description
-    };
+    });
+
+    if (typeof API !== 'undefined') {
+      try {
+        const res = await API.products.create({
+          id: newProd.id,
+          name,
+          sku,
+          cost_price: costPrice,
+          sell_price: sellPrice,
+          stock,
+          min_stock_threshold: minStock,
+          icon_emoji: 'auto'
+        });
+        if (res && res.data) {
+          Object.assign(newProd, normalizeProduct(res.data));
+        }
+      } catch (err) {
+        console.warn('[Inventory] Gagal tambah via REST API:', err);
+      }
+    }
+
     products.unshift(newProd);
     showToast(`Produk baru "${name}" berhasil ditambahkan!`, 'success');
   }
 
-  saveProducts();
   closeModal('productModal');
   renderAllViews();
 }
 
-function deleteProduct(id) {
+async function deleteProduct(id) {
   const p = products.find(x => x.id === id);
   if (!p) return;
 
   if (confirm(`Apakah Anda yakin ingin menghapus produk "${p.name}"? Data yang dihapus tidak dapat dikembalikan.`)) {
+    if (typeof API !== 'undefined') {
+      try {
+        await API.products.remove(id);
+      } catch (err) {
+        console.warn('[Inventory] Gagal hapus via REST API:', err);
+      }
+    }
     products = products.filter(x => x.id !== id);
-    saveProducts();
     showToast(`Produk "${p.name}" telah dihapus.`);
     renderAllViews();
   }
@@ -4296,7 +4642,7 @@ function openAddCustomerModal() {
   openModal('customerModal');
 }
 
-function handleCustomerFormSubmit(e) {
+async function handleCustomerFormSubmit(e) {
   e.preventDefault();
   const name = document.getElementById('custName').value.trim();
   const phone = document.getElementById('custPhone').value.trim();
@@ -4307,7 +4653,7 @@ function handleCustomerFormSubmit(e) {
     return;
   }
 
-  const newCust = {
+  const newCust = normalizeCustomer({
     id: 'cust-' + Date.now().toString().slice(-6),
     name,
     phone,
@@ -4315,10 +4661,25 @@ function handleCustomerFormSubmit(e) {
     points: 0,
     lastVisit: new Date().toISOString().split('T')[0],
     notes
-  };
+  });
+
+  if (typeof API !== 'undefined') {
+    try {
+      const res = await API.customers.create({
+        id: newCust.id,
+        name,
+        phone_whatsapp: phone,
+        notes
+      });
+      if (res && res.data) {
+        Object.assign(newCust, normalizeCustomer(res.data));
+      }
+    } catch (err) {
+      console.warn('[CRM] Gagal simpan customer via REST API:', err);
+    }
+  }
 
   customers.unshift(newCust);
-  saveCustomers();
   closeModal('customerModal');
   showToast(`Pelanggan "${name}" berhasil ditambahkan!`, 'success');
   renderCrmTable();
@@ -4432,12 +4793,16 @@ function copyStorefrontLink() {
 function exportDatabase() {
   const backup = {
     appName: 'TransformaUMKM',
-    version: '1.0.0',
-    platform: 'TransformaUMKM Business Operating System',
+    version: '2.0.0',
+    platform: 'TransformaUMKM Business Operating System (REST API)',
     exportedAt: new Date().toISOString(),
+    categories,
+    suppliers,
     products,
+    customers,
     transactions,
-    customers
+    transactionItems,
+    stockMutations
   };
 
   const jsonStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(backup, null, 2));
@@ -4448,7 +4813,7 @@ function exportDatabase() {
   dlAnchor.click();
   dlAnchor.remove();
 
-  showToast('Database JSON berhasil diekspor!', 'success');
+  showToast('Database JSON (7 Entitas) berhasil diekspor!', 'success');
 }
 
 function updateAlertBadges() {
@@ -4459,269 +4824,6 @@ function updateAlertBadges() {
     alertPill.style.display = lowCount > 0 ? 'inline-block' : 'none';
   }
   if (typeof renderNotifications === 'function') renderNotifications();
-}
-
-// ========================================================
-// 8B. SETTINGS & BUSINESS CONFIGURATION MODULE (5 KELOMPOK)
-// ========================================================
-const STORAGE_KEY_STORE_PROFILE = 'transforma_umkm_store_profile';
-const STORAGE_KEY_POS_SETTINGS = 'transforma_umkm_pos_settings';
-const STORAGE_KEY_INV_SETTINGS = 'transforma_umkm_inv_settings';
-
-const DEFAULT_STORE_PROFILE = {
-  name: 'Toko UMKM Saya',
-  phone: '',
-  desc: 'Selamat datang di toko kami. Menyediakan produk berkualitas untuk Anda.',
-  address: 'Belum diatur',
-  receiptFooter: 'Terima Kasih Atas Kunjungan Anda!'
-};
-
-const DEFAULT_POS_SETTINGS = {
-  taxRate: 0,
-  bankInfo: 'Belum diatur',
-  qrisHolder: 'TOKO UMKM'
-};
-
-const DEFAULT_INV_SETTINGS = {
-  defaultMinStock: 5,
-  currencyPrefix: 'Rp'
-};
-
-function getStoreProfile() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY_STORE_PROFILE);
-    return raw ? { ...DEFAULT_STORE_PROFILE, ...JSON.parse(raw) } : { ...DEFAULT_STORE_PROFILE };
-  } catch (e) {
-    return { ...DEFAULT_STORE_PROFILE };
-  }
-}
-
-function getPosSettings() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY_POS_SETTINGS);
-    return raw ? { ...DEFAULT_POS_SETTINGS, ...JSON.parse(raw) } : { ...DEFAULT_POS_SETTINGS };
-  } catch (e) {
-    return { ...DEFAULT_POS_SETTINGS };
-  }
-}
-
-function getInvSettings() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY_INV_SETTINGS);
-    return raw ? { ...DEFAULT_INV_SETTINGS, ...JSON.parse(raw) } : { ...DEFAULT_INV_SETTINGS };
-  } catch (e) {
-    return { ...DEFAULT_INV_SETTINGS };
-  }
-}
-
-function loadAllSettingsForm() {
-  const store = getStoreProfile();
-  const pos = getPosSettings();
-  const inv = getInvSettings();
-
-  // 1. Profil Toko
-  const elName = document.getElementById('setStoreName');
-  const elPhone = document.getElementById('setStorePhone');
-  const elDesc = document.getElementById('setStoreDesc');
-  const elAddr = document.getElementById('setStoreAddress');
-  const elRcFoot = document.getElementById('setReceiptFooter');
-  if (elName) elName.value = store.name || '';
-  if (elPhone) elPhone.value = store.phone || '';
-  if (elDesc) elDesc.value = store.desc || '';
-  if (elAddr) elAddr.value = store.address || '';
-  if (elRcFoot) elRcFoot.value = store.receiptFooter || '';
-
-  // Sinkronkan ke UI Toko & Struk jika elemen ada
-  applyStoreProfileToUI(store);
-
-  // 2. Pengaturan Kasir
-  const elTax = document.getElementById('setTaxRate');
-  const elBank = document.getElementById('setBankInfo');
-  const elQris = document.getElementById('setQrisHolder');
-  if (elTax) elTax.value = pos.taxRate !== undefined ? pos.taxRate : 11;
-  if (elBank) elBank.value = pos.bankInfo || '';
-  if (elQris) elQris.value = pos.qrisHolder || '';
-
-  // 3. Inventori
-  const elMinStock = document.getElementById('setDefaultMinStock');
-  if (elMinStock) elMinStock.value = inv.defaultMinStock || 5;
-
-  // 5. Akun Detail
-  const elUserDetail = document.getElementById('setAccountUserDetail');
-  if (elUserDetail && currentUser) {
-    elUserDetail.textContent = `Masuk sebagai: ${currentUser.email || 'owner@nusantara.id'} (Role: ${currentUser.role || 'Owner / Pengelola Toko'})`;
-  }
-}
-
-function applyStoreProfileToUI(store) {
-  const pubTitle = document.getElementById('pubStoreTitle');
-  const pubDesc = document.getElementById('pubStoreDesc');
-  const rcStoreSub = document.getElementById('rcStoreSub');
-
-  if (pubTitle) pubTitle.textContent = store.name;
-  if (pubDesc) pubDesc.textContent = store.desc;
-  if (rcStoreSub) rcStoreSub.textContent = store.name;
-
-  const storeContacts = document.querySelector('.store-contacts');
-  if (storeContacts) {
-    storeContacts.innerHTML = `
-      <span><i data-ic="map-pin"></i> ${escapeHtml(store.address)}</span> &bull; 
-      <span><i data-ic="phone"></i> WA: ${escapeHtml(store.phone)}</span>
-    `;
-    if (typeof LucideStaticFallback !== 'undefined' && LucideStaticFallback.scan) {
-      LucideStaticFallback.scan(storeContacts);
-    }
-  }
-}
-
-function saveStoreProfileSettings(e) {
-  if (e) e.preventDefault();
-  const profile = {
-    name: document.getElementById('setStoreName').value.trim() || DEFAULT_STORE_PROFILE.name,
-    phone: document.getElementById('setStorePhone').value.trim() || DEFAULT_STORE_PROFILE.phone,
-    desc: document.getElementById('setStoreDesc').value.trim(),
-    address: document.getElementById('setStoreAddress').value.trim(),
-    receiptFooter: document.getElementById('setReceiptFooter').value.trim() || DEFAULT_STORE_PROFILE.receiptFooter
-  };
-  localStorage.setItem(STORAGE_KEY_STORE_PROFILE, JSON.stringify(profile));
-  applyStoreProfileToUI(profile);
-  showToast('Profil dan identitas toko berhasil diperbarui!', 'success');
-}
-
-function saveCheckoutSettings(e) {
-  if (e) e.preventDefault();
-  const pos = {
-    taxRate: Number(document.getElementById('setTaxRate').value) || 0,
-    bankInfo: document.getElementById('setBankInfo').value.trim(),
-    qrisHolder: document.getElementById('setQrisHolder').value.trim()
-  };
-  localStorage.setItem(STORAGE_KEY_POS_SETTINGS, JSON.stringify(pos));
-  
-  // Update bank info di modal checkout jika ada
-  const bankBox = document.querySelector('.bank-acc-row strong');
-  if (bankBox && pos.bankInfo) {
-    bankBox.textContent = pos.bankInfo;
-  }
-  
-  // Recalculate cart if items exist
-  const subtotal = cart.reduce((sum, i) => sum + i.price * i.qty, 0);
-  updateCartTotals(subtotal);
-  showToast('Pengaturan kasir & pembayaran berhasil disimpan!', 'success');
-}
-
-function saveInventorySettings(e) {
-  if (e) e.preventDefault();
-  const inv = {
-    defaultMinStock: Number(document.getElementById('setDefaultMinStock').value) || 5,
-    currencyPrefix: 'Rp'
-  };
-  localStorage.setItem(STORAGE_KEY_INV_SETTINGS, JSON.stringify(inv));
-  
-  // Update default value di form tambah produk
-  const prodMinStock = document.getElementById('prodMinStock');
-  if (prodMinStock) prodMinStock.value = inv.defaultMinStock;
-
-  showToast('Pengaturan inventori berhasil disimpan!', 'success');
-}
-
-function exportDataBackup() {
-  exportDatabase();
-}
-
-function importDataBackup(e) {
-  const file = e.target.files && e.target.files[0];
-  if (!file) return;
-
-  const reader = new FileReader();
-  reader.onload = function(evt) {
-    try {
-      const data = JSON.parse(evt.target.result);
-      if (!data.products && !data.transactions && !data.customers) {
-        showToast('Format file backup tidak sesuai!', 'danger');
-        return;
-      }
-
-      if (confirm('Pulihkan data dari backup? Data transaksi dan produk saat ini akan diperbarui dengan isi file.')) {
-        if (Array.isArray(data.products)) {
-          products = data.products;
-          saveProducts();
-        }
-        if (Array.isArray(data.transactions)) {
-          transactions = data.transactions;
-          saveTransactions();
-        }
-        if (Array.isArray(data.customers)) {
-          customers = data.customers;
-          saveCustomers();
-        }
-        renderAllViews();
-        showToast('Data berhasil dipulihkan dari file backup!', 'success');
-      }
-    } catch (err) {
-      showToast('Gagal membaca file JSON: ' + err.message, 'danger');
-    }
-  };
-  reader.readAsText(file);
-  e.target.value = '';
-}
-
-function resetToDemoData() {
-  if (!confirm('Apakah Anda yakin ingin mengosongkan seluruh database (produk, transaksi, pelanggan)?')) {
-    return;
-  }
-  products = [];
-  saveProducts();
-  transactions = [];
-  saveTransactions();
-  customers = [];
-  saveCustomers();
-  
-  localStorage.removeItem(STORAGE_KEY_STORE_PROFILE);
-  localStorage.removeItem(STORAGE_KEY_POS_SETTINGS);
-  localStorage.removeItem(STORAGE_KEY_INV_SETTINGS);
-  
-  loadAllSettingsForm();
-  renderAllViews();
-  showToast('Database berhasil dikosongkan!', 'info');
-}
-
-function handleChangePassword(e) {
-  if (e) e.preventDefault();
-  const curr = document.getElementById('setCurrPassword').value.trim();
-  const newPass = document.getElementById('setNewPassword').value.trim();
-
-  if (!curr) {
-    showToast('Masukkan kata sandi saat ini!', 'warning');
-    return;
-  }
-  if (newPass.length < 6) {
-    showToast('Kata sandi baru minimal 6 karakter!', 'warning');
-    return;
-  }
-
-  // Validasi password lama dari database pengguna
-  try {
-    const session = typeof SessionSecurity !== 'undefined' ? SessionSecurity.getSession() : null;
-    const usersRaw = localStorage.getItem('transforma_umkm_users_db');
-    const users = usersRaw ? JSON.parse(usersRaw) : [];
-    const userEmail = session ? session.email : null;
-    const userRecord = users.find(u => u.email === userEmail);
-
-    if (userRecord) {
-      if (userRecord.password !== curr) {
-        showToast('Kata sandi saat ini tidak tepat!', 'error');
-        return;
-      }
-      // Update password di database
-      userRecord.password = newPass;
-      localStorage.setItem('transforma_umkm_users_db', JSON.stringify(users));
-    }
-  } catch (err) {
-    console.warn('[handleChangePassword]', err);
-  }
-
-  showToast('Kata sandi berhasil diperbarui!', 'success');
-  document.getElementById('formChangePassword').reset();
 }
 
 // ========================================================
@@ -4742,7 +4844,7 @@ function initAuth() {
 
   // Jika tidak ada sesi aktif atau token kedaluwarsa, alihkan langsung ke portal login mandiri
   if (!currentUser) {
-    window.location.replace('?view=login');
+    window.location.replace('login.html');
     return false;
   }
   updateAuthUI();
@@ -4935,9 +5037,9 @@ function initShell() {
 // Redirect to separate auth portals
 function openAuthModal(target = 'login') {
   if (target === 'register') {
-    window.location.href = '?view=register';
+    window.location.href = 'register.html';
   } else {
-    window.location.href = '?view=login';
+    window.location.href = 'login.html';
   }
 }
 
@@ -4968,9 +5070,9 @@ function proceedLogout(target = 'login') {
   currentUser = null;
 
   if (target === 'register') {
-    window.location.replace('?view=register');
+    window.location.replace('register.html');
   } else {
-    window.location.replace('?view=login');
+    window.location.replace('login.html');
   }
 }
 
@@ -5075,7 +5177,7 @@ function updateAiHeaderStats() {
   });
 
   const bsEl = document.getElementById('aiStatBestSeller');
-  if (bsEl) bsEl.textContent = bestSellerName;
+  if (bsEl) bsEl.textContent = bestSellerName.length > 18 ? bestSellerName.slice(0, 16) + '...' : bestSellerName;
 }
 
 // 1. SARAN STOK CERDAS BERBASIS DATA PENJUALAN RIIL
@@ -5363,7 +5465,7 @@ function generateSmartProductDescription(name, category, features, tone, audienc
   return { headline, body, bullets, bulletIcons, cta, hashtags, rawText };
 }
 
-function applyAiDescriptionToSelectedProduct() {
+async function applyAiDescriptionToSelectedProduct() {
   const select = document.getElementById('aiCopySelectProduct');
   const prodId = select ? select.value : '';
 
@@ -5375,7 +5477,13 @@ function applyAiDescriptionToSelectedProduct() {
   const p = products.find(x => x.id === prodId);
   if (p && lastGeneratedAiCopy) {
     p.description = lastGeneratedAiCopy.text;
-    saveProducts();
+    if (typeof API !== 'undefined') {
+      try {
+        await API.products.update(p.id, { description: p.description });
+      } catch (e) {
+        console.warn('[AI] Gagal update deskripsi produk via REST API:', e);
+      }
+    }
     renderAllViews();
     showToast(`Deskripsi AI berhasil disimpan ke data produk "${p.name}"!`, 'success');
   }
@@ -5994,6 +6102,7 @@ function resetAiChatHistory() {
   });
   update();
 })();
+
 </script>
 <script type="text/plain" id="src-welcome">
 // ========================================================

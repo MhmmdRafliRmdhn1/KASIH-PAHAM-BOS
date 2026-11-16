@@ -1,7 +1,15 @@
 /**
  * TransformaUMKM — Frontend API Client
  * Wrapper untuk semua call ke backend REST API (http://localhost:3001)
- * Digunakan oleh script.js sebagai pengganti localStorage operations
+ * Menyediakan fungsi fetch CRUD lengkap untuk ke-7 entitas bisnis:
+ * 1. categories
+ * 2. suppliers
+ * 3. products
+ * 4. customers
+ * 5. transactions
+ * 6. transactionItems
+ * 7. stockMutations
+ * Serta endpoint dashboard summary dan health check.
  */
 
 'use strict';
@@ -26,9 +34,8 @@ const API = (() => {
       }
       return data;
     } catch (err) {
-      // Jika backend mati, tampilkan notifikasi tapi jangan crash app
-      if (err.message.includes('Failed to fetch') || err.message.includes('NetworkError')) {
-        console.warn('[API] Backend tidak tersedia, gunakan mode offline (localStorage)');
+      if (err.message && (err.message.includes('Failed to fetch') || err.message.includes('NetworkError'))) {
+        console.warn('[API] Backend tidak tersedia di ' + BASE_URL);
         throw new Error('OFFLINE');
       }
       throw err;
@@ -42,28 +49,33 @@ const API = (() => {
   const post   = (ep, body) => request('POST', ep, body);
   const put    = (ep, body) => request('PUT', ep, body);
   const patch  = (ep, body) => request('PATCH', ep, body);
-  const del    = (ep)       => request('DELETE', ep);
+  const del    = (ep, params = {}) => {
+    const qs = new URLSearchParams(params).toString();
+    return request('DELETE', qs ? `${ep}?${qs}` : ep);
+  };
 
   // ─── Health ──────────────────────────────────────────────────────────────
   const health = () => get('/health');
 
-  // ─── Categories ──────────────────────────────────────────────────────────
+  // ─── 1. Categories ───────────────────────────────────────────────────────
   const categories = {
-    getAll:   ()                    => get('/categories'),
+    getAll:   (params = {})         => get('/categories', params),
+    getById:  (id)                  => get(`/categories/${id}`),
     create:   (data)                => post('/categories', data),
     update:   (id, data)            => put(`/categories/${id}`, data),
     remove:   (id)                  => del(`/categories/${id}`),
   };
 
-  // ─── Suppliers ───────────────────────────────────────────────────────────
+  // ─── 2. Suppliers ────────────────────────────────────────────────────────
   const suppliers = {
-    getAll:   ()                    => get('/suppliers'),
+    getAll:   (params = {})         => get('/suppliers', params),
+    getById:  (id)                  => get(`/suppliers/${id}`),
     create:   (data)                => post('/suppliers', data),
     update:   (id, data)            => put(`/suppliers/${id}`, data),
     remove:   (id)                  => del(`/suppliers/${id}`),
   };
 
-  // ─── Products ────────────────────────────────────────────────────────────
+  // ─── 3. Products ─────────────────────────────────────────────────────────
   const products = {
     getAll:   (params = {})         => get('/products', params),
     getById:  (id)                  => get(`/products/${id}`),
@@ -74,7 +86,7 @@ const API = (() => {
     getLowStock: ()                 => get('/products', { low_stock: 'true' }),
   };
 
-  // ─── Customers ───────────────────────────────────────────────────────────
+  // ─── 4. Customers ────────────────────────────────────────────────────────
   const customers = {
     getAll:   (params = {})         => get('/customers', params),
     getById:  (id)                  => get(`/customers/${id}`),
@@ -83,25 +95,40 @@ const API = (() => {
     remove:   (id)                  => del(`/customers/${id}`),
   };
 
-  // ─── Transactions ─────────────────────────────────────────────────────────
+  // ─── 5. Transactions ─────────────────────────────────────────────────────
   const transactions = {
     getAll:   (params = {})         => get('/transactions', params),
     getById:  (id)                  => get(`/transactions/${id}`),
     create:   (data)                => post('/transactions', data),
+    update:   (id, data)            => put(`/transactions/${id}`, data),
+    remove:   (id, permanent = false) => del(`/transactions/${id}`, permanent ? { permanent: 'true' } : {}),
     void:     (id)                  => del(`/transactions/${id}`),
   };
 
-  // ─── Stock Mutations ──────────────────────────────────────────────────────
-  const stockMutations = {
-    getAll:   (params = {})         => get('/stock-mutations', params),
+  // ─── 6. Transaction Items ────────────────────────────────────────────────
+  const transactionItems = {
+    getAll:   (params = {})         => get('/transaction-items', params),
+    getById:  (id)                  => get(`/transaction-items/${id}`),
+    create:   (data)                => post('/transaction-items', data),
+    update:   (id, data)            => put(`/transaction-items/${id}`, data),
+    remove:   (id)                  => del(`/transaction-items/${id}`),
   };
 
-  // ─── Dashboard ────────────────────────────────────────────────────────────
+  // ─── 7. Stock Mutations ──────────────────────────────────────────────────
+  const stockMutations = {
+    getAll:   (params = {})         => get('/stock-mutations', params),
+    getById:  (id)                  => get(`/stock-mutations/${id}`),
+    create:   (data)                => post('/stock-mutations', data),
+    update:   (id, data)            => put(`/stock-mutations/${id}`, data),
+    remove:   (id)                  => del(`/stock-mutations/${id}`),
+  };
+
+  // ─── Dashboard ───────────────────────────────────────────────────────────
   const dashboard = {
     getSummary: ()                  => get('/dashboard/summary'),
   };
 
-  // ─── Connectivity Check ───────────────────────────────────────────────────
+  // ─── Connectivity Check ──────────────────────────────────────────────────
   let _isOnline = false;
   let _onlineCallbacks = [];
 
@@ -117,25 +144,37 @@ const API = (() => {
 
   function isOnline() { return _isOnline; }
 
-  function onOnline(cb) { _onlineCallbacks.push(cb); }
+  function onOnline(cb) {
+    if (_isOnline) {
+      cb();
+    } else {
+      _onlineCallbacks.push(cb);
+    }
+  }
 
   // Cek koneksi saat pertama kali dimuat
   checkConnectivity().then((online) => {
     if (online) {
-      console.log('%c[API] OK - Backend terhubung — http://localhost:3001', 'color: #22c55e; font-weight: bold');
-      _onlineCallbacks.forEach(cb => cb());
+      console.log('%c[API] OK - Backend terhubung — ' + BASE_URL, 'color: #22c55e; font-weight: bold');
+      _onlineCallbacks.forEach(cb => {
+        try { cb(); } catch (e) { console.error('[API] Callback error:', e); }
+      });
+      _onlineCallbacks = [];
     } else {
-      console.warn('%c[API] PERINGATAN - Backend tidak aktif — jalankan: pnpm server', 'color: #f59e0b; font-weight: bold');
+      console.warn('%c[API] PERINGATAN - Backend tidak aktif di ' + BASE_URL + ' — jalankan: pnpm backend', 'color: #f59e0b; font-weight: bold');
     }
   });
 
   return {
+    BASE_URL,
+    request,
     health,
     categories,
     suppliers,
     products,
     customers,
     transactions,
+    transactionItems,
     stockMutations,
     dashboard,
     checkConnectivity,
@@ -144,5 +183,5 @@ const API = (() => {
   };
 })();
 
-// Expose ke window agar bisa dipakai oleh script.js
+// Expose ke window agar bisa dipakai oleh script.js dan komponen lain
 window.API = API;
