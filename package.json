@@ -1,14 +1,16 @@
 {
   "name": "transforma-umkm",
   "version": "1.0.0",
-  "description": "TransformaUMKM — Platform Operasi Digital Terpadu untuk Akselerasi Bisnis & UMKM Indonesia",
+  "description": "TransformaUMKM \u2014 Platform Operasi Digital Terpadu untuk Akselerasi Bisnis & UMKM Indonesia",
   "scripts": {
-    "dev": "live-server . --port=8080"
+    "start": "node backend/server.js",
+    "dev": "node --watch backend/server.js",
+    "test": "node --test backend/server.test.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-    "live-server": "^1.2.2"
+  "engines": {
+    "node": ">=22"
   }
 }

@@ -2758,8 +2758,8 @@ let currentUser = null;
 // ========================================================
 // INITIALIZATION
 // ========================================================
-document.addEventListener('DOMContentLoaded', () => {
-  initStorage();
+document.addEventListener('DOMContentLoaded', async () => {
+  try { await initStorage(); } catch (e) { alert('Backend tidak tersedia. Jalankan npm start lalu buka http://localhost:3001. ' + e.message); return; }
   const isAuthenticated = initAuth();
   if (!isAuthenticated) return;
   initClock();
@@ -6915,5 +6915,6 @@ function resetAiChatHistory() {
   cfg.scripts.forEach(run);
 })();
 </script>
+<script src="course-api.js"></script>
 </body>
 </html>

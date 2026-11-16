@@ -1,0 +1,14 @@
+[Unit]
+Description=TransformaUMKM Tugas 9
+After=network.target
+[Service]
+User=transforma
+Group=transforma
+WorkingDirectory=/var/www/transforma
+Environment=NODE_ENV=production
+Environment=HOST=127.0.0.1
+Environment=PORT=3001
+ExecStart=/usr/bin/node /var/www/transforma/backend/server.js
+Restart=on-failure
+[Install]
+WantedBy=multi-user.target
