@@ -1,35 +1,73 @@
 # TransformaUMKM
 
 > **Platform Operasi Digital Terpadu untuk UMKM Indonesia**  
-> Kasir POS · Inventori · Asisten Bisnis AI · CRM · Katalog Digital — dalam satu aplikasi web.
+> Kasir POS · Inventori · Asisten Bisnis AI · CRM · Katalog Digital — didukung arsitektur REST API Backend.
 
-[![Platform](https://img.shields.io/badge/Platform-Web%20SPA-00D4FF)](#)
-[![Tech](https://img.shields.io/badge/Stack-HTML%20%2F%20CSS%20%2F%20Vanilla%20JS-F7DF1E)](#)
+[![Platform](https://img.shields.io/badge/Platform-Web%20SPA%20%2B%20REST%20API-00D4FF)](#)
+[![Backend](https://img.shields.io/badge/Backend-Node.js%20%2F%20Express%205-68a063)](#)
+[![Frontend](https://img.shields.io/badge/Frontend-HTML5%20%2F%20CSS3%20%2F%20Vanilla%20JS-F7DF1E)](#)
 [![License](https://img.shields.io/badge/License-MIT-10B981)](LICENSE)
 [![Status](https://img.shields.io/badge/Status-Production%20Ready-22c55e)](#)
 
 ---
 
-## Tampilan Aplikasi
+## Arsitektur Sistem (Client-Server REST API)
 
-| Dashboard | Kasir POS | Asisten AI |
-|-----------|-----------|------------|
-| Monitoring omzet, laba, stok real-time | Transaksi cepat dengan filter kategori | Rekomendasi restock & caption promosi |
+TransformaUMKM mengadopsi arsitektur terpisah antara **Frontend Single Page Application (SPA)** dan **Backend REST API**:
+
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│                        FRONTEND CLIENT (Port 8080)                     │
+│  - Semantic HTML5, CSS Variables, Native Canvas 2D Charts              │
+│  - Lucide Icons CDN + Local Storage SVG Cache                          │
+│  - Session Security (XOR Cipher Token Expiry di localStorage)          │
+│  - script.js: Mengonsumsi data bisnis via async/await                  │
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    │
+                         HTTP REST API (JSON / CORS)
+                       http://localhost:3001/api/...
+                                    │
+┌───────────────────────────────────┴────────────────────────────────────┐
+│                       BACKEND SERVER (Port 3001)                       │
+│  - Node.js + Express 5 + CORS Middleware (backend/server.js)           │
+│  - API Client SDK (backend/api-client.js)                              │
+│  - Atomic Business Logic (Rollback on failure)                         │
+│  - 7 Entitas Inti: Categories, Suppliers, Products, Customers,         │
+│    Transactions, Transaction Items, Stock Mutations                    │
+│  - Executive Dashboard Aggregator & Health Endpoint                    │
+└────────────────────────────────────────────────────────────────────────┘
+```
 
 ---
 
-## Fitur Utama
+## Fitur Utama & Ke-7 Entitas Bisnis
+
+Aplikasi mengintegrasikan 7 entitas bisnis secara relasional dan atomik:
+
+| Entitas | Deskripsi & Operasi API | Fitur Terkait |
+|---|---|---|
+| **1. Categories** | Manajemen kategori produk (`/api/categories`) | POS category chips, donat chart omzet, filter inventori |
+| **2. Suppliers** | Direktori pemasok & kontak WhatsApp (`/api/suppliers`) | AI WhatsApp Purchase Order, pengadaan barang |
+| **3. Products** | Katalog SKU, harga modal/jual, stok & threshold (`/api/products`) | Kasir POS, inventori, etalase publik, restock alert |
+| **4. Customers** | Direktori pelanggan, segmentasi VIP/Regular (`/api/customers`) | Poin loyalitas (1 pt / Rp 10.000), WhatsApp blast |
+| **5. Transactions** | Header transaksi penjualan, diskon, PPN, bayar/kembalian (`/api/transactions`) | Checkout POS, struk digital, omzet dashboard |
+| **6. Transaction Items** | Rincian produk per transaksi penjualan (`/api/transaction-items`) | Kalkulasi margin keuntungan, top 5 best seller |
+| **7. Stock Mutations** | Audit trail keluar-masuk stok (SALE, RESTOCK, ADJUSTMENT) (`/api/stock-mutations`) | Laju penjualan (*sales velocity*), AI Restock |
+
+---
+
+## Modul Fungsional
 
 | Modul | Deskripsi |
 |-------|-----------|
-| 📊 **Executive Dashboard** | KPI real-time: omzet harian, estimasi laba bersih, total transaksi, alert stok. Grafik tren 7 hari & donut chart kategori. |
-| 🛒 **Kasir POS** | Transaksi cepat, filter kategori produk, diskon fleksibel, toggle PPN, QRIS canvas dinamis, struk digital via WhatsApp. |
-| 📦 **Inventori & Stok** | CRUD produk, SKU otomatis, peringatan stok minimum, ikon produk otomatis dari Lucide Icons. |
-| 🤖 **Asisten Bisnis AI** | Saran restock berbasis sales velocity, generator deskripsi produk, caption promosi WA/IG/TikTok, chat konsultan AI. |
-| 👥 **CRM Pelanggan** | Database pelanggan, poin reward (1 pt / Rp 10.000), segmentasi VIP, template pesan WhatsApp. |
-| 🏪 **Katalog Digital Publik** | Mini storefront publik dengan sinkronisasi stok real-time, order via WhatsApp. |
-| ⚙️ **Pengaturan (5 Kelompok)** | Profil Toko, Kasir/Pembayaran, Inventori, Backup Data, Akun & Keamanan. |
-| 🔐 **Auth Mandiri** | Registrasi & login dengan kredensial sendiri, enkripsi sesi XOR, auto-expiry token. |
+| 📊 **Executive Dashboard** | KPI real-time: omzet harian, estimasi laba bersih, total transaksi, alert stok. Grafik tren 7 hari (Canvas line) & breakdown kategori (Canvas donut). |
+| 🛒 **Kasir POS** | Transaksi instan, filter kategori, diskon fleksibel, toggle PPN, kalkulator uang/kembalian, QRIS canvas dinamis, cetak & kirim struk digital WhatsApp. |
+| 📦 **Inventori & Stok** | CRUD produk lengkap, SKU otomatis, peringatan stok minimum, auto-icon Lucide cerdas (zero config). |
+| 🤖 **Asisten Bisnis AI** | Saran restock berbasis sales velocity & runout days, generator deskripsi produk, caption promosi WA/IG/TikTok, chat konsultasi bisnis. |
+| 👥 **CRM Pelanggan** | Database pelanggan, poin reward otomatis, segmentasi VIP, template pesan promosi & ucapan WhatsApp. |
+| 🏪 **Katalog Digital Publik** | Mini storefront publik dengan sinkronisasi stok real-time dan direct order ke WhatsApp toko. |
+| ⚙️ **Pengaturan Terpadu** | Profil Toko, Kasir/Pembayaran, Inventori, Backup Data JSON 7 entitas, Akun & Keamanan. |
+| 🔐 **Auth Mandiri** | Registrasi & login kredensial lokal, enkripsi sesi XOR, auto-expiry token (tetap tersimpan di `localStorage` sesi). |
 
 ---
 
@@ -38,248 +76,121 @@
 ### Prasyarat
 
 - **Node.js** versi 18 ke atas → [Download di nodejs.org](https://nodejs.org)
-- **pnpm** (package manager) — lihat cara install di bawah
+- **pnpm** atau **npm**
 
 ---
 
-### 1. Install pnpm (Sekali Saja)
+### 1. Install Dependensi
 
-Buka **Terminal / PowerShell**, jalankan:
-
-```powershell
-npm install -g pnpm@9
-```
-
-> **Windows — pnpm tidak dikenali?**  
-> Jalankan perintah ini di PowerShell untuk patch otomatis:
-> ```powershell
-> $f = "$env:APPDATA\npm\pnpm.ps1"
-> $c = Get-Content $f -Raw
-> $patched = $c -replace 'if \(Test-Path.*?\n.*?\n.*?\} else \{', '# patched'
-> # Cara manual: edit file $f, ganti baris node dengan path absolut:
-> # & "C:\Program Files\nodejs\node.exe" "$basedir/node_modules/pnpm/bin/pnpm.cjs" $args
-> ```
-> Atau ikuti langkah manual di bagian **Troubleshooting** bawah.
-
----
-
-### 2. Clone / Download Proyek
+Buka terminal di folder proyek, lalu jalankan:
 
 ```bash
-# Clone via Git
-git clone https://github.com/username/transforma-umkm.git
-cd transforma-umkm
-
-# Atau: ekstrak ZIP yang sudah didownload, lalu buka foldernya
-```
-
----
-
-### 3. Install Dependensi
-
-```powershell
-cd C:\Users\NamaAnda\Downloads\KASIH-PAHAM-BOS
-
 pnpm install
+# atau menggunakan npm:
+npm install
 ```
 
 ---
 
-### 4. Jalankan Dev Server
+### 2. Menjalankan Server & Aplikasi
 
-```powershell
-pnpm run dev
-```
-
-Aplikasi akan berjalan di: **http://127.0.0.1:8080**
-
-Buka browser dan akses URL tersebut.
-
----
-
-### Alternatif: Tanpa pnpm (Python)
-
-Jika tidak ingin install Node.js/pnpm, gunakan Python:
+Jalankan backend dan frontend secara bersamaan:
 
 ```bash
-# Python 3
-python -m http.server 8080
-
-# Buka browser: http://localhost:8080
+pnpm run dev
+# atau:
+npm run dev
 ```
 
----
+Perintah di atas akan menjalankan:
+- **Backend REST API**: `http://localhost:3001`
+- **Frontend Web SPA**: `http://localhost:8080`
 
-### Alternatif: Buka File Langsung
+#### Menjalankan Secara Terpisah:
 
-Klik ganda `index.html` untuk membuka langsung di browser.  
-> ⚠️ Beberapa fitur (CDN icon, font) membutuhkan koneksi internet.
+```bash
+# Terminal 1 - Backend REST API
+pnpm run backend
+# (atau: node backend/server.js)
+
+# Terminal 2 - Frontend Web SPA
+pnpm run frontend
+# (atau: npx live-server . --port=8080 --ignore=backend)
+```
+
+Buka browser dan akses: **http://localhost:8080**
 
 ---
 
 ## Alur Pertama Kali Pakai
 
 ```
-1. Buka http://127.0.0.1:8080
+1. Buka http://localhost:8080
          ↓
 2. Halaman Login → klik "Daftar Sekarang"
          ↓
-3. Isi form registrasi:
-   - Nama pemilik
-   - Nama usaha / toko
-   - No. WhatsApp
-   - Email
-   - Kata sandi (min. 6 karakter)
+3. Isi form registrasi (Nama, Usaha, No. WA, Email, Password)
          ↓
-4. Login dengan email & kata sandi yang baru didaftarkan
+4. Login dengan akun yang baru didaftarkan
          ↓
-5. Dashboard kosong siap digunakan!
-   → Tambah produk di menu Inventori
-   → Lakukan transaksi di menu Kasir
-   → Pantau performa di Dashboard
+5. Dashboard terhubung otomatis dengan REST API Backend di port 3001!
+   → Tambah/kelola produk di menu Inventori
+   → Lakukan transaksi kasir di menu Kasir POS
+   → Pantau omzet, laba bersih, dan grafik tren di Dashboard
 ```
-
----
-
-## Pengaturan Aplikasi
-
-Buka sidebar → klik **Pengaturan** untuk mengakses 5 kelompok konfigurasi:
-
-| Kelompok | Isi |
-|----------|-----|
-| **1. Profil Toko** | Nama toko, nomor WA, deskripsi, alamat, footer struk |
-| **2. Kasir & Pembayaran** | Tarif PPN (%), info rekening bank, nama pemegang QRIS |
-| **3. Aturan Inventori** | Stok minimum default untuk peringatan restock |
-| **4. Backup & Restore Data** | Export data ke file JSON, import dari backup, kosongkan semua data |
-| **5. Akun & Keamanan** | Ganti kata sandi (verifikasi password lama dulu) |
 
 ---
 
 ## Struktur Proyek
 
 ```
-KASIH-PAHAM-BOS/
-├── index.html              # Aplikasi utama (SPA — semua modul terintegrasi)
-├── style.css               # Design system lengkap (CSS Variables, komponen)
-├── package.json            # Konfigurasi proyek & script dev server
-├── pnpm-lock.yaml          # Lock file dependensi pnpm
-├── vercel.json             # Konfigurasi deploy ke Vercel
-├── favicon.ico             # Favicon aplikasi
+TransformaUMKM/
+├── index.html              # Aplikasi SPA utama (terhubung ke backend/api-client.js)
+├── style.css               # Design system, CSS variables & komponen UI
+├── script.js               # Logika aplikasi frontend (async/await ke REST API)
+├── auth-security.js        # Modul enkripsi sesi & autentikasi lokal
+├── welcome.js              # Onboarding & landing animation
+├── dev-inspector.js        # Tool inspeksi & developer diagnostic
+├── package.json            # Konfigurasi dependensi Express, CORS, live-server
+├── vercel.json             # Konfigurasi hosting
+├── favicon.ico             # Favicon web
+├── backend/
+│   ├── server.js           # Server REST API Express (In-Memory Atomic Store)
+│   └── api-client.js       # Client SDK CRUD 7 entitas (fetch async/await)
 ├── assets/
 │   ├── logo.svg            # Logo TransformaUMKM
 │   ├── teks-logo.svg       # Versi teks logo
 │   ├── favicon.png         # Favicon PNG
-│   └── icons/              # Icon SVG produk (Lucide Icons, offline fallback)
-├── database/
-│   ├── schema.sql          # Skema database relasional (siap migrasi ke PostgreSQL)
-│   └── transforma.db       # SQLite database (referensi struktur)
+│   └── icons/              # Ikon SVG produk Lucide (offline fallback)
 ├── docs/
 │   └── PROPOSAL_UX_CASE_STUDY.md
+├── PRD.md                  # Product Requirement Document v2.0
 └── LICENSE                 # Lisensi MIT
 ```
 
-> **Catatan**: File `script.js`, `api.js`, `server.js`, dll. adalah file referensi legacy.  
-> Semua logika aktif ada di dalam `index.html` sebagai embedded scripts.
-
 ---
 
-## Stack Teknologi
+## Endpoint REST API Backend (`http://localhost:3001/api`)
 
-| Layer | Teknologi |
-|-------|-----------|
-| **Frontend** | HTML5 Semantik, Vanilla JavaScript (ES6+) |
-| **Styling** | Vanilla CSS3, CSS Custom Properties (Design Tokens) |
-| **Charts** | HTML5 Canvas 2D (tanpa library eksternal) |
-| **Storage** | localStorage (offline-first, JSON serialization) |
-| **Icons** | Lucide Icons via jsDelivr CDN + cache localStorage |
-| **Fonts** | Plus Jakarta Sans, Inter, JetBrains Mono (Google Fonts) |
-| **Dev Server** | live-server (via pnpm) |
-| **Auth** | Client-side XOR session encryption + auto token expiry |
-
----
-
-## Deploy ke Hosting Publik
-
-### Vercel (Gratis, Tercepat)
-
-```bash
-npm i -g vercel
-cd KASIH-PAHAM-BOS
-vercel --prod
-```
-
-### Netlify
-
-Drag & drop folder `KASIH-PAHAM-BOS` ke [app.netlify.com/drop](https://app.netlify.com/drop)
-
-### GitHub Pages
-
-1. Push ke GitHub repository
-2. Settings → Pages → pilih branch `main` → Save
-3. Akses di `https://username.github.io/nama-repo`
-
----
-
-## Troubleshooting
-
-### `pnpm` tidak dikenali di PowerShell
-
-**Penyebab**: Node.js tidak ada di PATH yang digunakan pnpm.ps1.
-
-**Solusi**:
-
-1. Buka file: `C:\Users\NamaAnda\AppData\Roaming\npm\pnpm.ps1`
-2. Edit dengan Notepad, ubah isinya menjadi:
-
-```powershell
-#!/usr/bin/env pwsh
-$basedir=Split-Path $MyInvocation.MyCommand.Definition -Parent
-$nodeExe = "C:\Program Files\nodejs\node.exe"
-if (Test-Path "$basedir/node.exe") { $nodeExe = "$basedir/node.exe" }
-if ($MyInvocation.ExpectingInput) {
-  $input | & "$nodeExe" "$basedir/node_modules/pnpm/bin/pnpm.cjs" $args
-} else {
-  & "$nodeExe" "$basedir/node_modules/pnpm/bin/pnpm.cjs" $args
-}
-exit $LASTEXITCODE
-```
-
-3. Simpan → buka terminal baru → coba `pnpm --version`
-
----
-
-### Data lama / demo masih muncul setelah update
-
-Aplikasi otomatis membersihkan data lama saat versi berubah. Jika masih muncul:
-
-1. Buka browser → `F12` → tab **Application**
-2. Kiri: **Local Storage** → `http://127.0.0.1:8080`
-3. Klik kanan → **Clear All** → refresh halaman
-
----
-
-### Port 8080 sudah dipakai
-
-```powershell
-# Cek proses yang pakai port 8080
-netstat -ano | findstr :8080
-
-# Kill proses (ganti PID dengan angka dari hasil di atas)
-taskkill /PID 12345 /F
-
-# Lalu jalankan ulang
-pnpm run dev
-```
-
----
-
-### Lupa kata sandi
-
-Karena sistem berbasis localStorage (tidak ada backend), reset manual:
-
-1. Buka DevTools → Application → Local Storage
-2. Hapus key `transforma_umkm_users_db`
-3. Refresh → daftar akun baru
+| Metode | Endpoint | Deskripsi |
+|---|---|---|
+| `GET` | `/health` | Status server dan jumlah data tiap entitas |
+| `GET` | `/dashboard/summary` | Agregasi metrik KPI omzet, laba, tren 7 hari, dan top produk |
+| `GET, POST` | `/categories` | Ambil semua kategori atau buat kategori baru |
+| `GET, PUT, DELETE`| `/categories/:id` | Ambil detail, perbarui, atau hapus kategori |
+| `GET, POST` | `/suppliers` | Ambil semua supplier atau tambah supplier |
+| `GET, PUT, DELETE`| `/suppliers/:id` | Detail, ubah, atau hapus supplier |
+| `GET, POST` | `/products` | Daftar produk (dukung filter search/low_stock) atau tambah |
+| `GET, PUT, DELETE`| `/products/:id` | Detail, ubah, atau nonaktifkan produk |
+| `PATCH` | `/products/:id/restock` | Tambah stok produk secara langsung |
+| `GET, POST` | `/customers` | Daftar pelanggan atau tambah pelanggan baru |
+| `GET, PUT, DELETE`| `/customers/:id` | Detail, perbarui, atau hapus data pelanggan |
+| `GET, POST` | `/transactions` | Riwayat transaksi atau checkout transaksi baru (atomik) |
+| `GET, PUT, DELETE`| `/transactions/:id` | Detail transaksi (+items), ubah, atau void transaksi |
+| `GET, POST` | `/transaction-items` | Daftar rincian item atau tambah item transaksi |
+| `GET, PUT, DELETE`| `/transaction-items/:id` | Detail, ubah, atau hapus item transaksi |
+| `GET, POST` | `/stock-mutations` | Riwayat kartu stok atau catat mutasi manual |
+| `GET, PUT, DELETE`| `/stock-mutations/:id` | Detail, ubah, atau hapus catatan mutasi stok |
 
 ---
 

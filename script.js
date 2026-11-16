@@ -424,10 +424,14 @@ const INITIAL_CUSTOMERS = [
   }
 ];
 
-// App State
+// App State (7 Entitas Bisnis REST API)
 let products = [];
 let transactions = [];
 let customers = [];
+let categories = [];
+let suppliers = [];
+let transactionItems = [];
+let stockMutations = [];
 let cart = [];
 let currentCartCustomer = 'guest';
 let lastCompletedTrx = null;
@@ -436,41 +440,182 @@ let currentInvFilter = 'all';
 let currentUser = null;
 
 // ========================================================
+// API CLIENT INTEGRATION & NORMALIZATION HELPERS (7 Entitas)
+// ========================================================
+function normalizeProduct(p) {
+  if (!p) return p;
+  const costPrice = p.costPrice !== undefined ? Number(p.costPrice) : Number(p.cost_price || 0);
+  const sellPrice = p.sellPrice !== undefined ? Number(p.sellPrice) : Number(p.sell_price || 0);
+  const minStock = p.minStock !== undefined ? Number(p.minStock) : Number(p.min_stock_threshold !== undefined ? p.min_stock_threshold : 5);
+  const stock = Number(p.stock || 0);
+  const category = p.category || p.category_name || '';
+  const supplier = p.supplier || p.supplier_name || '';
+  return {
+    ...p,
+    costPrice,
+    cost_price: costPrice,
+    sellPrice,
+    sell_price: sellPrice,
+    stock,
+    minStock,
+    min_stock_threshold: minStock,
+    category,
+    category_name: category,
+    supplier,
+    supplier_name: supplier,
+    icon: p.icon || p.icon_emoji || 'auto'
+  };
+}
+
+function normalizeCustomer(c) {
+  if (!c) return c;
+  const totalSpent = c.totalSpent !== undefined ? Number(c.totalSpent) : Number(c.total_spent || 0);
+  const points = c.points !== undefined ? Number(c.points) : Number(c.loyalty_points || 0);
+  const phone = c.phone || c.phone_whatsapp || '';
+  const lastVisit = c.lastVisit || (c.last_visit_at ? c.last_visit_at.slice(0, 10) : '');
+  return {
+    ...c,
+    phone,
+    phone_whatsapp: phone,
+    totalSpent,
+    total_spent: totalSpent,
+    points,
+    loyalty_points: points,
+    lastVisit,
+    last_visit_at: lastVisit,
+    segment: c.segment || (totalSpent >= 5000000 ? 'VIP' : 'REGULAR')
+  };
+}
+
+function normalizeTransaction(t) {
+  if (!t) return t;
+  const createdAt = t.created_at || (t.date ? `${t.date} ${t.time || '00:00:00'}` : new Date().toISOString());
+  const date = t.date || createdAt.slice(0, 10);
+  const time = t.time || (createdAt.length >= 16 ? createdAt.slice(11, 16) : '00:00');
+  const discount = t.discount !== undefined ? Number(t.discount) : Number(t.discount_amount || 0);
+  const tax = t.tax !== undefined ? Number(t.tax) : Number(t.tax_amount || 0);
+  const grandTotal = t.grandTotal !== undefined ? Number(t.grandTotal) : Number(t.grand_total || 0);
+  const method = (t.method || t.payment_method || 'CASH').toUpperCase();
+  const customerId = t.customerId || t.customer_id || null;
+  const customerName = t.customerName || t.customer_name || 'Umum (Guest)';
+  const customerPhone = t.customerPhone || t.customer_phone || '';
+  const cashPaid = t.cashPaid !== undefined ? Number(t.cashPaid) : Number(t.cash_paid || grandTotal);
+  const cashChange = t.cashChange !== undefined ? Number(t.cashChange) : Number(t.cash_change || 0);
+  const items = Array.isArray(t.items) ? t.items.map(it => ({
+    ...it,
+    id: it.id || it.product_id,
+    product_id: it.product_id || it.id,
+    name: it.name || it.product_name,
+    product_name: it.product_name || it.name,
+    price: it.price !== undefined ? it.price : it.unit_price,
+    unit_price: it.unit_price !== undefined ? it.unit_price : it.price,
+    cost: it.cost !== undefined ? it.cost : it.unit_cost,
+    unit_cost: it.unit_cost !== undefined ? it.unit_cost : it.cost,
+    qty: it.qty !== undefined ? it.qty : it.quantity,
+    quantity: it.quantity !== undefined ? it.quantity : it.qty,
+  })) : [];
+
+  return {
+    ...t,
+    date,
+    time,
+    created_at: createdAt,
+    customerId,
+    customer_id: customerId,
+    customerName,
+    customer_name: customerName,
+    customerPhone,
+    customer_phone: customerPhone,
+    subtotal: Number(t.subtotal || 0),
+    discount,
+    discount_amount: discount,
+    tax,
+    tax_amount: tax,
+    grandTotal,
+    grand_total: grandTotal,
+    method,
+    payment_method: method,
+    cashPaid,
+    cash_paid: cashPaid,
+    cashChange,
+    cash_change: cashChange,
+    items,
+  };
+}
+
+async function syncAllBusinessData() {
+  if (typeof API === 'undefined') return;
+  try {
+    const [pRes, tRes, cRes, catRes, supRes, smRes, tiRes] = await Promise.allSettled([
+      API.products.getAll({ include_inactive: 'false' }),
+      API.transactions.getAll({ limit: 100 }),
+      API.customers.getAll(),
+      API.categories.getAll(),
+      API.suppliers.getAll(),
+      API.stockMutations.getAll({ limit: 100 }),
+      API.transactionItems.getAll()
+    ]);
+
+    if (pRes.status === 'fulfilled' && pRes.value && pRes.value.data) {
+      products = pRes.value.data.map(normalizeProduct);
+    }
+    if (tRes.status === 'fulfilled' && tRes.value && tRes.value.data) {
+      transactions = tRes.value.data.map(normalizeTransaction);
+    }
+    if (cRes.status === 'fulfilled' && cRes.value && cRes.value.data) {
+      customers = cRes.value.data.map(normalizeCustomer);
+    }
+    if (catRes.status === 'fulfilled' && catRes.value && catRes.value.data) {
+      categories = catRes.value.data;
+    }
+    if (supRes.status === 'fulfilled' && supRes.value && supRes.value.data) {
+      suppliers = supRes.value.data;
+    }
+    if (smRes.status === 'fulfilled' && smRes.value && smRes.value.data) {
+      stockMutations = smRes.value.data;
+    }
+    if (tiRes.status === 'fulfilled' && tiRes.value && tiRes.value.data) {
+      transactionItems = tiRes.value.data;
+    }
+  } catch (err) {
+    console.warn('[API Sync] Gagal sinkronisasi data bisnis:', err);
+  }
+}
+
+// ========================================================
 // INITIALIZATION
 // ========================================================
-document.addEventListener('DOMContentLoaded', () => {
-  initStorage();
+document.addEventListener('DOMContentLoaded', async () => {
   const isAuthenticated = initAuth();
   if (!isAuthenticated) return;
+  await initStorage();
   initClock();
   initNav();
   initShell();
   renderAllViews();
 });
 
-function initStorage() {
-  const storedProds = localStorage.getItem(STORAGE_KEY_PRODUCTS);
-  if (!storedProds) {
-    products = JSON.parse(JSON.stringify(INITIAL_PRODUCTS));
-    saveProducts();
-  } else {
-    products = JSON.parse(storedProds);
+async function initStorage() {
+  let loadedFromApi = false;
+  if (typeof API !== 'undefined') {
+    try {
+      await syncAllBusinessData();
+      if (products && products.length > 0) loadedFromApi = true;
+    } catch (e) {
+      console.warn('[Storage] API fetch gagal, fallback ke in-memory initial data');
+    }
   }
 
-  const storedTrx = localStorage.getItem(STORAGE_KEY_TRX);
-  if (!storedTrx) {
-    transactions = generateInitialTransactions();
-    saveTransactions();
-  } else {
-    transactions = JSON.parse(storedTrx);
-  }
-
-  const storedCust = localStorage.getItem(STORAGE_KEY_CUSTOMERS);
-  if (!storedCust) {
-    customers = JSON.parse(JSON.stringify(INITIAL_CUSTOMERS));
-    saveCustomers();
-  } else {
-    customers = JSON.parse(storedCust);
+  if (!loadedFromApi || products.length === 0) {
+    if (typeof INITIAL_PRODUCTS !== 'undefined' && INITIAL_PRODUCTS.length > 0) {
+      products = JSON.parse(JSON.stringify(INITIAL_PRODUCTS)).map(normalizeProduct);
+    }
+    if (typeof INITIAL_CUSTOMERS !== 'undefined' && INITIAL_CUSTOMERS.length > 0) {
+      customers = JSON.parse(JSON.stringify(INITIAL_CUSTOMERS)).map(normalizeCustomer);
+    }
+    if (typeof generateInitialTransactions === 'function') {
+      transactions = generateInitialTransactions().map(normalizeTransaction);
+    }
   }
 }
 
@@ -505,16 +650,16 @@ function generateInitialTransactions() {
   return trxs;
 }
 
-function saveProducts() {
-  localStorage.setItem(STORAGE_KEY_PRODUCTS, JSON.stringify(products));
+async function saveProducts() {
+  // Disimpan langsung ke backend REST API (http://localhost:3001/api/products)
 }
 
-function saveTransactions() {
-  localStorage.setItem(STORAGE_KEY_TRX, JSON.stringify(transactions));
+async function saveTransactions() {
+  // Disimpan langsung ke backend REST API (http://localhost:3001/api/transactions)
 }
 
-function saveCustomers() {
-  localStorage.setItem(STORAGE_KEY_CUSTOMERS, JSON.stringify(customers));
+async function saveCustomers() {
+  // Disimpan langsung ke backend REST API (http://localhost:3001/api/customers)
 }
 
 // ========================================================
@@ -547,15 +692,10 @@ function initNav() {
   });
 
   // Reset/Seed Button
-  document.getElementById('btnResetSeed').addEventListener('click', () => {
+  document.getElementById('btnResetSeed').addEventListener('click', async () => {
     if (confirm('Muat ulang dataset realistis UMKM? Data yang diubah akan kembali ke nilai default demo.')) {
-      products = JSON.parse(JSON.stringify(INITIAL_PRODUCTS));
-      customers = JSON.parse(JSON.stringify(INITIAL_CUSTOMERS));
-      transactions = generateInitialTransactions();
       cart = [];
-      saveProducts();
-      saveCustomers();
-      saveTransactions();
+      await initStorage();
       renderAllViews();
       showToast('Dataset demo UMKM berhasil dimuat ulang!');
     }
@@ -1429,7 +1569,7 @@ function renderQrisDummyCanvas() {
   ctx.fillText('QRIS', size / 2, size / 2 + 3);
 }
 
-function processPayment() {
+async function processPayment() {
   const method = document.querySelector('input[name="payMethod"]:checked').value;
   const subtotal = cart.reduce((sum, i) => sum + i.price * i.qty, 0);
   const discountPct = Number(document.getElementById('cartDiscountPercent').value) || 0;
@@ -1446,6 +1586,39 @@ function processPayment() {
     }
   }
 
+  const now = new Date();
+  const trxId = 'TRX-' + (1000 + transactions.length + 1);
+  const cust = customers.find(c => c.id === currentCartCustomer);
+
+  // Catat transaksi via api-client.js ke backend REST API
+  if (typeof API !== 'undefined') {
+    const apiItems = cart.map(item => ({
+      product_id: item.id,
+      quantity: item.qty,
+      unit_price: item.price,
+      unit_cost: item.cost,
+      product_name: item.name
+    }));
+
+    try {
+      await API.transactions.create({
+        id: trxId,
+        customer_id: cust ? cust.id : null,
+        items: apiItems,
+        payment_method: method.toUpperCase(),
+        discount_amount: discAmt,
+        tax_amount: taxAmt,
+        subtotal: subtotal,
+        grand_total: grand,
+        cash_paid: method === 'cash' ? Number(document.getElementById('cashReceivedInput').value) : grand,
+        cash_change: method === 'cash' ? Number(document.getElementById('cashReceivedInput').value) - grand : 0,
+        status: 'SELESAI'
+      });
+    } catch (apiErr) {
+      console.warn('[POS] Gagal kirim transaksi ke REST API:', apiErr);
+    }
+  }
+
   // 1. Deduct Stock in Database
   cart.forEach(item => {
     const p = products.find(prod => prod.id === item.id);
@@ -1453,22 +1626,20 @@ function processPayment() {
       p.stock = Math.max(0, p.stock - item.qty);
     }
   });
-  saveProducts();
 
   // 2. Add Customer Reward Points (1 point per Rp 10.000)
-  const cust = customers.find(c => c.id === currentCartCustomer);
   if (cust) {
     const earnedPoints = Math.floor(grand / 10000);
     cust.points += earnedPoints;
+    cust.loyalty_points = cust.points;
     cust.totalSpent += grand;
+    cust.total_spent = cust.totalSpent;
     cust.lastVisit = new Date().toISOString().split('T')[0];
-    saveCustomers();
+    cust.last_visit_at = cust.lastVisit;
   }
 
   // 3. Record Transaction
-  const now = new Date();
-  const trxId = 'TRX-' + (1000 + transactions.length + 1);
-  const newTrx = {
+  const newTrx = normalizeTransaction({
     id: trxId,
     date: now.toISOString().split('T')[0],
     time: now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }),
@@ -1484,10 +1655,9 @@ function processPayment() {
     cashPaid: method === 'cash' ? Number(document.getElementById('cashReceivedInput').value) : grand,
     cashChange: method === 'cash' ? Number(document.getElementById('cashReceivedInput').value) - grand : 0,
     status: 'Selesai'
-  };
+  });
 
-  transactions.push(newTrx);
-  saveTransactions();
+  transactions.unshift(newTrx);
   lastCompletedTrx = newTrx;
 
   closeModal('checkoutModal');
@@ -1503,6 +1673,9 @@ function processPayment() {
 
   // Show Digital Receipt Modal
   showReceiptModal(newTrx);
+
+  // Sinkronisasi data bisnis terbaru dari backend
+  syncAllBusinessData();
 }
 
 // ========================================================
@@ -1803,7 +1976,7 @@ function openEditProductModal(id) {
   openModal('productModal');
 }
 
-function handleProductFormSubmit(e) {
+async function handleProductFormSubmit(e) {
   e.preventDefault();
   const editId = document.getElementById('prodEditId').value;
   const name = document.getElementById('prodName').value.trim();
@@ -1830,18 +2003,39 @@ function handleProductFormSubmit(e) {
     if (p) {
       p.name = name;
       p.category = category;
+      p.category_name = category;
       p.sku = sku;
       p.costPrice = costPrice;
+      p.cost_price = costPrice;
       p.sellPrice = sellPrice;
+      p.sell_price = sellPrice;
       p.stock = stock;
       p.minStock = minStock;
+      p.min_stock_threshold = minStock;
       p.supplier = supplier;
+      p.supplier_name = supplier;
       p.icon = 'auto';
       p.description = description;
+
+      if (typeof API !== 'undefined') {
+        try {
+          await API.products.update(editId, {
+            name,
+            sku,
+            cost_price: costPrice,
+            sell_price: sellPrice,
+            stock,
+            min_stock_threshold: minStock,
+            icon_emoji: 'auto'
+          });
+        } catch (err) {
+          console.warn('[Inventory] Gagal update via REST API:', err);
+        }
+      }
       showToast(`Produk "${name}" berhasil diperbarui!`, 'success');
     }
   } else {
-    const newProd = {
+    const newProd = normalizeProduct({
       id: 'prod-' + Date.now().toString().slice(-6),
       name,
       category,
@@ -1853,23 +2047,49 @@ function handleProductFormSubmit(e) {
       supplier,
       icon: 'auto', // ikon dipilih otomatis dari nama & kategori
       description
-    };
+    });
+
+    if (typeof API !== 'undefined') {
+      try {
+        const res = await API.products.create({
+          id: newProd.id,
+          name,
+          sku,
+          cost_price: costPrice,
+          sell_price: sellPrice,
+          stock,
+          min_stock_threshold: minStock,
+          icon_emoji: 'auto'
+        });
+        if (res && res.data) {
+          Object.assign(newProd, normalizeProduct(res.data));
+        }
+      } catch (err) {
+        console.warn('[Inventory] Gagal tambah via REST API:', err);
+      }
+    }
+
     products.unshift(newProd);
     showToast(`Produk baru "${name}" berhasil ditambahkan!`, 'success');
   }
 
-  saveProducts();
   closeModal('productModal');
   renderAllViews();
 }
 
-function deleteProduct(id) {
+async function deleteProduct(id) {
   const p = products.find(x => x.id === id);
   if (!p) return;
 
   if (confirm(`Apakah Anda yakin ingin menghapus produk "${p.name}"? Data yang dihapus tidak dapat dikembalikan.`)) {
+    if (typeof API !== 'undefined') {
+      try {
+        await API.products.remove(id);
+      } catch (err) {
+        console.warn('[Inventory] Gagal hapus via REST API:', err);
+      }
+    }
     products = products.filter(x => x.id !== id);
-    saveProducts();
     showToast(`Produk "${p.name}" telah dihapus.`);
     renderAllViews();
   }
@@ -1977,7 +2197,7 @@ function openAddCustomerModal() {
   openModal('customerModal');
 }
 
-function handleCustomerFormSubmit(e) {
+async function handleCustomerFormSubmit(e) {
   e.preventDefault();
   const name = document.getElementById('custName').value.trim();
   const phone = document.getElementById('custPhone').value.trim();
@@ -1988,7 +2208,7 @@ function handleCustomerFormSubmit(e) {
     return;
   }
 
-  const newCust = {
+  const newCust = normalizeCustomer({
     id: 'cust-' + Date.now().toString().slice(-6),
     name,
     phone,
@@ -1996,10 +2216,25 @@ function handleCustomerFormSubmit(e) {
     points: 0,
     lastVisit: new Date().toISOString().split('T')[0],
     notes
-  };
+  });
+
+  if (typeof API !== 'undefined') {
+    try {
+      const res = await API.customers.create({
+        id: newCust.id,
+        name,
+        phone_whatsapp: phone,
+        notes
+      });
+      if (res && res.data) {
+        Object.assign(newCust, normalizeCustomer(res.data));
+      }
+    } catch (err) {
+      console.warn('[CRM] Gagal simpan customer via REST API:', err);
+    }
+  }
 
   customers.unshift(newCust);
-  saveCustomers();
   closeModal('customerModal');
   showToast(`Pelanggan "${name}" berhasil ditambahkan!`, 'success');
   renderCrmTable();
@@ -2113,12 +2348,16 @@ function copyStorefrontLink() {
 function exportDatabase() {
   const backup = {
     appName: 'TransformaUMKM',
-    version: '1.0.0',
-    platform: 'TransformaUMKM Business Operating System',
+    version: '2.0.0',
+    platform: 'TransformaUMKM Business Operating System (REST API)',
     exportedAt: new Date().toISOString(),
+    categories,
+    suppliers,
     products,
+    customers,
     transactions,
-    customers
+    transactionItems,
+    stockMutations
   };
 
   const jsonStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(backup, null, 2));
@@ -2129,7 +2368,7 @@ function exportDatabase() {
   dlAnchor.click();
   dlAnchor.remove();
 
-  showToast('Database JSON berhasil diekspor!', 'success');
+  showToast('Database JSON (7 Entitas) berhasil diekspor!', 'success');
 }
 
 function updateAlertBadges() {
@@ -2781,7 +3020,7 @@ function generateSmartProductDescription(name, category, features, tone, audienc
   return { headline, body, bullets, bulletIcons, cta, hashtags, rawText };
 }
 
-function applyAiDescriptionToSelectedProduct() {
+async function applyAiDescriptionToSelectedProduct() {
   const select = document.getElementById('aiCopySelectProduct');
   const prodId = select ? select.value : '';
 
@@ -2793,7 +3032,13 @@ function applyAiDescriptionToSelectedProduct() {
   const p = products.find(x => x.id === prodId);
   if (p && lastGeneratedAiCopy) {
     p.description = lastGeneratedAiCopy.text;
-    saveProducts();
+    if (typeof API !== 'undefined') {
+      try {
+        await API.products.update(p.id, { description: p.description });
+      } catch (e) {
+        console.warn('[AI] Gagal update deskripsi produk via REST API:', e);
+      }
+    }
     renderAllViews();
     showToast(`Deskripsi AI berhasil disimpan ke data produk "${p.name}"!`, 'success');
   }

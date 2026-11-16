@@ -3,12 +3,22 @@
   "version": "1.0.0",
   "description": "TransformaUMKM — Platform Operasi Digital Terpadu untuk Akselerasi Bisnis & UMKM Indonesia",
   "scripts": {
-    "dev": "live-server . --port=8080"
+    "backend": "node backend/server.js",
+    "backend:dev": "node --watch backend/server.js",
+    "frontend": "live-server . --port=8080 --ignore=backend",
+    "dev": "concurrently -n BACKEND,FRONTEND -c blue,green \"npm:backend:dev\" \"npm:frontend\"",
+    "start": "concurrently -n BACKEND,FRONTEND -c blue,green \"npm:backend\" \"npm:frontend\""
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "devDependencies": {
+  "dependencies": {
+    "concurrently": "^9.1.2",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
     "live-server": "^1.2.2"
+  },
+  "engines": {
+    "node": ">=18"
   }
 }
